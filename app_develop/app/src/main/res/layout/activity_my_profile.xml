@@ -1,0 +1,178 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#F2F2F2"
+    tools:context=".MyProfileActivity">
+
+    <ImageButton
+        android:contentDescription="알림 리스트로 이동하기"
+        android:id = "@+id/btn_push"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        android:src = "@drawable/ic_push_notification2"
+        android:layout_marginRight="60dp"
+        android:layout_marginTop="18dp"
+        android:backgroundTint="@android:color/transparent"/>
+
+    <ImageButton
+        android:contentDescription="로그아웃 버튼"
+        android:id = "@+id/btn_logout"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        android:src = "@drawable/ic_logout2"
+        android:layout_marginRight="15dp"
+        android:layout_marginTop="20dp"
+        android:backgroundTint="@android:color/transparent"/>
+
+    <androidx.cardview.widget.CardView
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        android:layout_width="80dp"
+        android:layout_height="80dp"
+        android:layout_marginTop="60dp"
+        app:cardCornerRadius="60dp"
+        android:id = "@+id/user_img"
+        android:layout_gravity="center"
+        app:cardElevation="0dp">
+        <ImageView
+            android:contentDescription="프로필 사진"
+            android:id = "@+id/img_view"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:scaleType = "centerCrop"
+            android:adjustViewBounds="true"
+            android:src="@drawable/ic_user_profile"
+            >
+        </ImageView>
+    </androidx.cardview.widget.CardView>
+
+
+
+    <TextView
+        app:layout_constraintTop_toBottomOf="@+id/user_img"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:fontFamily="@font/font"
+        android:textStyle="normal"
+        android:textSize="15sp"
+        android:textColor="#242424"
+        android:id = "@+id/tv_user_name"
+        android:text="홍길동님"/>
+
+    <TextView
+        app:layout_constraintTop_toBottomOf="@+id/tv_user_name"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        android:layout_marginTop="-15dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:fontFamily="@font/font"
+        android:textStyle="normal"
+        android:textSize="10sp"
+        android:textColor="#50242424"
+        android:id = "@+id/tv_user_register_text"
+        android:text="2021.10.28 가입"/>
+
+    <Button
+        android:contentDescription="내 정보 수정하기 버튼"
+        app:layout_constraintTop_toBottomOf="@+id/tv_user_register_text"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        android:layout_marginRight="25dp"
+        android:layout_marginLeft="25dp"
+        android:layout_marginTop="5dp"
+        android:layout_width="match_parent"
+        android:layout_height="71dp"
+        android:text="내 정보 편집"
+        android:drawableLeft="@drawable/profile_edit_icon"
+        android:paddingLeft = "104dp"
+        android:paddingRight= "104dp"
+        android:fontFamily="@font/font"
+        android:textStyle="normal"
+        android:textSize="15sp"
+        android:textColor="#000000"
+        app:backgroundTint="@null"
+        android:background ="@drawable/btn_edit_profile"
+        android:id = "@+id/btn_edit"
+        >
+    </Button>
+
+    <TextView
+        app:layout_constraintTop_toBottomOf="@+id/btn_edit"
+        app:layout_constraintLeft_toLeftOf="parent"
+        android:layout_marginTop="50dp"
+        android:layout_marginLeft="25dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:fontFamily="@font/font"
+        android:textStyle="bold"
+        android:textSize="20sp"
+        android:textColor="#000000"
+        android:id = "@+id/title"
+        android:text="내 관심 복지 목록"
+        />
+
+    <TextView
+        app:layout_constraintTop_toBottomOf="@+id/title"
+        app:layout_constraintLeft_toLeftOf="parent"
+        android:layout_marginLeft="25dp"
+        android:layout_marginTop="-20dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:fontFamily="@font/font"
+        android:textStyle="normal"
+        android:textSize="12sp"
+        android:textColor="#000000"
+        android:id = "@+id/text_num_list"
+        android:text="총 10개의 복지가 있습니다"/>
+
+    <LinearLayout
+        app:layout_constraintTop_toBottomOf="@+id/text_num_list"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        android:background="@drawable/recommend_list_container"
+        android:layout_marginTop="20dp"
+        android:layout_marginLeft="25dp"
+        android:layout_marginRight="25dp"
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:gravity="center_horizontal"
+        android:layout_height="300dp">
+        <androidx.recyclerview.widget.RecyclerView
+            android:id = "@+id/RV_welfare_list"
+            android:layout_width="match_parent"
+            android:layout_height="220dp"/>
+
+        <Button
+            android:contentDescription="관심 복지 리스트 전체 보기"
+            android:id="@+id/btn_view_more"
+            android:layout_margin="15dp"
+            android:text = "관심 복지 전체보기 +"
+            app:backgroundTint="@null"
+            android:background ="@drawable/btn_view_more"
+            android:layout_width="300dp"
+            android:layout_height="50dp"/>
+
+    </LinearLayout>
+
+    <com.google.android.material.bottomnavigation.BottomNavigationView
+        app:layout_constraintBottom_toBottomOf="parent"
+        android:id="@+id/nav_view"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="#2e8378"
+        app:itemIconTint="@drawable/menu_selector_color"
+        app:itemTextColor="@drawable/menu_selector_color"
+        app:labelVisibilityMode="labeled"
+        app:menu="@menu/bottom_nav" />
+</androidx.constraintlayout.widget.ConstraintLayout>

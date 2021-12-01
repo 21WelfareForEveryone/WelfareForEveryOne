@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.cardview.widget.CardView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app = "http://schemas.android.com/apk/res-auto"
+    android:id = "@+id/CV_category"
+    android:layout_width="115dp"
+    android:layout_height="120dp"
+    android:layout_marginLeft="5dp"
+    android:layout_marginRight="15dp"
+    android:contentDescription="카테고리 항목 버튼"
+    android:layout_marginTop="0dp"
+    android:elevation="8dp"
+    app:cardElevation="0dp"
+    android:backgroundTint="@android:color/transparent"
+    android:background = "@android:color/transparent">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background = "@drawable/card_component_container"
+        android:orientation="vertical">
+
+        <TextView
+            android:id="@+id/title_category"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text = "카테고리"
+            android:fontFamily="@font/font"
+            android:textStyle="bold"
+            android:textSize="14dp"
+            android:textColor="#242424"
+            android:lineSpacingExtra="6sp"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            android:layout_marginTop= "30dp" />
+
+        <ImageView
+            app:layout_constraintTop_toBottomOf="@id/title_category"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintVertical_bias="0.0"
+            android:layout_marginTop="0dp"
+            android:layout_marginBottom="10dp"
+            android:layout_width="22dp"
+            android:layout_height="22dp"
+            android:src = "@drawable/ic_category_btn2"/>
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</androidx.cardview.widget.CardView>

@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.cardview.widget.CardView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app = "http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_gravity="left"
+    android:layout_marginTop="15dp"
+    android:layout_marginBottom="5dp"
+    android:layout_marginLeft="5dp"
+    android:layout_marginRight="5dp"
+    android:elevation="8dp"
+    app:cardElevation="0dp"
+    android:backgroundTint="@android:color/transparent"
+    android:background = "@android:color/transparent"
+    >
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_gravity="left"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+        <ImageView
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            android:layout_marginTop="5dp"
+            android:layout_width="30dp"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="15dp"
+            android:src = "@drawable/bottom_menu_ico_2"
+            android:layout_gravity="center"/>
+
+        <LinearLayout
+            android:background="@drawable/bot_msg_box_container"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            android:orientation="vertical"
+            android:layout_marginLeft="60dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content">
+
+
+            <TextView
+                android:background="@android:color/transparent"
+                android:layout_width="150dp"
+                android:layout_height="wrap_content"
+                android:layout_margin="10dp"
+                android:id = "@+id/idTVBot_title"
+                android:text = "ChatBot Message"
+                android:gravity="left"
+                android:fontFamily="@font/font"
+                android:textStyle="normal"
+                android:textSize="12sp"
+                android:textColor="#000000"/>
+
+            <TextView
+                android:background="@android:color/transparent"
+                android:layout_width="190dp"
+                android:layout_height="wrap_content"
+                android:layout_margin="10dp"
+                android:id = "@+id/idTVBot_summary"
+                android:text = "ChatBot Message"
+                android:gravity="left"
+                android:fontFamily="@font/font"
+                android:textStyle="normal"
+                android:textSize="9sp"
+                android:textColor="#000000"/>
+
+            <Button
+                android:contentDescription="더 알아보기 버튼"
+                android:id = "@+id/btn_detail"
+                android:layout_width="180dp"
+                android:layout_height="40dp"
+                android:layout_marginTop="5dp"
+                android:layout_marginLeft="15dp"
+                android:layout_marginBottom="10dp"
+                android:text = "더 알아보기 +"
+                android:lineSpacingExtra="6sp"
+                android:textStyle="normal"
+                android:textColor="#ffffff"
+                android:textSize="11sp"
+                app:backgroundTint="@null"
+                android:background="@drawable/btn_design_login"
+                />
+
+        </LinearLayout>
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</androidx.cardview.widget.CardView>

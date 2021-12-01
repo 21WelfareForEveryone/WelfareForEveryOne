@@ -1,0 +1,4 @@
+<resources>
+    <string name="app_name">welfareapp</string>
+    <string name="msg_token_fmt" translatable="false">Token : %s</string>
+</resources>

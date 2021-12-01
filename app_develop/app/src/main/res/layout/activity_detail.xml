@@ -1,0 +1,261 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/white"
+    tools:context=".DetailActivity">
+
+    <include layout = "@layout/toolbar_info_detail"/>
+
+    <ImageView
+        android:id="@+id/welfare_info_img"
+        android:layout_width="420dp"
+        android:layout_height="275dp"
+        android:foregroundGravity="center"
+        android:src="@drawable/detail_picture"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:ignore="MissingConstraints"
+        tools:layout_editor_absoluteX="-5dp" />
+
+    <ToggleButton
+        android:layout_marginBottom="15dp"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintBottom_toBottomOf="@+id/welfare_info_img"
+        android:id="@+id/toggle_favorite"
+        android:layout_width="32dp"
+        android:layout_height="32dp"
+        android:translationZ="999dp"
+        android:layout_marginRight="15dp"
+        android:textOn=""
+        android:textOff=""
+        android:background="@drawable/toggle_button_selector"
+        android:textColor="@null"
+        />
+
+    <TextView
+        android:translationZ="999dp"
+        android:id="@+id/tv_title"
+        android:textStyle="bold"
+        android:textSize="20dp"
+        android:textColor="@color/white"
+        android:text="복지 제목"
+        android:layout_marginLeft="15dp"
+        app:layout_constraintLeft_toLeftOf="parent"
+        android:layout_marginBottom="15dp"
+        app:layout_constraintBottom_toBottomOf="@+id/welfare_info_img"
+        android:layout_width="300dp"
+        android:layout_height="wrap_content"/>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="450dp"
+        app:layout_constraintBottom_toTopOf="@id/btn_sign"
+        app:layout_constraintTop_toBottomOf="@id/welfare_info_img">
+
+        <ScrollView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <LinearLayout
+                android:background = "#ffffff"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="25dp"
+                android:layout_marginRight="25dp"
+                android:orientation="vertical">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/tv_main_info_container"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:fontFamily="@font/font"
+                        android:lineSpacingExtra="5sp"
+                        android:text="복지 상세"
+                        android:textColor="#242424"
+                        android:layout_marginBottom="5dp"
+                        android:textSize="11sp"
+                        android:textStyle="bold" />
+
+                    <TextView
+                        android:id="@+id/tv_detail"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginBottom="20dp"
+                        android:lineSpacingExtra="12sp"
+                        android:text="상세한 내용이 이곳에 들어갑니다"
+                        android:textColor="#242424"
+                        android:textSize="13sp"
+                        android:textStyle="normal" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/tv_main_info_container"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:fontFamily="@font/font"
+                        android:lineSpacingExtra="5sp"
+                        android:layout_marginBottom="5dp"
+                        android:text="지원 대상"
+                        android:textColor="#242424"
+                        android:textSize="11sp"
+                        android:textStyle="bold" />
+
+                    <TextView
+                        android:id="@+id/tv_who"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginBottom="20dp"
+                        android:lineSpacingExtra="12sp"
+                        android:text="상세한 내용이 이곳에 들어갑니다"
+                        android:textColor="#242424"
+                        android:textSize="13sp"
+                        android:textStyle="normal" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/tv_main_info_container"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:fontFamily="@font/font"
+                        android:lineSpacingExtra="5sp"
+                        android:layout_marginBottom="5dp"
+                        android:text="선정 기준"
+                        android:textColor="#242424"
+                        android:textSize="11sp"
+                        android:textStyle="bold" />
+
+                    <TextView
+                        android:id="@+id/tv_criteria"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginBottom="20dp"
+                        android:lineSpacingExtra="12sp"
+                        android:text="상세한 내용이 이곳에 들어갑니다"
+                        android:textColor="#242424"
+                        android:textSize="13sp"
+                        android:textStyle="normal" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/tv_main_info_container"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:fontFamily="@font/font"
+                        android:lineSpacingExtra="5sp"
+                        android:layout_marginBottom="5dp"
+                        android:text="지원 방법"
+                        android:textColor="#242424"
+                        android:textSize="11sp"
+                        android:textStyle="bold" />
+
+                    <TextView
+                        android:id = "@+id/tv_how"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginBottom="20dp"
+                        android:lineSpacingExtra="12sp"
+                        android:text="상세한 내용이 이곳에 들어갑니다"
+                        android:textColor="#242424"
+                        android:textSize="13sp"
+                        android:textStyle="normal" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/tv_main_info_container"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:fontFamily="@font/font"
+                        android:lineSpacingExtra="5sp"
+                        android:layout_marginBottom="5dp"
+                        android:text="연락처"
+                        android:textColor="#242424"
+                        android:textSize="11sp"
+                        android:textStyle="bold" />
+
+                    <TextView
+                        android:id="@+id/tv_calls"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginBottom="20dp"
+                        android:lineSpacingExtra="12sp"
+                        android:text="상세한 내용이 이곳에 들어갑니다"
+                        android:textColor="#242424"
+                        android:textSize="13sp"
+                        android:textStyle="normal" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/tv_main_info_container"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:fontFamily="@font/font"
+                        android:lineSpacingExtra="5sp"
+                        android:layout_marginBottom="5dp"
+                        android:text="url"
+                        android:textColor="#242424"
+                        android:textSize="11sp"
+                        android:textStyle="bold" />
+
+                    <TextView
+                        android:id="@+id/tv_sites"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginBottom="20dp"
+                        android:lineSpacingExtra="12sp"
+                        android:text="상세한 내용이 이곳에 들어갑니다"
+                        android:textColor="#242424"
+                        android:textSize="13sp"
+                        android:textStyle="normal" />
+                </LinearLayout>
+
+            </LinearLayout>
+        </ScrollView>
+    </LinearLayout>
+
+    <Button
+        android:id="@+id/btn_sign"
+        android:fontFamily="@font/font"
+        android:textStyle="normal"
+        android:textSize="15sp"
+        android:textColor="#ffffff"
+        android:lineSpacingExtra="6sp"
+        android:backgroundTint="#24bfad"
+        android:text = "바로 신청하기"
+        android:layout_width="match_parent"
+        android:layout_height="71dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        tools:ignore="MissingConstraints" />
+</androidx.constraintlayout.widget.ConstraintLayout>

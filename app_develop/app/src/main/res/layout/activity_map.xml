@@ -1,0 +1,190 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".MapActivity"
+    android:orientation="vertical">
+
+    <!--main layout -->
+    <fragment
+        app:layout_constraintBottom_toTopOf="@id/nav_view"
+        app:layout_constraintTop_toTopOf="parent"
+        android:id="@+id/googleMap"
+        class="com.google.android.gms.maps.MapFragment"
+        android:layout_width="match_parent"
+        android:layout_height="780dp"
+        tools:layout_editor_absoluteX="0dp"
+        tools:layout_editor_absoluteY="-128dp" />
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="350dp"
+        android:layout_height="225dp"
+        android:background="@drawable/btn_container_map"
+        android:layout_marginBottom="50dp"
+        app:layout_constraintBottom_toTopOf="@+id/nav_view"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintVertical_bias="0.865"
+        >
+
+        <TextView
+            android:id="@+id/textView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:fontFamily="@font/font"
+            android:text="주변 복지시설 정보"
+            android:textColor="#000000"
+            android:textSize="15sp"
+            android:textStyle="bold"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.12"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_bias="0.05">
+
+        </TextView>
+
+        <androidx.appcompat.widget.AppCompatButton
+            android:contentDescription="복지회관 찾기"
+            android:id="@+id/map_button_1"
+            android:layout_width="100dp"
+            android:layout_height="47dp"
+            android:background="@drawable/btn_design_map"
+            android:fontFamily="@font/font"
+            android:textColor="#242424"
+            android:textSize="12sp"
+            android:textStyle="normal"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.075"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_bias="0.295"
+            android:text="복지회관" />
+
+
+        <androidx.appcompat.widget.AppCompatButton
+            android:contentDescription="보건소 찾기"
+            android:id="@+id/map_button_2"
+            android:layout_width="100dp"
+            android:layout_height="47dp"
+            android:background="@drawable/btn_design_map"
+            android:fontFamily="@font/font"
+            android:textColor="#242424"
+            android:textSize="12sp"
+            android:textStyle="normal"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_bias="0.295"
+            android:text="보건소" />
+
+        <androidx.appcompat.widget.AppCompatButton
+            android:contentDescription="경로당 찾기"
+            android:id="@+id/map_button_3"
+            android:layout_width="100dp"
+            android:layout_height="47dp"
+            android:background="@drawable/btn_design_map"
+            android:fontFamily="@font/font"
+            android:textColor="#242424"
+            android:textSize="12sp"
+            android:textStyle="normal"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.925"
+
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_bias="0.295"
+            android:text="경로당" />
+
+        <androidx.appcompat.widget.AppCompatButton
+            android:contentDescription="주민센터 찾기"
+            android:id="@+id/map_button_4"
+            android:layout_width="100dp"
+            android:layout_height="47dp"
+            android:background="@drawable/btn_design_map"
+            android:fontFamily="@font/font"
+            android:textColor="#242424"
+            android:textSize="12sp"
+            android:textStyle="normal"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.075"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_bias="0.615"
+            android:text="주민센터" />
+
+        <androidx.appcompat.widget.AppCompatButton
+            android:contentDescription="구청 찾기"
+            android:id="@+id/map_button_5"
+            android:layout_width="100dp"
+            android:layout_height="47dp"
+            android:background="@drawable/btn_design_map"
+            android:fontFamily="@font/font"
+            android:textColor="#242424"
+            android:textSize="12sp"
+            android:textStyle="normal"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_bias="0.615"
+            android:text="구청" />
+
+        <androidx.appcompat.widget.AppCompatButton
+            android:contentDescription="병원 찾기"
+            android:id="@+id/map_button_6"
+            android:layout_width="100dp"
+            android:layout_height="47dp"
+            android:background="@drawable/btn_design_map"
+            android:fontFamily="@font/font"
+            android:textColor="#242424"
+            android:textSize="12sp"
+            android:textStyle="normal"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.925"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_bias="0.615"
+            android:text="병원" />
+
+        <androidx.appcompat.widget.AppCompatButton
+            android:id="@+id/map_button_7"
+            android:layout_width="315dp"
+            android:layout_height="47dp"
+            android:background="@drawable/btn_design_map"
+            android:fontFamily="@font/font"
+            android:textColor="#242424"
+            android:textSize="12sp"
+            android:textStyle="normal"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_bias="0.93"
+            android:text="전체보기" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <com.google.android.material.bottomnavigation.BottomNavigationView
+        app:layout_constraintBottom_toBottomOf="parent"
+        android:id="@+id/nav_view"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="#2e8378"
+        app:labelVisibilityMode="labeled"
+        app:itemIconTint="@drawable/menu_selector_color"
+        app:itemTextColor="@drawable/menu_selector_color"
+        app:menu="@menu/bottom_nav" />
+</androidx.constraintlayout.widget.ConstraintLayout>
