@@ -6,7 +6,7 @@ const User_dibs = require('../models/dibs');
 // Importing Modules
 const request = require('request');
 let jwt = require("jsonwebtoken");
-let secretObj = require('../config/jwt');
+let secretObj = process.env.JWT_SECRET
 
 // 복지 정보 Create Request 처리 
 exports.createWelfare = (req, res, next) => {

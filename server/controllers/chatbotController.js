@@ -5,7 +5,8 @@ const chatbotInfo = require("../config/chatbot.json");
 
 // Import Modules
 let jwt = require("jsonwebtoken"); 
-let secretObj = require("../config/jwt"); 
+// let secretObj = require("../config/jwt"); 
+let secretObj = process.env.JWT_SECRET
 let request = require('request');
 
 // Server IP Info (Private IP)
