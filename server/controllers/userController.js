@@ -5,11 +5,40 @@ const User_dibs = require('../models/dibs');
 
 // Import Modules
 let jwt = require("jsonwebtoken"); 
-let secretObj = require("../config/jwt"); 
+let secretObj = process.env.JWT_SECRET
 const crypto = require('crypto'); 
 
 // Import Sequelize Operator
 const { Op } = require("sequelize");
+
+// 사용자의 로그인 세션을 확인하는 API
+exports.userSession = (req, res, next) => {
+    // 토큰 복호화 
+    const user_info = jwt.verify(req.body.token, secretObj.secret);
+
+    // 해당 유저가 존재한다면 성공 response 보내고 없다면 실패 response 보내기 
+    User.findByPk(user_info.user_id)
+    .then(user=>{
+        if(user != undefined){
+            // 성공 json 보내기
+            res.send(JSON.stringify({
+                "success": true,
+                "statusCode" : 200,
+                "token" : req.body.token
+            }));
+        }
+        else {
+            // 실패 json 보내기
+            res.send(JSON.stringify({
+                "success": false,
+                "statusCode" : 202,
+                "token" : undefined
+            }));
+        }
+    })
+    .catch(err=>{console.log(err);})
+
+}
 
 // 로그인 Request 처리
 exports.userLogin = (req, res, next) => {

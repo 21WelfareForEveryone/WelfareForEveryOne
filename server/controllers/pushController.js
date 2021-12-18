@@ -7,7 +7,7 @@ const { Op } = require("sequelize");
 
 // Import Modules
 let jwt = require("jsonwebtoken"); 
-let secretObj = require("../config/jwt"); 
+let secretObj = process.env.JWT_SECRET
 
 // Import FCM Info
 const admin = require('firebase-admin');
