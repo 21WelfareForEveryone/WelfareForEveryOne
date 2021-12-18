@@ -5,7 +5,7 @@ const Welfare_category = require('../models/welfare_category');
 
 // Import modules
 let jwt = require("jsonwebtoken"); 
-let secretObj = require("../config/jwt"); 
+let secretObj = process.env.JWT_SECRET
 
 // 찜 Create Request 처리
 exports.createDibs = (req, res, next) => {

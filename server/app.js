@@ -3,16 +3,13 @@ const express = require('express');
 const bodyParser = require('body-parser');
 const path = require('path');
 const app = express();
+require("dotenv").config();
 
 const userRoutes = require('./routes/userRoutes');
 const dibsRoutes = require('./routes/dibsRoutes');
 const welfareRoutes = require('./routes/welfareRoutes');
 const pushRoutes = require('./routes/pushRoutes');
 const chatbotRoutes = require('./routes/chatbotRoutes');
-
-
-// const update = require('./utils/schedule')
-// update.check()
 
 // FCM 푸시알림 코드입니다.
 const admin = require('firebase-admin')
