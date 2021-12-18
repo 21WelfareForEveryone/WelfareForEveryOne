@@ -6,6 +6,9 @@
 # gitignore template for Jupyter Notebooks
 # website: http://jupyter.org/
 
+## For Backend Security 
+server/config
+
 .ipynb_checkpoints
 */.ipynb_checkpoints/*
 
