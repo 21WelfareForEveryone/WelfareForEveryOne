@@ -202,7 +202,7 @@ public class PushActivity extends AppCompatActivity {
                             }
                         }
                     }
-                }, 1024
+                }, 1024 * 2
         );
 
     }
