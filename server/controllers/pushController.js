@@ -63,6 +63,11 @@ exports.pushToggle = (req, res, next) => {
     
 
 }
+const User = require('../models/user'); 
+
+// Import modules
+let jwt = require("jsonwebtoken"); 
+let secretObj = require("../config/jwt"); 
 
 exports.getPushAlarm = (req, res, next) => {
     /*
@@ -80,6 +85,16 @@ exports.getPushAlarm = (req, res, next) => {
     const user_info = jwt.verify(req.body.token, secretObj.secret);
 
     Welfare.findAll({where: {d_day : { [Op.lte] : kr_curr}}, raw: true})
+
+    // FCM 메시지 Format 
+    let message = 
+    {
+        notification : {
+            title: '모두를 위한 복지 알림입니다.',
+            body: welfareinfo.title,
+        },
+        token : userinfo.user_mToken
+    }
 
     // FCM 메시지 Format 
     let message = 
