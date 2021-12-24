@@ -588,4 +588,10 @@ hs_err_pid*
 
 !/gradle/wrapper/gradle-wrapper.jar
 
+### AWS
+
+*.pem
+config.py
+welfare_for_embedding.csv
+
 # End of https://www.toptal.com/developers/gitignore/api/windows,macos,visualstudiocode,androidstudio,pycharm,node,jupyternotebooks,python
