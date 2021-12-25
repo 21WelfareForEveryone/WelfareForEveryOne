@@ -35,4 +35,6 @@ app.use(welfareRoutes);
 app.use(dibsRoutes);
 app.use(chatbotRoutes);
 
-app.listen(80);
+app.listen(3000,() => {
+    console.log(`listening at http://localhost:3000`)
+  });
