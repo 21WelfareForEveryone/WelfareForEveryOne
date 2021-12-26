@@ -18,7 +18,7 @@
         android:layout_height="match_parent"
         tools:layout_editor_absoluteX="0dp"
         tools:layout_editor_absoluteY="-128dp" />
-
+    
     <ImageButton
         android:id = "@+id/btn_current_position"
         android:layout_width="42dp"
@@ -30,6 +30,36 @@
         android:translationZ="999dp"
         android:src = "@drawable/ic_gps"
         android:background="@drawable/btn_design_current_position"/>
+
+    <LinearLayout
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintLeft_toLeftOf="parent"
+        android:layout_marginTop="20dp"
+        android:layout_marginLeft="20dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:gravity="center_horizontal"
+        android:background="@drawable/btn_container_map"
+        android:orientation="vertical">
+        <TextView
+            android:id="@+id/txt_search_radius"
+            android:fontFamily="@font/font"
+            android:textColor="#000000"
+            android:textSize="12sp"
+            android:textStyle="bold"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text='검색반경:500(m)'/>
+        <SeekBar
+            android:contentDescription="검색 반경 조절하기"
+            android:layout_width="120dp"
+            android:layout_height="30dp"
+            android:progress='500'
+            android:max ='1000'
+            android:stepSize='100'
+            android:id="@+id/map_radius_seekbar"
+            />
+    </LinearLayout>
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/map_btn_container"
