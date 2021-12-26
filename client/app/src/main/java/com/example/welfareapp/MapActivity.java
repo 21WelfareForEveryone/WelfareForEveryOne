@@ -19,6 +19,8 @@ import android.widget.Button;
 import android.widget.CompoundButton;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
+import android.widget.SeekBar;
+import android.widget.TextView;
 import android.widget.Toast;
 import android.widget.ToggleButton;
 
@@ -44,6 +46,9 @@ import com.google.android.gms.tasks.Task;
 import com.google.android.libraries.places.api.Places;
 import com.google.android.libraries.places.api.net.PlacesClient;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
+import com.google.android.material.slider.Slider;
+
+import org.json.JSONObject;
 
 import java.io.IOException;
 import java.util.HashSet;
@@ -97,6 +102,7 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
     // Place API key
     private final String placeAPIKey = "AIzaSyDmaHqwSUJSjaS07Hod_L81DUynQBeV8m4";
 
+    private int searchRadius = 500;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -203,11 +209,29 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
                 if(locationPermissionGranted){
                     Log.v("MapActivity update current position", "Event start");
                     updateUserLocation();
+                    showPlaceInformation(defaultLocation, PlaceType.HOSPITAL, searchRadius);
                 }
                 else{
                     Log.v("MapActivity get location permission", "Event start");
                     getLocationPermission();
                 }
+            }
+        });
+
+        /* SeekBar를 이용한 검색 반경 조정 */
+        SeekBar seekBar = findViewById(R.id.map_radius_seekbar);
+        seekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
+            @Override
+            public void onProgressChanged(SeekBar seekBar, int i, boolean b) {
+            }
+            @Override
+            public void onStartTrackingTouch(SeekBar seekBar) {
+            }
+            @Override
+            public void onStopTrackingTouch(SeekBar seekBar) {
+                TextView txt_search_radius = findViewById(R.id.txt_search_radius);
+                txt_search_radius.setText(String.format("검색반경:%d(m)", seekBar.getProgress()));
+                searchRadius = (int)seekBar.getProgress();
             }
         });
     }
@@ -225,6 +249,7 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
                 android.Manifest.permission.ACCESS_FINE_LOCATION)
                 == PackageManager.PERMISSION_GRANTED) {
             locationPermissionGranted = true;
+            Log.v("MapActivity getLocationPermission","activated");
         } else {
             ActivityCompat.requestPermissions(this,
                     new String[]{android.Manifest.permission.ACCESS_FINE_LOCATION},
@@ -242,6 +267,7 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
                         if (task.isSuccessful()) {
                             // Set the map's camera position to the current location of the device.
                             lastKnownLocation = task.getResult();
+                            Log.v("MapActivity getDeviceLocation lastKnownLocation", lastKnownLocation.toString());
                             if (lastKnownLocation != null) {
                                 /*
                                 mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(
@@ -291,10 +317,6 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
             Log.e("Exception: %s", e.getMessage());
         }
     }
-
-    /**
-     * Handles the result of the request for location permissions.
-     */
     @Override
     public void onRequestPermissionsResult(int requestCode,
                                            @NonNull String[] permissions,
@@ -313,7 +335,7 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
         updateUserLocation();
     }
 
-    public void showPlaceInformation(LatLng location, String placeType) {
+    public void showPlaceInformation(LatLng location, String placeType, int searchRadius) {
         mMap.clear();
         if (previous_marker != null)
             previous_marker.clear();//지역정보 마커 클리어
@@ -321,10 +343,17 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
                 .listener(MapActivity.this)
                 .key(placeAPIKey)
                 .latlng(location.latitude, location.longitude)//현재 위치
-                .radius(500) //500 미터 내에서 검색
+                .radius(searchRadius) //500 미터 내에서 검색
                 .type(placeType) // .type(PlaceType.LOCAL_GOVERNMENT_OFFICE) // (ex)  지역구청
                 .build()
                 .execute();
+    }
+    public void searchPlace(LatLng location, String placeName){
+        mMap.clear();
+        if(previous_marker != null){
+            previous_marker.clear();
+        }
+        /* 검색 메커니즘 */
     }
 
     @Override
@@ -365,7 +394,6 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
                         makerOptions.position(location);
                         mMap.addMarker(makerOptions);
                         mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(location,DEFAULT_ZOOM));
-
                     }
                 }
         );
@@ -485,16 +513,20 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
             @Override
             public void run() {
                 for (noman.googleplaces.Place place : places) {
-
-                    LatLng latLng = new LatLng(place.getLatitude(), place.getLongitude());
-                    String markerSnippet = getCurrentAddress(latLng);
-                    MarkerOptions markerOptions = new MarkerOptions();
-                    markerOptions.position(latLng);
-                    markerOptions.title(place.getName());
-                    markerOptions.snippet(markerSnippet);
-                    Marker item = mMap.addMarker(markerOptions);
-                    previous_marker.add(item);
-
+                    try{
+                        LatLng latLng = new LatLng(place.getLatitude(), place.getLongitude());
+                        String markerSnippet = getCurrentAddress(latLng);
+                        MarkerOptions markerOptions = new MarkerOptions();
+                        markerOptions.position(latLng);
+                        markerOptions.title(place.getName());
+                        markerOptions.snippet(markerSnippet);
+                        Marker item = mMap.addMarker(markerOptions);
+                        previous_marker.add(item);
+                    }
+                    catch(Exception e){
+                        e.printStackTrace();
+                        Log.e("MapActivity onPlacesSuccess run Exception Error",e.getMessage());
+                    }
                 }
                 HashSet<Marker> hashSet = new HashSet<Marker>();
                 hashSet.addAll(previous_marker);
