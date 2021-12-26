@@ -1,9 +1,9 @@
 // DB 연결
-// let dbInfo = require("../config/dbInfo");  
+let dbInfo = require("../config/dbInfo");  
 const Sequelize = require('sequelize');
-const sequelize = new Sequelize("welfare-for-everyone", process.env.DB_USER, process.env.DB_PASSWORD, {
+const sequelize = new Sequelize("welfare-for-everyone", 'root', dbInfo.password, {
   dialect: 'mysql',
-  host: process.env.DB_HOST
+  host: dbInfo.ip
 });
 
 module.exports = sequelize;

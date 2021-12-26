@@ -11,7 +11,6 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
-import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.android.volley.AuthFailureError;
@@ -21,10 +20,6 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.Volley;
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.Task;
-import com.google.firebase.FirebaseApp;
-import com.google.firebase.messaging.FirebaseMessaging;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -39,9 +34,6 @@ public class LoginActivity extends AppCompatActivity {
     private EditText et_pwd;
     private EditText et_id;
     private static long back_pressed;
-
-    // Firebase Push Notification
-    private static final String TAG = "LoginActivity Firebase Push Token Process";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -72,19 +64,15 @@ public class LoginActivity extends AppCompatActivity {
                                 Boolean isSuccess  = sharedPreferences.getBoolean("success", false);
                                 String mToken = sharedPreferences.getString("token", "");
                                 int statusCode = sharedPreferences.getInt("statusCode",0);
-                                //String token_firebase = sharedPreferences.getString("token_firebase", "");
 
                                 Log.v("sharedPreference  isSuccess", Boolean.toString(isSuccess));
                                 Log.v("sharedPreference  mToken", mToken);
 
                                 if(isSuccess){
-
                                     Log.v("Login Process", isSuccess.toString());
                                     Toast.makeText(getApplicationContext(), "로그인에 성공하셨습니다.", Toast.LENGTH_SHORT).show();
                                     Bundle bundle = new Bundle();
                                     bundle.putString("token", mToken);
-                                    //bundle.putString("token_firebase", token_firebase);
-
                                     Intent intent = new Intent(LoginActivity.this, com.example.welfareapp.MainActivity.class);
                                     if(bundle!=null){
                                         intent.putExtras(bundle);
@@ -148,38 +136,6 @@ public class LoginActivity extends AppCompatActivity {
             et_pwd.requestFocus();
             return;
         }
-
-        /*
-        // Firebase App Process to get token(11.27 added)
-        FirebaseApp.initializeApp(getApplicationContext());
-        try{
-            FirebaseMessaging.getInstance().getToken()
-                    .addOnCompleteListener(new OnCompleteListener<String>() {
-                        @Override
-                        public void onComplete(@NonNull Task<String> task) {
-                            if (!task.isSuccessful()) {
-                                Log.w(TAG, "Fetching FCM registration token failed", task.getException());
-                                editor.putString("token_firebase", "");
-                                editor.commit();
-                                return;
-                            }
-                            String token = task.getResult();
-                            String msg = getString(R.string.msg_token_fmt, token);
-                            editor.putString("token_firebase", token);
-                            editor.commit();
-                            Log.d(TAG, msg);
-                            Log.v(TAG, msg);
-                        }
-                    });
-        }
-        catch(Exception err){
-            err.printStackTrace();
-            editor.putString("token_firebase", "");
-            editor.commit();
-            Log.v("FirebaseApp error on LoginActivity", err.getMessage());
-        }
-
-         */
 
         final JsonObjectRequest jsonRequest = new JsonObjectRequest(Request.Method.POST, com.example.welfareapp.URLs.url_login, params, new Response.Listener<JSONObject>(){
             @Override
