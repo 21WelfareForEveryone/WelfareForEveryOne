@@ -86,8 +86,6 @@ exports.getResponse = (req, res, next) =>{
             
             // case 1. "type" == "welfare"일 경우 
             if (kmgResponse.type == 'welfare') {
-                console.log('welfare!');
-
                 // welfare id를 받아서 Welfare 모델로부터 전체 정보를 받는다.
                 const welfareIds = kmgResponse.welfare;
                 Welfare.findAll({where: { welfare_id: welfareIds }, raw: true})
@@ -121,8 +119,6 @@ exports.getResponse = (req, res, next) =>{
             else {
 
                 if (kmgResponse.type == 'message' && kmgResponse.message == '360') {
-                    console.log("Go to Kobert");
-                    
                     // send Request to kobert
                     const optionsKobert = {
                         uri: 'http://10.178.0.10:5000/sebert',
@@ -176,7 +172,6 @@ exports.getResponse = (req, res, next) =>{
                     // 메시지를 attribute에 추가하고 App으로 Response를 보낸다.
                     chatbotInfo.forEach(element => {
                         if (element.id == kmgResponse.message) {
-                            console.log(element.message);
                             message = element.message
                         }
                     });
