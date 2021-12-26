@@ -13,7 +13,6 @@ const { Op } = require("sequelize");
 
 // 사용자의 로그인 세션을 확인하는 API
 exports.userSession = (req, res, next) => {
-    console.log(secretObj);
     // 토큰 복호화 
     const user_info = jwt.verify(req.body.token, secretObj);
 
@@ -64,6 +63,13 @@ exports.userLogin = (req, res, next) => {
                 "statusCode" : 200,
                 "token" : token
             }));
+            
+            // request에 refresh된 토큰이 함께 온다면 db를 업데이트한다.
+            if (req.body.refreshed_ftoken != undefined) {   
+                User.update({
+                    user_mToken: req.body.refreshed_ftoken // refresh된 firebase token 
+                }, { where: { user_id: req.body.user_id }})
+            }
         }
         else{
             // 없다면 실패 json 보내기
@@ -73,6 +79,8 @@ exports.userLogin = (req, res, next) => {
                 "token" : "DENIED"
             }));
         }
+
+        return user
     })
     .catch(err=>{
         // 오류시 실패 json 보내기
@@ -207,7 +215,8 @@ exports.userRead = (req, res, next) => {
                 "user_is_one_parent": user.user_is_one_parent,
                 "user_income": user.user_income,
                 "user_is_disabled": user.user_is_disabled,
-                "user_interest" : interest
+                "user_interest" : interest,
+                "user_ftoken" : user.user_mToken
             }));  
         })
       })
