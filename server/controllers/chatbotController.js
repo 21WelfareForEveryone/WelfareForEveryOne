@@ -5,11 +5,8 @@ const chatbotInfo = require("../config/chatbot.json");
 
 // Import Modules
 let jwt = require("jsonwebtoken"); 
-let secretObj = require("../config/jwt"); 
+let secretObj = process.env.JWT_SECRET
 let request = require('request');
-
-// Server IP Info (Private IP)
-const serverURL = "http://172.30.1.57:3000"
 
 /*
 Chatbot Server API 
@@ -43,7 +40,7 @@ exports.getResponse = (req, res, next) =>{
     */
 
     // 토큰 복호화 
-    const user_info = jwt.verify(req.body.token, secretObj.secret);
+    const user_info = jwt.verify(req.body.token, secretObj);
     
     // Request로부터 user message 추출 
     let user_message = req.body.chat_message;
@@ -59,7 +56,7 @@ exports.getResponse = (req, res, next) =>{
 
     // send Request to kmg2933
     const options = {
-        uri: 'http://10.178.0.10:4000/chatbot',
+        uri: 'http://localhost:4000/chatbot',
         method: 'POST',
         json: {
             "message" : user_message,
@@ -86,8 +83,6 @@ exports.getResponse = (req, res, next) =>{
             
             // case 1. "type" == "welfare"일 경우 
             if (kmgResponse.type == 'welfare') {
-                console.log('welfare!');
-
                 // welfare id를 받아서 Welfare 모델로부터 전체 정보를 받는다.
                 const welfareIds = kmgResponse.welfare;
                 Welfare.findAll({where: { welfare_id: welfareIds }, raw: true})
@@ -121,11 +116,9 @@ exports.getResponse = (req, res, next) =>{
             else {
 
                 if (kmgResponse.type == 'message' && kmgResponse.message == '360') {
-                    console.log("Go to Kobert");
-                    
                     // send Request to kobert
                     const optionsKobert = {
-                        uri: 'http://10.178.0.10:5000/sebert',
+                        uri: 'http://localhost:5000/sebert',
                         method: 'POST',
                         json: {
                             "query" : user_message,
@@ -176,7 +169,6 @@ exports.getResponse = (req, res, next) =>{
                     // 메시지를 attribute에 추가하고 App으로 Response를 보낸다.
                     chatbotInfo.forEach(element => {
                         if (element.id == kmgResponse.message) {
-                            console.log(element.message);
                             message = element.message
                         }
                     });

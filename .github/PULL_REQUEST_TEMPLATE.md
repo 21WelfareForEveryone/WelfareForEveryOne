@@ -1,4 +1,4 @@
-## [ISSUE_TAG] Title
+## [Team name] Title
 
 ### 🔨 작업 내용 설명
 

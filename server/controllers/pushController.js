@@ -7,7 +7,7 @@ const { Op } = require("sequelize");
 
 // Import Modules
 let jwt = require("jsonwebtoken"); 
-let secretObj = require("../config/jwt"); 
+let secretObj = process.env.JWT_SECRET
 
 // Import FCM Info
 const admin = require('firebase-admin');
@@ -16,7 +16,7 @@ const User = require('../models/user');
 // In-App 푸시알림 창에 표시할 정보 전송 API 
 exports.getInfo = (req, res, next) => {
     // 토큰 복호화 
-    const user_info = jwt.verify(req.body.token, secretObj.secret);
+    const user_info = jwt.verify(req.body.token, secretObj);
 
     // 현재 날짜
     const curDate = new Date();
@@ -73,7 +73,7 @@ exports.getInfo = (req, res, next) => {
 exports.pushToggle = (req, res, next) => {
     // 토큰 복호화 
     const command = req.body.toggle_command;
-    const user_info = jwt.verify(req.body.token, secretObj.secret);
+    const user_info = jwt.verify(req.body.token, secretObj);
     const id2toggle = req.body.welfare_id
 
     Welfare.findByPk(id2toggle).then(welfare => {

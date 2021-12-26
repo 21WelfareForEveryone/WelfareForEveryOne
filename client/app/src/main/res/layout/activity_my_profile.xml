@@ -110,7 +110,7 @@
     <TextView
         app:layout_constraintTop_toBottomOf="@+id/btn_edit"
         app:layout_constraintLeft_toLeftOf="parent"
-        android:layout_marginTop="50dp"
+        android:layout_marginTop="24dp"
         android:layout_marginLeft="25dp"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -137,17 +137,21 @@
         android:text="총 10개의 복지가 있습니다"/>
 
     <LinearLayout
+        app:layout_constrainedHeight="true"
         app:layout_constraintTop_toBottomOf="@+id/text_num_list"
+        app:layout_constraintBottom_toTopOf="@+id/nav_view"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
         android:background="@drawable/recommend_list_container"
-        android:layout_marginTop="20dp"
+        android:layout_marginTop="8dp"
         android:layout_marginLeft="25dp"
         android:layout_marginRight="25dp"
+        android:layout_marginBottom="8dp"
         android:orientation="vertical"
         android:layout_width="match_parent"
         android:gravity="center_horizontal"
-        android:layout_height="300dp">
+        android:layout_height="match_parent">
+
         <androidx.recyclerview.widget.RecyclerView
             android:id = "@+id/RV_welfare_list"
             android:layout_width="match_parent"
