@@ -5,41 +5,11 @@ const User_dibs = require('../models/dibs');
 
 // Import Modules
 let jwt = require("jsonwebtoken"); 
-let secretObj = process.env.JWT_SECRET
+let secretObj = require("../config/jwt"); 
 const crypto = require('crypto'); 
 
 // Import Sequelize Operator
 const { Op } = require("sequelize");
-
-// 사용자의 로그인 세션을 확인하는 API
-exports.userSession = (req, res, next) => {
-    console.log(secretObj);
-    // 토큰 복호화 
-    const user_info = jwt.verify(req.body.token, secretObj);
-
-    // 해당 유저가 존재한다면 성공 response 보내고 없다면 실패 response 보내기 
-    User.findByPk(user_info.user_id)
-    .then(user=>{
-        if(user != undefined){
-            // 성공 json 보내기
-            res.send(JSON.stringify({
-                "success": true,
-                "statusCode" : 200,
-                "token" : req.body.token
-            }));
-        }
-        else {
-            // 실패 json 보내기
-            res.send(JSON.stringify({
-                "success": false,
-                "statusCode" : 202,
-                "token" : undefined
-            }));
-        }
-    })
-    .catch(err=>{console.log(err);})
-
-}
 
 // 로그인 Request 처리
 exports.userLogin = (req, res, next) => {
@@ -55,7 +25,7 @@ exports.userLogin = (req, res, next) => {
                 user_id : req.body.user_id,
                 user_password : req.body.user_password
             }
-            , secretObj
+            , secretObj.secret
             , { expiresIn: '365d'});
 
             // 성공 json 보내기
@@ -149,7 +119,7 @@ exports.userRegister = (req, res, next) => {
         let token = jwt.sign({
             user_id : req.body.user_id,
             user_password : req.body.user_password
-        }, secretObj, { expiresIn: '365d'});
+        }, secretObj.secret, { expiresIn: '365d'});
 
         // 성공 json 보내기
         res.send(JSON.stringify({
@@ -174,7 +144,7 @@ exports.userRegister = (req, res, next) => {
 // 유저의 정보를 가져다주는 함수
 exports.userRead = (req, res, next) => {
     // 토큰 복호화 
-    const user_info = jwt.verify(req.body.token, secretObj);
+    const user_info = jwt.verify(req.body.token, secretObj.secret);
 
     // 토큰 값으로 해당 유저 검색
     User.findByPk(user_info.user_id)
@@ -225,7 +195,7 @@ exports.userRead = (req, res, next) => {
 // 유저 정보 갱신 Request 처리
 exports.userUpdate = (req, res, next) => {
     // 토큰 복호화 
-    const user_info = jwt.verify(req.body.token, secretObj);
+    const user_info = jwt.verify(req.body.token, secretObj.secret);
 
     // request로 받은 비밀번호 해시화 
     const hashed_pw = crypto.createHash('sha256').update(req.body.user_password).digest('base64');
@@ -349,7 +319,7 @@ exports.userUpdate = (req, res, next) => {
 // 유저 삭제 Request 처리
 exports.userDelete = (req, res, next) => {
     // 토큰 복호화 
-    const user_info = jwt.verify(req.body.token, secretObj);
+    const user_info = jwt.verify(req.body.token, secretObj.secret);
 
     // 토큰 값으로 해당 유저 검색
     User.destroy({where: { user_id: user_info.user_id }})

@@ -6,7 +6,7 @@ const User_dibs = require('../models/dibs');
 // Importing Modules
 const request = require('request');
 let jwt = require("jsonwebtoken");
-let secretObj = process.env.JWT_SECRET
+let secretObj = require('../config/jwt');
 
 // 복지 정보 Create Request 처리 
 exports.createWelfare = (req, res, next) => {
@@ -45,7 +45,7 @@ exports.createWelfare = (req, res, next) => {
 // 복지 정보 Read Request 처리 
 exports.readWelfare = (req, res, next) => {
     // 토큰 복호화
-    const user_info = jwt.verify(req.body.token, secretObj);
+    const user_info = jwt.verify(req.body.token, secretObj.secret);
     
     // 해당 유저가 찜한 복지정보 User_dibs model에서 가져오기
     let isLiked = false;
@@ -105,7 +105,7 @@ exports.searchWelfare = (req, res, next) => {
     let welfare_num = 0;
 
     // 토큰 복호화
-    const user_info = jwt.verify(req.body.token, secretObj);
+    const user_info = jwt.verify(req.body.token, secretObj.secret);
     
     // 해당 유저가 찜한 복지정보 User_dibs model에서 가져오기
     let likedWelfareIds = [];
@@ -178,7 +178,7 @@ exports.searchWelfare = (req, res, next) => {
 */
 exports.recommendedWelfare = (req, res, next) => {
     // 토큰 복호화 
-    const user_info = jwt.verify(req.body.token, secretObj);
+    const user_info = jwt.verify(req.body.token, secretObj.secret);
 
     // 민규 서버로 Request 보내기 
     // Response로 도착한 추천복지 6개의 id의 전체 정보를 서버로부터 받아서 res로 전달

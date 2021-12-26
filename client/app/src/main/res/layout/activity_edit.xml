@@ -1,0 +1,573 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--parent layout -->
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/editPage"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".EditActivity"
+    android:orientation="vertical">
+
+    <!--main layout -->
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background = "#000000"
+        android:orientation="vertical">
+
+        <include layout = "@layout/toolbar_edit"/>
+
+        <FrameLayout
+            android:background="#00EC94"
+            android:id="@+id/content_layout"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1" >
+
+            <LinearLayout
+                android:layout_margin="10dp"
+                android:background="@drawable/design"
+                android:orientation="vertical"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+
+                <!-- 정보 수정 내역: -->
+
+                <ScrollView
+                    xmlns:android="http://schemas.android.com/apk/res/android"
+                    xmlns:tools="http://schemas.android.com/tools"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:orientation="vertical"
+                    android:id = "@+id/ScrollView">
+
+                    <LinearLayout
+                        android:layout_marginTop="20dp"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:orientation="vertical">
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginLeft="10dp"
+                            android:layout_marginRight="10dp"
+                            android:orientation="vertical">
+
+                            <TextView
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_marginLeft="5dp"
+                                android:layout_marginTop="5dp"
+                                android:layout_marginBottom="5dp"
+                                android:text = "Email"
+                                android:fontFamily="@font/cookie_run_font"
+                                android:textColor="@color/black"
+                                android:textSize="18sp">
+                            </TextView>
+
+                            <LinearLayout
+                                android:layout_width="match_parent"
+                                android:layout_height="50dp"
+                                android:background="@drawable/register_blank_design">
+
+                                <EditText
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content"
+                                    android:hint = "이메일"
+                                    android:layout_marginLeft="10dp"
+                                    android:textSize="20sp"
+                                    android:background="@null"
+                                    android:id = "@+id/et_email"
+                                    android:layout_gravity="center_vertical"
+                                    android:inputType="textEmailAddress">
+                                </EditText>
+
+                            </LinearLayout>
+
+                        </LinearLayout>
+
+                        <LinearLayout
+                            android:layout_marginTop="20dp"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginLeft="10dp"
+                            android:layout_marginRight="10dp"
+                            android:orientation="vertical">
+
+                            <TextView
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_marginLeft="5dp"
+                                android:layout_marginTop="5dp"
+                                android:layout_marginBottom="5dp"
+                                android:text = "Password"
+                                android:fontFamily="@font/cookie_run_font"
+                                android:textColor="@color/black"
+                                android:textSize="18sp">
+                            </TextView>
+
+                            <LinearLayout
+                                android:layout_width="match_parent"
+                                android:layout_height="50dp"
+                                android:background="@drawable/register_blank_design">
+
+                                <EditText
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content"
+                                    android:hint = "Password"
+                                    android:textSize="20sp"
+                                    android:layout_marginLeft="10dp"
+                                    android:background="@null"
+                                    android:id = "@+id/et_pwd"
+                                    android:layout_gravity="center_vertical"
+                                    android:inputType="textPassword">
+                                </EditText>
+
+                            </LinearLayout>
+
+                        </LinearLayout>
+
+
+                        <LinearLayout
+                            android:layout_marginTop="20dp"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginLeft="10dp"
+                            android:layout_marginRight="10dp"
+                            android:orientation="vertical">
+
+                            <TextView
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_marginLeft="5dp"
+                                android:layout_marginTop="5dp"
+                                android:layout_marginBottom="5dp"
+                                android:text = "성별"
+
+                                android:fontFamily="@font/cookie_run_font"
+                                android:textColor="@color/black"
+                                android:textSize="18sp">
+                            </TextView>
+
+                            <LinearLayout
+                                android:layout_width="match_parent"
+                                android:layout_height="50dp"
+                                android:orientation="horizontal">
+
+                                <RadioButton
+                                    android:layout_marginLeft="5dp"
+                                    android:layout_marginTop="10dp"
+                                    android:fontFamily="@font/cookie_run_font"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:id = "@+id/btn_male"
+                                    android:text="Male">
+
+                                </RadioButton>
+
+                                <RadioButton
+                                    android:layout_marginLeft="10dp"
+                                    android:layout_marginTop="10dp"
+                                    android:fontFamily="@font/cookie_run_font"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:id = "@+id/btn_female"
+                                    android:text="Female">
+                                </RadioButton>
+
+                            </LinearLayout>
+
+                        </LinearLayout>
+
+
+
+                        <LinearLayout
+                            android:layout_marginTop="20dp"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginLeft="10dp"
+                            android:layout_marginRight="10dp"
+                            android:orientation="vertical">
+
+                            <TextView
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_marginLeft="5dp"
+                                android:layout_marginTop="5dp"
+                                android:layout_marginBottom="5dp"
+                                android:text = "소득분위"
+
+                                android:fontFamily="@font/cookie_run_font"
+                                android:textColor="@color/black"
+                                android:textSize="18sp">
+                            </TextView>
+
+                            <FrameLayout
+                                android:layout_width="match_parent"
+                                android:layout_height="50dp">
+
+                                <TextView
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content"
+                                    android:id = "@+id/spinner_tv"
+                                    android:textSize = "18sp"
+                                    android:layout_marginLeft="10dp"
+                                    android:layout_marginTop = "10dp"
+                                    >
+                                </TextView>
+
+                                <Spinner
+                                    android:layout_marginTop = "10dp"
+                                    android:layout_marginLeft="10dp"
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content"
+                                    android:id = "@+id/spinner"
+                                    android:layout_gravity="center_vertical">
+                                </Spinner>
+
+                            </FrameLayout>
+
+                        </LinearLayout>
+
+
+                        <LinearLayout
+                            android:layout_marginTop="20dp"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginLeft="10dp"
+                            android:layout_marginRight="10dp"
+                            android:orientation="vertical">
+
+                            <TextView
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_marginLeft="5dp"
+                                android:layout_marginTop="5dp"
+                                android:layout_marginBottom="5dp"
+                                android:text = "주소"
+                                android:fontFamily="@font/cookie_run_font"
+                                android:textColor="@color/black"
+                                android:textSize="18sp">
+                            </TextView>
+
+                            <LinearLayout
+                                android:layout_width="match_parent"
+                                android:layout_height="50dp"
+                                android:orientation="horizontal">
+
+                                <LinearLayout
+                                    android:layout_width="match_parent"
+                                    android:layout_height="match_parent"
+                                    android:layout_weight="1">
+
+
+                                    <FrameLayout
+                                        android:layout_width="match_parent"
+                                        android:layout_height="match_parent">
+
+                                        <TextView
+                                            android:layout_width="match_parent"
+                                            android:layout_height="wrap_content"
+                                            android:id = "@+id/addSpinner_tv1"
+                                            android:textSize = "18sp"
+                                            android:layout_marginLeft="10dp"
+                                            android:layout_marginTop = "10dp"
+                                            >
+                                        </TextView>
+
+                                        <Spinner
+                                            android:layout_marginTop = "10dp"
+                                            android:layout_marginLeft="10dp"
+                                            android:layout_width="match_parent"
+                                            android:layout_height="wrap_content"
+                                            android:id = "@+id/spinner_add1"
+                                            android:layout_gravity="center_vertical">
+                                        </Spinner>
+
+                                    </FrameLayout>
+
+
+                                </LinearLayout>
+
+                                <LinearLayout
+                                    android:layout_width="match_parent"
+                                    android:layout_height="match_parent"
+                                    android:layout_weight="1">
+
+                                    <FrameLayout
+                                        android:layout_width="match_parent"
+                                        android:layout_height="match_parent">
+
+                                        <TextView
+                                            android:layout_width="match_parent"
+                                            android:layout_height="wrap_content"
+                                            android:id = "@+id/addSpinner_tv2"
+                                            android:textSize = "18sp"
+                                            android:layout_marginLeft="10dp"
+                                            android:layout_marginTop = "10dp"
+                                            >
+                                        </TextView>
+
+                                        <Spinner
+                                            android:layout_marginTop = "10dp"
+                                            android:layout_marginLeft="10dp"
+                                            android:layout_width="match_parent"
+                                            android:layout_height="wrap_content"
+                                            android:id = "@+id/spinner_add2"
+                                            android:layout_gravity="center_vertical">
+                                        </Spinner>
+
+                                    </FrameLayout>
+
+                                </LinearLayout>
+
+                            </LinearLayout>
+
+                        </LinearLayout>
+
+
+
+                        <LinearLayout
+                            android:layout_marginTop="20dp"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginLeft="10dp"
+                            android:layout_marginRight="10dp"
+                            android:orientation="vertical">
+
+                            <TextView
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_marginLeft="5dp"
+                                android:layout_marginTop="5dp"
+                                android:layout_marginBottom="5dp"
+                                android:text = "보훈대상"
+                                android:fontFamily="@font/cookie_run_font"
+                                android:textColor="@color/black"
+                                android:textSize="18sp">
+                            </TextView>
+
+                            <LinearLayout
+                                android:layout_width="match_parent"
+                                android:layout_height="50dp"
+                                android:orientation="horizontal">
+
+                                <RadioButton
+                                    android:layout_marginLeft="5dp"
+                                    android:layout_marginTop="10dp"
+                                    android:fontFamily="@font/cookie_run_font"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:id = "@+id/btn_true"
+                                    android:text="Y">
+
+                                </RadioButton>
+
+                                <RadioButton
+                                    android:layout_marginLeft="10dp"
+                                    android:layout_marginTop="10dp"
+                                    android:fontFamily="@font/cookie_run_font"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:id = "@+id/btn_false"
+                                    android:text="N">
+                                </RadioButton>
+
+                            </LinearLayout>
+
+                        </LinearLayout>
+
+
+
+
+                        <LinearLayout
+                            android:layout_marginTop="20dp"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginLeft="10dp"
+                            android:layout_marginRight="10dp"
+                            android:orientation="vertical">
+
+                            <TextView
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_marginLeft="5dp"
+                                android:layout_marginTop="5dp"
+                                android:layout_marginBottom="5dp"
+                                android:text = "가족관계"
+
+                                android:fontFamily="@font/cookie_run_font"
+                                android:textColor="@color/black"
+                                android:textSize="18sp">
+                            </TextView>
+
+                            <FrameLayout
+                                android:layout_width="match_parent"
+                                android:layout_height="50dp">
+
+                                <TextView
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content"
+                                    android:id = "@+id/frSpinner_tv"
+                                    android:textSize = "18sp"
+                                    android:layout_marginLeft="10dp"
+                                    android:layout_marginTop = "10dp"
+                                    >
+                                </TextView>
+
+                                <Spinner
+                                    android:layout_marginTop = "10dp"
+                                    android:layout_marginLeft="10dp"
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content"
+                                    android:id = "@+id/spinner_fr"
+                                    android:layout_gravity="center_vertical">
+                                </Spinner>
+
+                            </FrameLayout>
+
+                        </LinearLayout>
+
+
+                        <LinearLayout
+                            android:layout_marginTop="20dp"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginLeft="10dp"
+                            android:layout_marginRight="10dp"
+                            android:orientation="vertical">
+
+                            <TextView
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_marginLeft="5dp"
+                                android:layout_marginTop="5dp"
+                                android:layout_marginBottom="5dp"
+                                android:text = "생애주기"
+
+                                android:fontFamily="@font/cookie_run_font"
+                                android:textColor="@color/black"
+                                android:textSize="18sp">
+                            </TextView>
+
+                            <FrameLayout
+                                android:layout_width="match_parent"
+                                android:layout_height="50dp">
+
+                                <TextView
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content"
+                                    android:id = "@+id/lcSpinner_tv"
+                                    android:textSize = "18sp"
+                                    android:layout_marginLeft="10dp"
+                                    android:layout_marginTop = "10dp"
+                                    >
+                                </TextView>
+
+                                <Spinner
+                                    android:layout_marginTop = "10dp"
+                                    android:layout_marginLeft="10dp"
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content"
+                                    android:id = "@+id/spinner_lc"
+                                    android:layout_gravity="center_vertical">
+                                </Spinner>
+
+                            </FrameLayout>
+
+                        </LinearLayout>
+
+
+
+
+                        <LinearLayout
+                            android:layout_marginTop="20dp"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginLeft="10dp"
+                            android:layout_marginRight="10dp"
+                            android:orientation="vertical">
+
+                            <TextView
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_marginLeft="5dp"
+                                android:layout_marginTop="5dp"
+                                android:layout_marginBottom="5dp"
+                                android:text = "장애여부"
+
+                                android:fontFamily="@font/cookie_run_font"
+                                android:textColor="@color/black"
+                                android:textSize="18sp">
+                            </TextView>
+
+                            <FrameLayout
+                                android:layout_width="match_parent"
+                                android:layout_height="50dp">
+
+                                <TextView
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content"
+                                    android:id = "@+id/obsSpinner_tv"
+                                    android:textSize = "18sp"
+                                    android:layout_marginLeft="10dp"
+                                    android:layout_marginTop = "10dp"
+                                    >
+                                </TextView>
+
+                                <Spinner
+                                    android:layout_marginTop = "10dp"
+                                    android:layout_marginLeft="10dp"
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content"
+                                    android:id = "@+id/spinner_obs"
+                                    android:layout_gravity="center_vertical">
+                                </Spinner>
+
+                            </FrameLayout>
+
+                        </LinearLayout>
+
+                        <LinearLayout
+                            android:layout_marginTop="10dp"
+                            android:gravity="center_horizontal"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content">
+
+                            <Button
+                                android:id="@+id/btn_edit"
+                                android:layout_width="250dp"
+                                android:layout_height="wrap_content"
+                                android:text="저장하기"
+                                android:textColor="@color/white"
+                                android:textSize="18sp"
+                                android:background = "@drawable/btn_design"
+                                android:fontFamily="@font/cookie_run_font"
+                                app:layout_constraintLeft_toLeftOf="parent"
+                                app:layout_constraintRight_toRightOf="parent"
+                                app:layout_constraintBottom_toBottomOf="parent"
+                                android:layout_marginBottom="30dp"
+                                />
+                        </LinearLayout>
+
+                    </LinearLayout>
+
+                </ScrollView>
+            </LinearLayout>
+        </FrameLayout>
+
+        <com.google.android.material.bottomnavigation.BottomNavigationView
+            android:id="@+id/nav_view"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="?android:attr/windowBackground"
+            app:labelVisibilityMode="labeled"
+            app:menu="@menu/bottom_nav" />
+
+    </LinearLayout>
+
+</LinearLayout>

@@ -7,32 +7,19 @@
     android:layout_height="match_parent"
     tools:context=".MapActivity"
     android:orientation="vertical">
+
     <!--main layout -->
     <fragment
-        app:layout_constrainedHeight="true"
-        app:layout_constraintBottom_toTopOf="@+id/nav_view"
+        app:layout_constraintBottom_toTopOf="@id/nav_view"
         app:layout_constraintTop_toTopOf="parent"
         android:id="@+id/googleMap"
         class="com.google.android.gms.maps.MapFragment"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="780dp"
         tools:layout_editor_absoluteX="0dp"
         tools:layout_editor_absoluteY="-128dp" />
 
-    <ImageButton
-        android:id = "@+id/btn_current_position"
-        android:layout_width="42dp"
-        android:layout_height="42dp"
-        app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        android:layout_marginTop="20dp"
-        android:layout_marginRight="20dp"
-        android:translationZ="999dp"
-        android:src = "@drawable/ic_gps"
-        android:background="@drawable/btn_design_current_position"/>
-
     <androidx.constraintlayout.widget.ConstraintLayout
-        android:id="@+id/map_btn_container"
         android:layout_width="350dp"
         android:layout_height="225dp"
         android:background="@drawable/btn_container_map"
@@ -43,20 +30,7 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintVertical_bias="0.865"
         >
-        <ToggleButton
-            android:contentDescription="버튼 상자 펼치기 혹은 숨기기"
-            android:layout_width="36dp"
-            android:layout_height="36dp"
-            android:src="@drawable/ic_arrow_up"
-            android:id="@+id/toggle_display"
-            android:textOn=""
-            android:textOff=""
-            android:layout_marginRight="16dp"
-            android:layout_marginTop="8dp"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintRight_toRightOf="parent"
-            android:background="@drawable/map_toggle_button_display_selector"
-            />
+
         <TextView
             android:id="@+id/textView"
             android:layout_width="wrap_content"
@@ -204,7 +178,6 @@
     </androidx.constraintlayout.widget.ConstraintLayout>
 
     <com.google.android.material.bottomnavigation.BottomNavigationView
-        app:layout_constraintTop_toBottomOf="@+id/googleMap"
         app:layout_constraintBottom_toBottomOf="parent"
         android:id="@+id/nav_view"
         android:layout_width="match_parent"

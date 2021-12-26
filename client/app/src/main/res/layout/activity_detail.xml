@@ -5,21 +5,20 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@android:color/transparent"
-    tools:context=".DetailActivity"
-    android:orientation="vertical"
-    >
+    android:background="@color/white"
+    tools:context=".DetailActivity">
+
     <include layout = "@layout/toolbar_info_detail"/>
+
     <ImageView
         android:id="@+id/welfare_info_img"
-        android:layout_width="match_parent"
+        android:layout_width="420dp"
         android:layout_height="275dp"
         android:foregroundGravity="center"
         android:src="@drawable/detail_picture"
         app:layout_constraintTop_toTopOf="parent"
         tools:ignore="MissingConstraints"
-        tools:layout_editor_absoluteX="-5dp"
-        />
+        tools:layout_editor_absoluteX="-5dp" />
 
     <ToggleButton
         android:layout_marginBottom="15dp"
@@ -51,9 +50,8 @@
         android:layout_height="wrap_content"/>
 
     <LinearLayout
-        app:layout_constrainedHeight="true"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="450dp"
         app:layout_constraintBottom_toTopOf="@id/btn_sign"
         app:layout_constraintTop_toBottomOf="@id/welfare_info_img">
 

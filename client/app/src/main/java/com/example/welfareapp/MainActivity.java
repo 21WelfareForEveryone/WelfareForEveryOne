@@ -91,8 +91,6 @@ public class MainActivity extends AppCompatActivity {
         Bundle bundle = getIntent().getExtras();
         String token = bundle.getString("token");
 
-        Log.v("MainActivity bundle", bundle.toString());
-
         RecyclerView RV_category = (RecyclerView)findViewById(R.id.RV_category);
         categoryList = new ArrayList<>();
 

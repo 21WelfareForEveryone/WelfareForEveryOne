@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.cardview.widget.CardView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app = "http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="100dp"
+    android:layout_margin="5dp"
+
+    >
+
+    <LinearLayout
+        android:background="@drawable/design"
+        android:padding = "5dp"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="horizontal">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_weight="2"
+            android:gravity = "center"
+            >
+
+            <ImageView
+                android:layout_width="60dp"
+                android:layout_height="60dp"
+                android:src = "@drawable/theme_edu"
+                android:layout_gravity="center"
+                >
+            </ImageView>
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            >
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:id = "@+id/welfare_title"
+                android:text = "복지 정보 제목(예시: 주거안정 월세대출)"
+                android:gravity="center"
+                android:textColor="@color/black"
+                android:fontFamily="@font/cookie_run_font"
+                >
+            </TextView>
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_weight="2"
+            >
+
+            <ToggleButton
+                android:textColor="@color/white"
+                android:layout_gravity="center"
+                android:background="@drawable/toggle_onoff"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content">
+
+            </ToggleButton>
+
+        </LinearLayout>
+
+    </LinearLayout>
+</androidx.cardview.widget.CardView>
