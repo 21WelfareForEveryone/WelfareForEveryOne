@@ -5,12 +5,12 @@ const Welfare_category = require('../models/welfare_category');
 
 // Import modules
 let jwt = require("jsonwebtoken"); 
-let secretObj = require("../config/jwt"); 
+let secretObj = process.env.JWT_SECRET
 
 // 찜 Create Request 처리
 exports.createDibs = (req, res, next) => {
     // 토큰 복호화 
-    const user_info = jwt.verify(req.body.token, secretObj.secret);
+    const user_info = jwt.verify(req.body.token, secretObj);
 
     // 사용자가 찜에 추가하고 싶어하는 welfare id를 likedWelfareIds에 저장
     let likedWelfareIds = [];
@@ -97,7 +97,7 @@ exports.createDibs = (req, res, next) => {
 // 찜 Read Request 처리
 exports.readDibs = (req, res, next) =>  {
     // 토큰 복호화 
-    const user_info = jwt.verify(req.body.token, secretObj.secret);
+    const user_info = jwt.verify(req.body.token, secretObj);
 
     // 현재 사용자가 찜한 welfare id를 likedWelfareIds에 저장 
     let likedWelfareIds = [];
@@ -165,7 +165,7 @@ exports.readDibs = (req, res, next) =>  {
 // 찜 데이터 삭제
 exports.deleteDibs = (req, res, next) => {
     // 토큰 복호화 
-    const user_info = jwt.verify(req.body.token, secretObj.secret);
+    const user_info = jwt.verify(req.body.token, secretObj);
     let likedWelfareIds = [];
     // User_dibs 모델에서 해당 유저 id와 welfare_id를 가진 인스턴스 삭제
     User_dibs.destroy({

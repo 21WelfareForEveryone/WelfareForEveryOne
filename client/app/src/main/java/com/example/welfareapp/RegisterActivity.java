@@ -17,12 +17,17 @@ import android.widget.RadioGroup;
 import android.widget.Spinner;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.android.volley.Request;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.FirebaseApp;
+import com.google.firebase.messaging.FirebaseMessaging;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -84,10 +89,42 @@ public class RegisterActivity extends AppCompatActivity {
 
     int interest;
 
+    // Firebase Push Notification
+    private static final String TAG = "RegisterActivity Firebase Push Token Process";
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_register);
+
+        // Firebase App Process to get token(11.27 added)
+        FirebaseApp.initializeApp(getApplicationContext());
+        try{
+            FirebaseMessaging.getInstance().getToken()
+                    .addOnCompleteListener(new OnCompleteListener<String>() {
+                        @Override
+                        public void onComplete(@NonNull Task<String> task) {
+                            if (!task.isSuccessful()) {
+                                Log.w(TAG, "Fetching FCM registration token failed", task.getException());
+                                return;
+                            }
+                            String token = task.getResult();
+                            String msg = getString(R.string.msg_token_fmt, token);
+
+                            SharedPreferences sharedPreferences = getSharedPreferences("user_info", MODE_PRIVATE);
+                            SharedPreferences.Editor editor= sharedPreferences.edit();
+                            editor.putString("token_firebase", token);
+                            editor.commit();
+
+                            Log.d(TAG, msg);
+                            Log.v(TAG, msg);
+                        }
+                    });
+        }
+        catch(Exception err){
+            err.printStackTrace();
+            Log.v("FirebaseApp error on RegisterActivity", err.getMessage());
+        }
 
         // agreement
 
@@ -333,9 +370,14 @@ public class RegisterActivity extends AppCompatActivity {
 
                 int user_interest = interest;
 
+                /* 파이어베이스 토큰 추가 (11.27) */
+                SharedPreferences sharedPreferences= getSharedPreferences("user_info", MODE_PRIVATE);
+                String token_firebase = sharedPreferences.getString("token_firebase", "");
+                Log.v("RegisterActivity token_firebase", token_firebase);
+
                 registerUser(user_name, user_id, user_password, user_gender,
                         user_income, user_address, user_life_cycle, user_is_multicultural,
-                        user_is_one_parent, user_is_disabled, user_interest);
+                        user_is_one_parent, user_is_disabled, user_interest, token_firebase);
 
                 new Handler().postDelayed(
                         new Runnable() {
@@ -382,9 +424,9 @@ public class RegisterActivity extends AppCompatActivity {
 
     private void registerUser(String user_name, String user_id, String user_password, int user_gender,
                               int user_income, String user_address, int user_life_cycle, int user_is_multicultural,
-                              int user_is_one_parent, int user_is_disabled, int user_interest){
+                              int user_is_one_parent, int user_is_disabled, int user_interest, String token_firebase){
 
-        String token_firebase = "";
+        // String token_firebase = "";
 
         // log list for variable request check
         Log.v("user_name_check", "user_name: " + user_name);
@@ -414,7 +456,7 @@ public class RegisterActivity extends AppCompatActivity {
             params.put("user_is_one_parent", user_is_one_parent);
             params.put("user_is_disabled", user_is_disabled);
             params.put("user_interest", user_interest);
-            params.put("token_firebase",token_firebase);
+            params.put("token_firebase", token_firebase);
 
             Log.v("Register params input process","success");
         }
@@ -422,6 +464,8 @@ public class RegisterActivity extends AppCompatActivity {
             e.printStackTrace();
             Log.v("Register params input process","failed");
         }
+
+        Log.v("RegisterActivity params", params.toString());
 
         SharedPreferences sharedPreferences = getSharedPreferences("user_info", MODE_PRIVATE);
         SharedPreferences.Editor editor= sharedPreferences.edit();
