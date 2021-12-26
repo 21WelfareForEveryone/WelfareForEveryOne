@@ -8,9 +8,6 @@ let jwt = require("jsonwebtoken");
 let secretObj = process.env.JWT_SECRET
 let request = require('request');
 
-// Server IP Info (Private IP)
-const serverURL = "http://172.30.1.57:3000"
-
 /*
 Chatbot Server API 
 
@@ -59,7 +56,7 @@ exports.getResponse = (req, res, next) =>{
 
     // send Request to kmg2933
     const options = {
-        uri: 'http://10.178.0.10:4000/chatbot',
+        uri: 'http://localhost:4000/chatbot',
         method: 'POST',
         json: {
             "message" : user_message,
@@ -121,7 +118,7 @@ exports.getResponse = (req, res, next) =>{
                 if (kmgResponse.type == 'message' && kmgResponse.message == '360') {
                     // send Request to kobert
                     const optionsKobert = {
-                        uri: 'http://10.178.0.10:5000/sebert',
+                        uri: 'http://localhost:5000/sebert',
                         method: 'POST',
                         json: {
                             "query" : user_message,
