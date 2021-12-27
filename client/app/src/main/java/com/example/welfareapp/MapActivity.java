@@ -645,8 +645,6 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
                 }
             }
         });
-
-
     }
     public class DownloadUrl{
         public String getUrl(String placeType, int searchRadius, String placeAPIKey, LatLng position){
