@@ -28,10 +28,6 @@ from preprocess import preprocess1, preprocess2
 
 
 page_num=19
-#page=1
-#block=1
-
-
 df=pd.DataFrame(columns=['title', 'summary', 'who', 'criteria', 'what', 'how', 'calls', 'sites','category'])
 df_check=pd.DataFrame(columns=['page', 'block'])
 
@@ -42,7 +38,6 @@ for try_num in range(5):
     options = webdriver.ChromeOptions()
     options.add_argument('window-size=1920,1080')
     options.add_experimental_option('excludeSwitches', ['enable-logging'])
-    #options.add_argument('--use-gl=desktop')
     
     driver_path=os.getcwd()+'\chromedriver.exe'
     driver = webdriver.Chrome(driver_path, options=options) #ChromeDriverManager().install()
@@ -128,7 +123,6 @@ for try_num in range(5):
             try:
                 # page 당 10개씩 있는 정책 가져오기
                 for block in tqdm(range(1,11),mininterval=1):
-                    #print("page :", page, "block :", block, "시작합니다" )
                     # category를 찾아서 들어가기
                     path='//*[@id="contents"]/div[4]/ul/li['+str(block)+']/div/a[2]'
                     category = driver.find_element_by_xpath(path)
@@ -151,7 +145,7 @@ for try_num in range(5):
                     #     category_name='//*[@id="catRightColor"]/li['+str(div_3)+']/a/span'
                     
                     
-                    # title 가져오기
+                    # title
                     title=soup.select_one('#contents > div.bokjiDetailWrap > h4 > span')
                     title=title.get_text()
                     if title=='학교정보': #다른 링크로 가는 사이트
@@ -240,7 +234,6 @@ for try_num in range(5):
                     new_welfare_list=[(title, summary, who, criteria, what, how, call, site, category_name)]
                     dfNew= pd.DataFrame(new_welfare_list, columns=['title', 'summary', 'who', 'criteria', 'what', 'how', 'calls', 'sites','category'])
                     df=df.append(dfNew, ignore_index=True)
-                    #print("page :", page, "block :", block, "저장합니다" )
                     df_checkNew= pd.DataFrame([(page, block)], columns=['page', 'block'])
                     df_check=df_check.append(df_checkNew, ignore_index=True)
 
@@ -255,23 +248,12 @@ for try_num in range(5):
 
     #return df
 
-
-
-
-# 중복된 값 확인하기
-
-len(df)
-len(df.drop_duplicates(['title'],keep='first')) #356개
-
-len(df_check)
-len(df_check.drop_duplicates(['page', 'block'], keep='first'))
-
 # 중복된 값들 유일하게 만들기
 df=df.drop_duplicates(['title'],keep='first')
 
 # 크롤링 끝날 때까지 보존하기
 import copy
-df_copy=copy.deepcopy(df) #임신출산, 영유아
+df_copy=copy.deepcopy(df)
 
 # category를 db에 맞게 int로 바꿔주기
 def category_to_int(x):
@@ -290,41 +272,20 @@ def category_to_int(x):
     elif x=="건강" : return 12
     elif x=="교육" : return 13
 
-#df['category']=df['category'].apply(lambda x: 0 if x=="임신·출산" else 1)
 df['category']=df['category'].apply(lambda x: category_to_int(x))
-df.info()
 df['category']=df.category.astype(int)
 df['category']=df.category.astype(str)
-#df.to_csv("임신출산영유아.csv", index=False, encoding='utf-8-sig')
-#df_check.to_csv("임신출산영유아_확인.csv", index=False, encoding='utf-8-sig' )
+
 
 # db에 dataframe 저장
-os.chdir("./crawler")
 import config
-
-
-# now we establish our connection
 cnxn = mysql.connector.connect(**config.DATABASE_CONFIG)
 cursor = cnxn.cursor(prepared=True)
 
-## welfare commit
-#query = ("""INSERT INTO welfare (title, summary) VALUES (%s, %s)""") #table name 바꾸는 거 기억하기
-#input_data=[tuple(x) for x in result_final.to_records(index=False)]
-#cursor.executemany(query, input_data) #error 나는 이유가 tuple이 아니라 numpy.record이기 때문
-#
-#cnxn.commit()  # and commit changes
-#cnxn.close() 
-
 result_final=copy.deepcopy(df) 
-# welfare_detail commit
-query = ("""INSERT INTO welfare (title, summary, who,criteria, what, how, calls, sites, category) VALUES (%s, %s, %s, %s, %s, %s,  %s,  %s, %s)""") #table name 바꾸는 거 기억하기
+query = ("""INSERT INTO welfare (title, summary, who,criteria, what, how, calls, sites, category) VALUES (%s, %s, %s, %s, %s, %s,  %s,  %s, %s)""") 
 input_data=[tuple(x) for x in result_final.to_records(index=False)]
-cursor.executemany(query, input_data) #error 나는 이유가 tuple이 아니라 numpy.record이기 때문
+cursor.executemany(query, input_data) 
 
-cnxn.commit()  # and commit changes
+cnxn.commit() 
 cnxn.close() 
-
-result_final.to_csv("크롤링최종1.csv", index=False)
-
-
-

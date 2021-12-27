@@ -57,7 +57,6 @@ import com.google.android.libraries.places.api.net.FindCurrentPlaceResponse;
 import com.google.android.libraries.places.api.net.PlacesClient;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.slider.Slider;
-
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -122,6 +121,7 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
 
     // 검색 목록 저장 array
     private List<HashMap<String, String>> placeList = new ArrayList<>();
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -256,8 +256,9 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
             public void onStopTrackingTouch(SeekBar seekBar) {
             }
         });
-        DownloadUrl downloadUrl = new DownloadUrl();
 
+        DownloadUrl downloadUrl = new DownloadUrl();
+      
         findViewById(R.id.map_button_1).setOnClickListener(
                 new Button.OnClickListener() {
                     public void onClick(View v) {

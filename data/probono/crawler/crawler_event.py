@@ -90,15 +90,12 @@ for _ in range(3):
             if 30>=all_page>15: 
                 next_button_path = '/html/body/div[1]/div[1]/div/div[3]/div/div/div/div[3]/div/div/div/div[2]/div/div/div/div[3]/div/div/div/div[3]/div/div/div/div[3]/div/div/div/div[2]/div/div/div/div[2]/div/div/div/div[4]/div/div/div/div[2]/div/div/div/div[3]'
                 clickButton(driver, next_button_path, "다음 페이지 버튼")
-                print("success")
             if all_page==33: 
                 print("----done------")
                 break
             if all_page>30:
                 clickButton(driver, next_button_path, "다음 페이지 버튼")
-                print("success")
                 clickButton(driver, next_button_path, "다음 페이지 버튼")
-                print("success")
             time.sleep(3)
             page_path = '/html/body/div[1]/div[1]/div/div[3]/div/div/div/div[3]/div/div/div/div[2]/div/div/div/div[3]/div/div/div/div[3]/div/div/div/div[3]/div/div/div/div[2]/div/div/div/div[2]/div/div/div/div[4]/div/div/div/div[2]/div/div/div/div[2]/div['+str(page)+']/div/div'
             clickButton(driver, page_path, "해당 페이지로 가기")
@@ -137,7 +134,6 @@ for _ in range(3):
                 detail_button_path = '/html/body/div[1]/div[1]/div/div[3]/div/div/div/div[3]/div/div/div/div[2]/div/div/div/div[3]/div/div/div/div[3]/div/div/div/div[3]/div/div/div/div[2]/div/div/div/div[2]/div/div/div/div[2]/div/div/div/div['+str(idx)+']/div/div/div[5]/div/a/div'
                 detail_button= driver.find_element_by_xpath(detail_button_path)
                 driver.execute_script("arguments[0].click();", detail_button)
-                #detail_button.click()
                 driver.implicitly_wait(10)
             except:
                 print("----------오류 --자세히보기----------")
@@ -157,13 +153,6 @@ for _ in range(3):
             what = findInfo(driver, what_path, "what")
             what = preprocess1(what)
 
-            # calls
-            # time.sleep(3)
-            # calls_path = '/html/body/div[1]/div[1]/div/div[3]/div/div/div/div[3]/div/div/div/div[2]/div/div/div/div[2]/div/div/div/div[3]/div/div/div/div[5]/div/div/div[3]/div/div/div/div/div/div/div[4]/div/div/div'
-            # result = driver.find_element_by_xpath(calls_path).text
-            # calls = findInfo(driver, calls_path, "calls")
-            # print(calls)
-
             if title!='해당없음' and title:
                 new_welfare_list=[(title, summary,who, what, classification ,start_date, end_date )]
                 dfNew= pd.DataFrame(new_welfare_list, columns=['title', 'summary', 'who', 'what',  'category','start_date', 'end_date' ])
@@ -175,7 +164,6 @@ for _ in range(3):
             print("-----------idx:", idx, "done--------------");
 
 welfare_df_copy = welfare_df
-
 
 welfare_df = welfare_df.drop_duplicates(keep='first', ignore_index=True)
 welfare_df = welfare_df.drop_duplicates(['title'], keep='first', ignore_index=True)
