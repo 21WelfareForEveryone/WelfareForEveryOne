@@ -14,6 +14,7 @@ public class URLs {
     * url_welfare_search : user의 카테고리별 복지 리스트 호출
     * url_welfare_recommend : user의 추천 복지 리스트 호출
     * url_welfare_read : 복지 정보 검색
+    * url_session : 사용자 자동 로그인
     * */
 
     private static final String root_url = "http://34.64.172.165";
@@ -32,5 +33,6 @@ public class URLs {
     public static final String url_push_getInfo = root_url + "/push/getinfo";
     public static final String url_push_toggle = root_url + "/push/toggle";
     public static final String url_push_getPushAlarm = root_url + "/push/getPushAlarm";
+    public static final String url_session = root_url + "/rest/user/session";
 
 }

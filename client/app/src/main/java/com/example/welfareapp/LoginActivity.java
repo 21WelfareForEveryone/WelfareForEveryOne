@@ -54,6 +54,39 @@ public class LoginActivity extends AppCompatActivity {
             AppHelper.requestQueue = Volley.newRequestQueue(getApplicationContext());
         }
 
+        // Firebase Token
+        FirebaseApp.initializeApp(getApplicationContext());
+        try{
+            FirebaseMessaging.getInstance().getToken()
+                    .addOnCompleteListener(new OnCompleteListener<String>() {
+                        @Override
+                        public void onComplete(@NonNull Task<String> task) {
+                            if (!task.isSuccessful()) {
+                                Log.w(TAG, "Fetching FCM registration token failed", task.getException());
+                                return;
+                            }
+                            String token = task.getResult();
+                            String msg = getString(R.string.msg_token_fmt, token);
+
+                            SharedPreferences sharedPreferences = getSharedPreferences("user_info", MODE_PRIVATE);
+                            SharedPreferences.Editor editor= sharedPreferences.edit();
+                            editor.putString("token_firebase", token);
+                            editor.commit();
+                            Log.d(TAG, msg);
+                            Log.v(TAG, msg);
+                        }
+                    });
+        }
+        catch(Exception err){
+            err.printStackTrace();
+            Log.v("FirebaseApp error on LoginActivity", err.getMessage());
+            SharedPreferences sharedPreferences = getSharedPreferences("user_info", MODE_PRIVATE);
+            SharedPreferences.Editor editor= sharedPreferences.edit();
+            editor.putString("token_firebase", "");
+            editor.commit();
+        }
+
+
         et_id = findViewById(R.id.et_Id);
         et_pwd = findViewById(R.id.et_pwd);
         Button btn_login = (Button)findViewById(R.id.btn_login);
@@ -128,9 +161,12 @@ public class LoginActivity extends AppCompatActivity {
         SharedPreferences sharedPreferences = getSharedPreferences("user_info", MODE_PRIVATE);
         SharedPreferences.Editor editor= sharedPreferences.edit();
 
+        final String token_firebase = sharedPreferences.getString("token_firebase","");
+
         try{
             params.put("user_id", id);
             params.put("user_password", pwd);
+            params.put("token_firebase", token_firebase);
             Log.v("params complete: ", "true");
         }
         catch(JSONException e){
@@ -148,38 +184,6 @@ public class LoginActivity extends AppCompatActivity {
             et_pwd.requestFocus();
             return;
         }
-
-        /*
-        // Firebase App Process to get token(11.27 added)
-        FirebaseApp.initializeApp(getApplicationContext());
-        try{
-            FirebaseMessaging.getInstance().getToken()
-                    .addOnCompleteListener(new OnCompleteListener<String>() {
-                        @Override
-                        public void onComplete(@NonNull Task<String> task) {
-                            if (!task.isSuccessful()) {
-                                Log.w(TAG, "Fetching FCM registration token failed", task.getException());
-                                editor.putString("token_firebase", "");
-                                editor.commit();
-                                return;
-                            }
-                            String token = task.getResult();
-                            String msg = getString(R.string.msg_token_fmt, token);
-                            editor.putString("token_firebase", token);
-                            editor.commit();
-                            Log.d(TAG, msg);
-                            Log.v(TAG, msg);
-                        }
-                    });
-        }
-        catch(Exception err){
-            err.printStackTrace();
-            editor.putString("token_firebase", "");
-            editor.commit();
-            Log.v("FirebaseApp error on LoginActivity", err.getMessage());
-        }
-
-         */
 
         final JsonObjectRequest jsonRequest = new JsonObjectRequest(Request.Method.POST, com.example.welfareapp.URLs.url_login, params, new Response.Listener<JSONObject>(){
             @Override

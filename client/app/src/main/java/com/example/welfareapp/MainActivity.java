@@ -56,36 +56,6 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        // Firebase App init
-        FirebaseApp.initializeApp(getApplicationContext());
-
-        try{
-            // Firebase Message Receiver : Error 발생(10.31)
-            FirebaseMessaging.getInstance().getToken()
-                    .addOnCompleteListener(new OnCompleteListener<String>() {
-                        @Override
-                        public void onComplete(@NonNull Task<String> task) {
-                            if (!task.isSuccessful()) {
-                                Log.w(TAG, "Fetching FCM registration token failed", task.getException());
-                                return;
-                            }
-
-                            // Get new FCM registration token
-                            String token = task.getResult();
-
-                            // Log and toast
-                            String msg = getString(R.string.msg_token_fmt, token);
-                            Log.d(TAG, msg);
-                            Log.v(TAG, msg);
-                            //Toast.makeText(MainActivity.this, msg, Toast.LENGTH_SHORT).show();
-                        }
-                    });
-        }
-        catch(Exception err){
-            err.printStackTrace();
-            Log.v("FirebaseApp error", err.getMessage());
-        }
-
         // bundle loaded
 
         Bundle bundle = getIntent().getExtras();
