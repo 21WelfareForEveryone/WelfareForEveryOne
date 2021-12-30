@@ -43,53 +43,59 @@ exports.userSession = (req, res, next) => {
 // 로그인 Request 처리
 exports.userLogin = (req, res, next) => {
     // request로 받은 비밀번호 해시화 
-    const hashed_pw = crypto.createHash('sha256').update(req.body.user_password).digest('base64');
+    const password = req.body.user_password;
+    let encrypt = new Promise((resolve, rejects) => {
+        resolve(crypto.createHash('sha256').update(password).digest('base64'));
+    })
 
-    // id로 해당 아이디를 가진 데이터를 db에서 찾기
-    User.findByPk(req.body.user_id).then(user=>{
-        // id, pw 일차하는 유저가 있다면 jwt token 생성 뒤 성공 json 보내기
-        if (req.body.user_id == user.user_id && hashed_pw == user.user_password){
-            // 토큰 생성 
-            let token = jwt.sign({
-                user_id : req.body.user_id,
-                user_password : req.body.user_password
+    encrypt
+    .then(hashed_pw => {
+        // id로 해당 아이디를 가진 데이터를 db에서 찾기
+        User.findByPk(req.body.user_id)
+        .then(user=>{
+            // id, pw 일차하는 유저가 있다면 jwt token 생성 뒤 성공 json 보내기
+            if (req.body.user_id == user.user_id && hashed_pw == user.user_password){
+                // 토큰 생성 
+                let token = jwt.sign({
+                    user_id : req.body.user_id,
+                    user_password : req.body.user_password
+                }
+                , secretObj
+                , { expiresIn: '365d'});
+    
+                // 성공 json 보내기
+                res.send(JSON.stringify({
+                    "success": true,
+                    "statusCode" : 200,
+                    "token" : token
+                }));
+                
+                // request에 refresh된 토큰이 함께 온다면 db를 업데이트한다.
+                if (req.body.refreshed_ftoken != undefined) {   
+                    User.update({
+                        user_mToken: req.body.refreshed_ftoken // refresh된 firebase token 
+                    }, { where: { user_id: req.body.user_id }})
+                }
             }
-            , secretObj
-            , { expiresIn: '365d'});
-
-            // 성공 json 보내기
-            res.send(JSON.stringify({
-                "success": true,
-                "statusCode" : 200,
-                "token" : token
-            }));
-            
-            // request에 refresh된 토큰이 함께 온다면 db를 업데이트한다.
-            if (req.body.refreshed_ftoken != undefined) {   
-                User.update({
-                    user_mToken: req.body.refreshed_ftoken // refresh된 firebase token 
-                }, { where: { user_id: req.body.user_id }})
+            else{
+                // 없다면 실패 json 보내기
+                res.send(JSON.stringify({
+                    "success": false,
+                    "statusCode" : 202,
+                    "token" : "DENIED"
+                }));
             }
-        }
-        else{
-            // 없다면 실패 json 보내기
+            return user
+        })
+        .catch(err=>{
+            // 오류시 실패 json 보내기
             res.send(JSON.stringify({
                 "success": false,
-                "statusCode" : 202,
+                "statusCode" : 406,
                 "token" : "DENIED"
             }));
-        }
-
-        return user
+        });
     })
-    .catch(err=>{
-        // 오류시 실패 json 보내기
-        res.send(JSON.stringify({
-            "success": false,
-            "statusCode" : 406,
-            "token" : "DENIED"
-        }));
-    });
 }
 
 // 회원가입 Request 처리
