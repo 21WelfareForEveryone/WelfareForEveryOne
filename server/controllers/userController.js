@@ -26,6 +26,13 @@ exports.userSession = (req, res, next) => {
                 "statusCode" : 200,
                 "token" : req.body.token
             }));
+
+            // request에 refresh된 토큰이 함께 온다면 db를 업데이트한다.
+            if (req.body.refreshed_ftoken != undefined) {   
+                User.update({
+                    user_mToken: req.body.refreshed_ftoken // refresh된 firebase token 
+                }, { where: { user_id: user_info.user_id }})
+            }
         }
         else {
             // 실패 json 보내기
