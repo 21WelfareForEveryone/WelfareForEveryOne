@@ -54,9 +54,43 @@ public class LoginActivity extends AppCompatActivity {
             AppHelper.requestQueue = Volley.newRequestQueue(getApplicationContext());
         }
 
+        // Firebase Token
+        FirebaseApp.initializeApp(getApplicationContext());
+        try{
+            FirebaseMessaging.getInstance().getToken()
+                    .addOnCompleteListener(new OnCompleteListener<String>() {
+                        @Override
+                        public void onComplete(@NonNull Task<String> task) {
+                            if (!task.isSuccessful()) {
+                                Log.w(TAG, "Fetching FCM registration token failed", task.getException());
+                                return;
+                            }
+                            String token = task.getResult();
+                            String msg = getString(R.string.msg_token_fmt, token);
+
+                            SharedPreferences sharedPreferences = getSharedPreferences("user_info", MODE_PRIVATE);
+                            SharedPreferences.Editor editor= sharedPreferences.edit();
+                            editor.putString("token_firebase", token);
+                            editor.commit();
+                            Log.d(TAG, msg);
+                            Log.v(TAG, msg);
+                        }
+                    });
+        }
+        catch(Exception err){
+            err.printStackTrace();
+            Log.v("FirebaseApp error on LoginActivity", err.getMessage());
+            SharedPreferences sharedPreferences = getSharedPreferences("user_info", MODE_PRIVATE);
+            SharedPreferences.Editor editor= sharedPreferences.edit();
+            editor.putString("token_firebase", "");
+            editor.commit();
+        }
+
+
         et_id = findViewById(R.id.et_Id);
         et_pwd = findViewById(R.id.et_pwd);
         Button btn_login = (Button)findViewById(R.id.btn_login);
+        /*
         btn_login.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -104,6 +138,41 @@ public class LoginActivity extends AppCompatActivity {
 
             }
         });
+         */
+
+        /* (21.12.30) volley callback을 이용한 동기화 */
+        btn_login.setOnClickListener(new View.OnClickListener(){
+            @Override
+            public void onClick(View view) {
+                userLoginVer2(new VolleyCallBack(){
+                    @Override
+                    public void onSuccess() {
+                        SharedPreferences sharedPreferences= getSharedPreferences("user_info", MODE_PRIVATE);
+                        Boolean isSuccess  = sharedPreferences.getBoolean("success", false);
+                        String mToken = sharedPreferences.getString("token", "");
+                        String token_firebase = sharedPreferences.getString("token_firebase","");
+                        int statusCode = sharedPreferences.getInt("statusCode",0);
+
+                        if(isSuccess){
+                            Toast.makeText(getApplicationContext(), "로그인에 성공하셨습니다.", Toast.LENGTH_SHORT).show();
+                            Bundle bundle = new Bundle();
+                            bundle.putString("token", mToken);
+                            bundle.putString("token_firebase", token_firebase);
+
+                            Intent intent = new Intent(LoginActivity.this, com.example.welfareapp.MainActivity.class);
+                            if(bundle!=null){
+                                intent.putExtras(bundle);
+                            }
+                            startActivity(intent);
+                            finish();
+                        }
+                        else{
+                            Toast.makeText(getApplicationContext(), "로그인에 실패했습니다..", Toast.LENGTH_SHORT).show();
+                        }
+                    }
+                });
+            }
+        });
 
         // register click method
         Button btn_register = (Button)findViewById(R.id.btn_register);
@@ -116,7 +185,67 @@ public class LoginActivity extends AppCompatActivity {
             }
         });
     }
+    public interface VolleyCallBack {
+        void onSuccess();
+    }
+    public synchronized void userLoginVer2(final VolleyCallBack volleyCallBack){
+        final String id  = et_id.getText().toString();
+        final String pwd = et_pwd.getText().toString();
 
+        JSONObject params = new JSONObject();
+
+        SharedPreferences sharedPreferences = getSharedPreferences("user_info", MODE_PRIVATE);
+        SharedPreferences.Editor editor= sharedPreferences.edit();
+
+        final String token_firebase = sharedPreferences.getString("token_firebase","");
+
+        try{
+            params.put("user_id", id);
+            params.put("user_password", pwd);
+            params.put("token_firebase", token_firebase);
+            Log.v("params complete: ", "true");
+        }
+        catch(JSONException e){
+            e.printStackTrace();
+        }
+
+        if(TextUtils.isEmpty(id)){
+            et_id.setError("아이디를 입력해주세요.");
+            et_id.requestFocus();
+            return;
+        }
+        if(TextUtils.isEmpty(pwd)){
+            et_pwd.setError("패스워드를 입력해주세요.");
+            et_pwd.requestFocus();
+            return;
+        }
+
+        final JsonObjectRequest jsonRequest = new JsonObjectRequest(Request.Method.POST, com.example.welfareapp.URLs.url_login, params, new Response.Listener<JSONObject>(){
+            @Override
+            public void onResponse(JSONObject response) {
+                try{
+                    Boolean isSuccess = response.getBoolean("success");
+                    String mToken = response.getString("token");
+                    int statusCode =  response.getInt("statusCode");
+                    editor.putString("token", mToken);
+                    editor.putInt("statusCode", statusCode);
+                    editor.putBoolean("success", isSuccess);
+                    editor.commit();
+                    volleyCallBack.onSuccess();
+                }
+                catch(JSONException e){
+                    e.printStackTrace();
+                }
+            }
+        }, new Response.ErrorListener(){
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                Toast.makeText(LoginActivity.this, error.getMessage(), Toast.LENGTH_SHORT).show();
+                Log.v("Login onResponse Error", error.toString());
+            }
+        });
+        AppHelper.requestQueue.add(jsonRequest);
+    }
     // userLogin()
     public void userLogin(){
 
@@ -128,9 +257,12 @@ public class LoginActivity extends AppCompatActivity {
         SharedPreferences sharedPreferences = getSharedPreferences("user_info", MODE_PRIVATE);
         SharedPreferences.Editor editor= sharedPreferences.edit();
 
+        final String token_firebase = sharedPreferences.getString("token_firebase","");
+
         try{
             params.put("user_id", id);
             params.put("user_password", pwd);
+            params.put("token_firebase", token_firebase);
             Log.v("params complete: ", "true");
         }
         catch(JSONException e){
@@ -148,38 +280,6 @@ public class LoginActivity extends AppCompatActivity {
             et_pwd.requestFocus();
             return;
         }
-
-        /*
-        // Firebase App Process to get token(11.27 added)
-        FirebaseApp.initializeApp(getApplicationContext());
-        try{
-            FirebaseMessaging.getInstance().getToken()
-                    .addOnCompleteListener(new OnCompleteListener<String>() {
-                        @Override
-                        public void onComplete(@NonNull Task<String> task) {
-                            if (!task.isSuccessful()) {
-                                Log.w(TAG, "Fetching FCM registration token failed", task.getException());
-                                editor.putString("token_firebase", "");
-                                editor.commit();
-                                return;
-                            }
-                            String token = task.getResult();
-                            String msg = getString(R.string.msg_token_fmt, token);
-                            editor.putString("token_firebase", token);
-                            editor.commit();
-                            Log.d(TAG, msg);
-                            Log.v(TAG, msg);
-                        }
-                    });
-        }
-        catch(Exception err){
-            err.printStackTrace();
-            editor.putString("token_firebase", "");
-            editor.commit();
-            Log.v("FirebaseApp error on LoginActivity", err.getMessage());
-        }
-
-         */
 
         final JsonObjectRequest jsonRequest = new JsonObjectRequest(Request.Method.POST, com.example.welfareapp.URLs.url_login, params, new Response.Listener<JSONObject>(){
             @Override

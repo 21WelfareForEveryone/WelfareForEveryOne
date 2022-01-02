@@ -4,6 +4,7 @@ import android.app.ActionBar;
 import android.app.FragmentManager;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.location.Address;
 import android.location.Geocoder;
@@ -34,6 +35,7 @@ import androidx.room.vo.Field;
 
 import com.android.volley.Request;
 import com.android.volley.Response;
+import com.android.volley.RetryPolicy;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.google.android.gms.location.FusedLocationProviderClient;
@@ -55,7 +57,7 @@ import com.google.android.libraries.places.api.net.FindCurrentPlaceResponse;
 import com.google.android.libraries.places.api.net.PlacesClient;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.slider.Slider;
-
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -63,6 +65,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Locale;
@@ -115,6 +118,10 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
     private final String placeAPIKey = "AIzaSyDmaHqwSUJSjaS07Hod_L81DUynQBeV8m4";
 
     private int searchRadius = 500;
+
+    // 검색 목록 저장 array
+    private List<HashMap<String, String>> placeList = new ArrayList<>();
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -250,85 +257,61 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
             }
         });
 
+        DownloadUrl downloadUrl = new DownloadUrl();
+      
         findViewById(R.id.map_button_1).setOnClickListener(
                 new Button.OnClickListener() {
                     public void onClick(View v) {
-                        LatLng location = new LatLng(37.5162958434477, 127.05196608896408);
-                        MarkerOptions makerOptions = new MarkerOptions();
-                        makerOptions.title("강남구노인복지회관");
-                        makerOptions.snippet("복지회관");
-                        makerOptions.position(location);
-                        mMap.addMarker(makerOptions);
-                        mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(location,DEFAULT_ZOOM));
-
-                        // download url test
-                        DownloadUrl downloadUrl = new DownloadUrl();
-                        String url = downloadUrl.getUrl(PlaceType.HOSPITAL, searchRadius, placeAPIKey, defaultLocation);
-                        try{
-                            JsonObjectRequest urlData = new JsonObjectRequest(Request.Method.GET, url, null, new Response.Listener<JSONObject>() {
-                                @Override
-                                public void onResponse(JSONObject response) {
-                                    try{
-                                        Log.v("MapActivity url test ",response.toString());
-                                    }
-                                    catch(Exception e){
-                                        e.printStackTrace();
-                                        Log.v("MapActivity url test Exception error", e.getMessage());
-                                    }
-                                }
-                            }, new Response.ErrorListener() {
-                                @Override
-                                public void onErrorResponse(VolleyError error) {
-                                    error.printStackTrace();
-                                    Log.v("MapActivity url test Volley Error", error.toString());
-                                }
-                            });
-                            urlData.setShouldCache(false);
-                            AppHelper.requestQueue.add(urlData);
-                        }
-                        catch(Exception err){
-                            err.printStackTrace();
-                            Log.e("MapActivity download read the url error occur", err.getMessage());
-                        }
+                        previous_marker.clear();
+                        String url = downloadUrl.getUrl("복지회관", 5000, placeAPIKey, defaultLocation);
+                        downloadUrl.getPlaceDataFromUrl(url, new VolleyCallBack() {
+                            @Override
+                            public void onSuccess() {
+                                updatePlaceListOnMapUI(placeList);
+                            }
+                        });
                     }
                 }
         );
         findViewById(R.id.map_button_2).setOnClickListener(
                 new Button.OnClickListener() {
                     public void onClick(View v) {
-                        LatLng location = new LatLng(37.517040387414724, 127.04190521599091);
-                        MarkerOptions makerOptions = new MarkerOptions();
-                        makerOptions.title("강남구보건소");
-                        makerOptions.snippet("보건소");
-                        makerOptions.position(location);
-                        mMap.addMarker(makerOptions);
-                        mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(location,DEFAULT_ZOOM));
+                        previous_marker.clear();
+                        String url = downloadUrl.getUrl("보건소", searchRadius, placeAPIKey, defaultLocation);
+                        downloadUrl.getPlaceDataFromUrl(url, new VolleyCallBack() {
+                            @Override
+                            public void onSuccess() {
+                                updatePlaceListOnMapUI(placeList);
+                            }
+                        });
                     }
                 }
         );
         findViewById(R.id.map_button_3).setOnClickListener(
                 new Button.OnClickListener() {
                     public void onClick(View v) {
-                        LatLng location = new LatLng(37.510557754240494, 127.05192267858015);
-                        MarkerOptions makerOptions = new MarkerOptions();
-                        makerOptions.title("봉전경로당");
-                        makerOptions.snippet("경로당");
-                        makerOptions.position(location);
-                        mMap.addMarker(makerOptions);
-                        mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(location,DEFAULT_ZOOM));
+                        previous_marker.clear();
+                        String url = downloadUrl.getUrl("경로당", searchRadius, placeAPIKey, defaultLocation);
+                        downloadUrl.getPlaceDataFromUrl(url, new VolleyCallBack() {
+                            @Override
+                            public void onSuccess() {
+                                updatePlaceListOnMapUI(placeList);
+                            }
+                        });
                     }
                 }
         );
         findViewById(R.id.map_button_4).setOnClickListener(
                 new Button.OnClickListener() {
                     public void onClick(View v) {
-                        LatLng location = new LatLng(37.51488034442946, 127.06286608908715);
-                        MarkerOptions makerOptions = new MarkerOptions();
-                        makerOptions.title("삼성1동주민센터");
-                        makerOptions.snippet("주민센터");
-                        makerOptions.position(location);
-                        mMap.addMarker(makerOptions);
-                        mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(location,DEFAULT_ZOOM));
+                        previous_marker.clear();
+                        String url = downloadUrl.getUrl("주민센터", searchRadius, placeAPIKey, defaultLocation);
+                        downloadUrl.getPlaceDataFromUrl(url, new VolleyCallBack() {
+                            @Override
+                            public void onSuccess() {
+                                updatePlaceListOnMapUI(placeList);
+                            }
+                        });
                     }
                 }
         );
@@ -485,10 +468,6 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
 
     @Override
     public void onMapReady(@NonNull GoogleMap googleMap) {
-        /* ToDo: 버튼 클릭 시 대응되는 복지시설에 대한 marker 활성화 */
-        /* Step 1 : getCurrentLocation */
-        /* Step 2 : using place api to get place information list including (x,y) */
-        /* Step 3 : 위치 정보 리스트 생성 및 버튼 클릭시 대응되는 기관에 대해 모두 marker option 추가 */
         mMap = googleMap;
         MarkerOptions markerOptions = new MarkerOptions();
         markerOptions.title("현재 위치");
@@ -602,4 +581,171 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
     public void onPlacesFinished() {
 
     }
+
+    public void updatePlaceListOnMapUI(List<HashMap<String, String>> placeList){
+        if(previous_marker != null){
+            previous_marker.clear();
+        }
+        runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                for(int i = 0; i < placeList.size(); i ++){
+                    try{
+                        JSONObject jsonObject = new JSONObject(placeList.get(i));
+                        Log.v("MapActivity jsonObject", jsonObject.toString());
+                        LatLng latLng = new LatLng(Double.parseDouble(jsonObject.getString("lat")), Double.parseDouble(jsonObject.getString("lng")));
+                        String markerSnippet = getCurrentAddress(latLng);
+                        MarkerOptions markerOptions = new MarkerOptions();
+                        markerOptions.position(latLng);
+                        markerOptions.title(jsonObject.getString("name"));
+                        markerOptions.snippet(markerSnippet);
+                        Log.v("MapActivity jsonObject lat", jsonObject.getString("lat"));
+                        Log.v("MapActivity jsonObject lng", jsonObject.getString("lng"));
+                        Log.v("MapActivity jsonObject name", jsonObject.getString("name"));
+                        Marker item = mMap.addMarker(markerOptions);
+                        previous_marker.add(item);
+                    }
+                    catch(JSONException err){
+                        err.printStackTrace();
+                        Log.e("MapActivity onPlacesSuccess run Exception Error",err.getMessage());
+                    }
+                }
+
+                try{
+                    HashSet<Marker> hashSet = new HashSet<Marker>();
+                    hashSet.addAll(previous_marker);
+                    previous_marker.clear();
+                    previous_marker.addAll(hashSet);
+                }
+                catch(Exception err){
+                    Log.e("MapActivity onPlaceSuccess run Error Message", err.getMessage());
+                }
+
+                Log.v("MapActivity placeList size", Integer.toString(placeList.size()));
+
+                if(placeList.size() == 1){
+                    LatLng focusLatLng = previous_marker.get(0).getPosition();
+                    previous_marker.get(0).showInfoWindow();
+                    mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(focusLatLng,DEFAULT_ZOOM));
+                }
+                else if(placeList.size() == 0 || previous_marker == null){
+                    Toast.makeText(getApplicationContext(), "검색반경 내 장소를 찾을 수 없습니다", Toast.LENGTH_LONG).show();
+                }
+                else if(placeList.size() > 1){
+                    double latitude = 0;
+                    double longitude = 0;
+                    for(int i = 0; i < previous_marker.size(); i++){
+                        latitude += previous_marker.get(i).getPosition().latitude;
+                        longitude += previous_marker.get(i).getPosition().longitude;
+                    }
+                    latitude /= previous_marker.size();
+                    longitude /= previous_marker.size();
+
+                    LatLng centerLatLng = new LatLng(latitude, longitude);
+                    mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(centerLatLng, DEFAULT_ZOOM));
+                }
+            }
+        });
+    }
+    public class DownloadUrl{
+        public String getUrl(String placeType, int searchRadius, String placeAPIKey, LatLng position){
+            StringBuilder googleURL = new StringBuilder("https://maps.googleapis.com/maps/api/place/nearbysearch/json?");
+
+            double latitide = position.latitude;
+            double longitude = position.longitude;
+            googleURL.append("location=" + latitide + "," + longitude);
+            googleURL.append("&radius=" + searchRadius);
+            googleURL.append("&name=" + placeType);
+            googleURL.append("&sensor=true");
+            googleURL.append("&key=" + placeAPIKey);
+            Log.d("MapActivity DownloadUrl class", "url = " + googleURL.toString());
+            return googleURL.toString();
+        }
+        public synchronized void getPlaceDataFromUrl(String url, final VolleyCallBack volleyCallBack){
+            if(placeList !=null){
+                placeList.clear();
+            }
+            JsonObjectRequest urlData = new JsonObjectRequest(Request.Method.GET, url, null, new Response.Listener<JSONObject>() {
+                @Override
+                public void onResponse(JSONObject response) {
+                    try{
+                        JSONArray jsonArray = response.getJSONArray("results");
+                        Log.v("MapActivity getPlaceDataFromUrl function results", jsonArray.toString());
+                        //List<HashMap<String, String>> placeList = getListFromJsonObject(jsonArray);
+                        for(int i = 0; i < jsonArray.length(); i++){
+                            HashMap<String, String> googlePlace = getSingleDataFromJsonObject((JSONObject)jsonArray.get(i));
+                            Log.v("MapActivity getPlaceDataFromUrl googlePlace", googlePlace.toString());
+                            placeList.add(googlePlace);
+                        }
+                        volleyCallBack.onSuccess();
+                    }
+                    catch(Exception e){
+                        e.printStackTrace();
+                        Log.v("MapActivity getPlaceDataFromUrl Exception error", e.getMessage());
+                    }
+                }
+            }, new Response.ErrorListener() {
+                @Override
+                public void onErrorResponse(VolleyError error) {
+                    error.printStackTrace();
+                    Log.v("MapActivity getPlaceDataFromUrl Volley Error", error.toString());
+                }
+            });
+            urlData.setShouldCache(false);
+            AppHelper.requestQueue.add(urlData);
+        }
+        public HashMap<String, String> getSingleDataFromJsonObject(JSONObject jsonObject){
+            HashMap<String, String> googlePlace = new HashMap<>();
+            try{
+                String latitude = jsonObject.getJSONObject("geometry").getJSONObject("location").getString("lat");
+                String longitude =  jsonObject.getJSONObject("geometry").getJSONObject("location").getString("lng");
+                String name = jsonObject.getString("name");
+                String place_id = jsonObject.getString("place_id");
+                String vicinity = jsonObject.getString("vicinity");
+
+                googlePlace.put("lat", latitude);
+                googlePlace.put("lng", longitude);
+                googlePlace.put("name", name);
+                googlePlace.put("place_id", place_id);
+                googlePlace.put("vicinity", vicinity);
+                return googlePlace;
+            }
+            catch(JSONException err){
+                err.printStackTrace();
+            }
+            return googlePlace;
+        }
+        private List<HashMap<String, String>> getListFromJsonObject(JSONArray jsonArray){
+            int totalNum = jsonArray.length();
+            List <HashMap<String, String>> googlePlacesList = new ArrayList<>();
+            HashMap<String, String> googlePlace = new HashMap<>();
+
+            for(int i = 0; i < totalNum; i++){
+                try{
+                    JSONObject jsonObject = (JSONObject) jsonArray.get(i);
+                    String latitude = jsonObject.getJSONObject("geometry").getJSONObject("location").getString("lat");
+                    String longitude =  jsonObject.getJSONObject("geometry").getJSONObject("location").getString("lng");
+                    String name = jsonObject.getString("name");
+                    String place_id = jsonObject.getString("place_id");
+                    String vicinity = jsonObject.getString("vicinity");
+
+                    googlePlace.put("lat", latitude);
+                    googlePlace.put("lng", longitude);
+                    googlePlace.put("name", name);
+                    googlePlace.put("place_id", place_id);
+                    googlePlace.put("vicinity", vicinity);
+                    googlePlacesList.add(googlePlace);
+                }
+                catch(JSONException err){
+                    err.printStackTrace();
+                    Log.e("MapActivity getListFromJsonObject parsing error", err.getMessage());
+                }
+            }
+            return googlePlacesList;
+        }
+    }
+    public interface VolleyCallBack {
+        void onSuccess();
+    }
+
 }

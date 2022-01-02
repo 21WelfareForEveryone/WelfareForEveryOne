@@ -1,7 +1,7 @@
 // Importing Modules
 const express = require('express');
-const bodyParser = require('body-parser');
-const path = require('path');
+// const bodyParser = require('body-parser');
+// const path = require('path');
 const morgan = require('morgan');
 require("dotenv").config();
 
@@ -20,13 +20,12 @@ admin.initializeApp({
     credential: admin.credential.cert(serviceAccount)
 });
 
-
 // Parsing middleware 
 app.use(express.json());
-// app.use(bodyParser.urlencoded({ extended: false }));
-app.use(express.static(path.join(__dirname, 'public')));
-app.use(bodyParser.json());
-app.use(morgan('tiny'));
+app.use(express.urlencoded({ extended: false }));
+// app.use(express.static(path.join(__dirname, 'public')));
+// app.use(bodyParser.json());
+app.use(morgan('dev'));
 
 // Routers 
 app.use(pushRoutes);
@@ -35,4 +34,6 @@ app.use(welfareRoutes);
 app.use(dibsRoutes);
 app.use(chatbotRoutes);
 
-app.listen(80);
+app.listen(3000,() => {
+    console.log(`listening at http://localhost:3000`)
+  });

@@ -5,7 +5,8 @@
   "main": "app.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "nodemon app.js"
+    "start": "nodemon app.js",
+    "prod" : "pm2 start app.js --watch"
   },
   "repository": {
     "type": "git",
@@ -30,6 +31,7 @@
     "mysql2": "^2.3.0",
     "node-schedule": "^2.0.0",
     "path": "^0.12.7",
+    "pm2": "^5.1.2",
     "request": "^2.88.2",
     "sequelize": "^6.6.5"
   },
