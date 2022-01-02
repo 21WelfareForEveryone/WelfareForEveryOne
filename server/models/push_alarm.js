@@ -4,14 +4,16 @@ const Sequelize = require('sequelize');
 const sequelize = require('../utils/database');
 
 const Push_alarm = sequelize.define('push_alarm', {
-    alarm_id : {
-        primaryKey : true,
-        autoIncrement: true,
-        allowNull : false,
-        type : Sequelize.INTEGER,
-    }, 
+    // alarm_id : {
+    //     primaryKey : true,
+    //     autoIncrement: true,
+    //     allowNull : false,
+    //     type : Sequelize.INTEGER,
+    // }, 
     user_id : {
+        primaryKey : true,
         allowNull : false,
+        unique : true,
         type : Sequelize.STRING,
     }
 }, {
