@@ -96,6 +96,9 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
     // A default location and default zoom to use when location permission is not granted
     private final LatLng defaultLocation = new LatLng(37.513055, 127.059765); // 서울 강남구 위치를 디폴트 값으로 설정
     private static final int DEFAULT_ZOOM = 15;
+    int CURRENT_ZOOM = 15;
+    int ZOOM_MAX = 17;
+    int ZOOM_MIN = 13;
     private static final int PERMISSIONS_REQUEST_ACCESS_FINE_LOCATION = 1;
     private boolean locationPermissionGranted;
     private Location lastKnownLocation;
@@ -248,6 +251,7 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
                 TextView txt_search_radius = findViewById(R.id.txt_search_radius);
                 txt_search_radius.setText(String.format("검색반경:%d(m)", seekBar.getProgress()));
                 searchRadius = (int)seekBar.getProgress();
+                zoomControl(searchRadius);
             }
             @Override
             public void onStartTrackingTouch(SeekBar seekBar) {
@@ -318,14 +322,31 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
         findViewById(R.id.map_button_5).setOnClickListener(
                 new Button.OnClickListener() {
                     public void onClick(View v) {
-                        showPlaceInformation(defaultLocation, PlaceType.LOCAL_GOVERNMENT_OFFICE, searchRadius);
+                        //showPlaceInformation(defaultLocation, PlaceType.LOCAL_GOVERNMENT_OFFICE, searchRadius);
+
+                        previous_marker.clear();
+                        String url = downloadUrl.getUrl("구청|시청", searchRadius, placeAPIKey, defaultLocation);
+                        downloadUrl.getPlaceDataFromUrl(url, new VolleyCallBack() {
+                            @Override
+                            public void onSuccess() {
+                                updatePlaceListOnMapUI(placeList);
+                            }
+                        });
                     }
                 }
         );
         findViewById(R.id.map_button_6).setOnClickListener(
                 new Button.OnClickListener() {
                     public void onClick(View v) {
-                        showPlaceInformation(defaultLocation, PlaceType.HOSPITAL, searchRadius);
+                        //showPlaceInformation(defaultLocation, PlaceType.HOSPITAL, searchRadius);
+                        previous_marker.clear();
+                        String url = downloadUrl.getUrl("병원|의원", searchRadius, placeAPIKey, defaultLocation);
+                        downloadUrl.getPlaceDataFromUrl(url, new VolleyCallBack() {
+                            @Override
+                            public void onSuccess() {
+                                updatePlaceListOnMapUI(placeList);
+                            }
+                        });
                     }
                 }
         );
@@ -342,7 +363,11 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
                     }
                 }
         );
+    }
 
+    private void zoomControl(int searchRadius){
+        CURRENT_ZOOM = (int) (ZOOM_MIN + (ZOOM_MAX - ZOOM_MIN) * (1000 - searchRadius) / 1000);
+        mMap.animateCamera(CameraUpdateFactory.zoomTo(CURRENT_ZOOM), 512, null);
     }
 
     @Override
@@ -583,6 +608,7 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
     }
 
     public void updatePlaceListOnMapUI(List<HashMap<String, String>> placeList){
+        mMap.clear();
         if(previous_marker != null){
             previous_marker.clear();
         }
@@ -642,7 +668,7 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
                     longitude /= previous_marker.size();
 
                     LatLng centerLatLng = new LatLng(latitude, longitude);
-                    mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(centerLatLng, DEFAULT_ZOOM));
+                    mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(centerLatLng, CURRENT_ZOOM));
                 }
             }
         });
@@ -657,6 +683,12 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
             googleURL.append("&radius=" + searchRadius);
             googleURL.append("&name=" + placeType);
             googleURL.append("&sensor=true");
+            if(placeType == "병원|의원"){
+                googleURL.append("&type=hospital");
+            }
+            if(placeType == "구청|시청"){
+                googleURL.append("&type=local_government_office");
+            }
             googleURL.append("&key=" + placeAPIKey);
             Log.d("MapActivity DownloadUrl class", "url = " + googleURL.toString());
             return googleURL.toString();

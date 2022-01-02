@@ -8,12 +8,12 @@
     android:background="#f2f2f2"
     android:orientation="vertical"
     android:backgroundTint="#24bfad"
-    tools:context=".MainActivity">
-
+    tools:context=".PushNotificationActivity">
     <include layout = "@layout/toolbar_push"/>
-
-
     <ImageView
+        app:layout_constraintTop_toBottomOf="@+id/toolbar_push"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
         android:id="@+id/img_view"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -22,8 +22,7 @@
         android:src="@drawable/push_description"
         tools:ignore="MissingConstraints"
         tools:layout_editor_absoluteX="0dp"
-        tools:layout_editor_absoluteY="50dp"></ImageView>
-
+        tools:layout_editor_absoluteY="50dp"/>
 
     <ImageView
         android:id="@+id/img_view1"
@@ -40,12 +39,13 @@
         app:layout_constraintTop_toBottomOf="@+id/img_view"
         app:layout_constraintVertical_bias="0.226"
         app:tint="@color/white"
-        tools:ignore="MissingConstraints"></ImageView>
+        tools:ignore="MissingConstraints"/>
 
     <ImageView
         android:id="@+id/img_view2"
         android:layout_width="74dp"
         android:layout_height="70dp"
+        android:layout_marginTop="79dp"
         android:adjustViewBounds="true"
         android:scaleType="centerCrop"
         android:src="@drawable/ic_baseline_notifications_off_24"
@@ -54,9 +54,9 @@
         app:layout_constraintHorizontal_bias="0.457"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/img_view"
-        app:layout_constraintVertical_bias="0.497"
+        app:layout_constraintVertical_bias="0.226"
         app:tint="@color/white"
-        tools:ignore="MissingConstraints"></ImageView>
+        tools:ignore="MissingConstraints"/>
 
     <Switch
         android:id="@+id/toggle_notification"
@@ -70,6 +70,6 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/img_view"
         app:layout_constraintVertical_bias="0.268"
-        tools:ignore="MissingConstraints" />
+        tools:ignore="UseSwitchCompatOrMaterialXml" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

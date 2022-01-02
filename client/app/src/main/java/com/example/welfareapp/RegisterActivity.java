@@ -377,12 +377,9 @@ public class RegisterActivity extends AppCompatActivity {
 
                 registerUser(user_name, user_id, user_password, user_gender,
                         user_income, user_address, user_life_cycle, user_is_multicultural,
-                        user_is_one_parent, user_is_disabled, user_interest, token_firebase);
-
-                new Handler().postDelayed(
-                        new Runnable() {
+                        user_is_one_parent, user_is_disabled, user_interest, token_firebase, new VolleyCallBack() {
                             @Override
-                            public void run() {
+                            public void onSuccess() {
                                 SharedPreferences sharedPreferences= getSharedPreferences("user_info", MODE_PRIVATE);
                                 Boolean isSuccess  = sharedPreferences.getBoolean("success", false);
                                 String mToken = sharedPreferences.getString("token", "");
@@ -405,9 +402,7 @@ public class RegisterActivity extends AppCompatActivity {
                                     Log.v("Register Process","failed");
                                 }
                             }
-                        },
-                        1024
-                );
+                        });
             }
         });
 
@@ -421,12 +416,13 @@ public class RegisterActivity extends AppCompatActivity {
             }
         });
     }
+    public interface VolleyCallBack {
+        void onSuccess();
+    }
 
     private void registerUser(String user_name, String user_id, String user_password, int user_gender,
                               int user_income, String user_address, int user_life_cycle, int user_is_multicultural,
-                              int user_is_one_parent, int user_is_disabled, int user_interest, String token_firebase){
-
-        // String token_firebase = "";
+                              int user_is_one_parent, int user_is_disabled, int user_interest, String token_firebase, final VolleyCallBack volleyCallBack){
 
         // log list for variable request check
         Log.v("user_name_check", "user_name: " + user_name);
@@ -440,6 +436,7 @@ public class RegisterActivity extends AppCompatActivity {
         Log.v("user_is_one_parent_check", "user_is_one_parent: " + user_is_one_parent);
         Log.v("user_is_disabled_check", "user_is_disabled: " + user_is_disabled);
         Log.v("user_interest_check", "user_interest: " + user_interest);
+        Log.v("user_token_firebase", "token_firebase: " + token_firebase);
 
         // Register Request
         JSONObject params = new JSONObject();
@@ -463,6 +460,7 @@ public class RegisterActivity extends AppCompatActivity {
         catch(JSONException e){
             e.printStackTrace();
             Log.v("Register params input process","failed");
+            return;
         }
 
         Log.v("RegisterActivity params", params.toString());
@@ -484,6 +482,7 @@ public class RegisterActivity extends AppCompatActivity {
                     editor.putInt("statusCode", statusCode);
                     editor.putBoolean("success", isSuccess);
                     editor.commit();
+                    volleyCallBack.onSuccess();
 
                     Log.v("on register response isSuccess: ", isSuccess.toString());
                     Log.v("on register response statusCode : ", Integer.toString(statusCode));

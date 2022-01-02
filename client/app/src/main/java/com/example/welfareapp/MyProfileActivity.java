@@ -117,7 +117,7 @@ public class MyProfileActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 //Toast.makeText(getApplicationContext(), "푸시 알림 기능 ON(아직 개발중입니다..)", Toast.LENGTH_SHORT).show();
-                Intent intent = new Intent(MyProfileActivity.this, PushActivity.class);
+                Intent intent = new Intent(MyProfileActivity.this, PushNotificationActivity.class);
                 intent.putExtras(bundle);
                 startActivity(intent);
                 finish();
