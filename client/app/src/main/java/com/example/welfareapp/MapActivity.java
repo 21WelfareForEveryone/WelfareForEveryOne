@@ -403,15 +403,13 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
                             // Set the map's camera position to the current location of the device.
                             lastKnownLocation = task.getResult(); // 현재 null object 형태로 생성됨
                             if (lastKnownLocation != null) {
-                                /*
                                 // 현재는 구글 본사를 현재 위치로 인식하고 있음
                                 // 공기계 혹은 다른 임베디드 환경에서 어떤 식으로 위치를 인식하는지 미리 파악할 필요 있음
                                 mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(
                                         new LatLng(lastKnownLocation.getLatitude(),
                                                 lastKnownLocation.getLongitude()), DEFAULT_ZOOM));
 
-                                 */
-                                mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(defaultLocation, DEFAULT_ZOOM));
+                                //mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(defaultLocation, DEFAULT_ZOOM));
                                 mMap.getUiSettings().setMyLocationButtonEnabled(false);
                             }
                         } else {
