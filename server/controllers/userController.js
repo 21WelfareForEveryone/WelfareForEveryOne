@@ -122,7 +122,8 @@ exports.userRegister = (req, res, next) => {
         user_is_one_parent: req.body.user_is_one_parent,
         user_income: req.body.user_income,
         user_is_disabled: req.body.user_is_disabled,
-        user_mToken: req.body.token_firebase
+        user_mToken: req.body.token_firebase,
+        img_idx: req.body.img_idx
     })
     .then(result =>{
         // 관심 카테고리 테이블 생성 
@@ -229,7 +230,8 @@ exports.userRead = (req, res, next) => {
                 "user_income": user.user_income,
                 "user_is_disabled": user.user_is_disabled,
                 "user_interest" : interest,
-                "user_ftoken" : user.user_mToken
+                "user_ftoken" : user.user_mToken,
+                "img_idx": user.img_idx
             }));  
         })
       })
@@ -264,7 +266,8 @@ exports.userUpdate = (req, res, next) => {
         user_is_multicultural: req.body.user_is_multicultural,
         user_family_state: req.body.user_family_state,
         user_income: req.body.user_income,
-        user_is_disabled: req.body.user_is_disabled
+        user_is_disabled: req.body.user_is_disabled,
+        img_idx: req.body.img_idx
     }, { where: { user_id: user_info.user_id }})
     .then(()=>{
         // 관심 카테고리 테이블 수정 

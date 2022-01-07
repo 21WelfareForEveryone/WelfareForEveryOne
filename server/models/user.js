@@ -61,6 +61,11 @@ const User = sequelize.define('user', {
         allowNull : true,
         unique : false,
         type : Sequelize.DATE
+    },
+    img_idx : {
+        allowNull : false,
+        unique : false,
+        type : Sequelize.INTEGER
     }
 }, {
     charset: "utf8", // char format 설정
