@@ -7,10 +7,10 @@ const schedule = require('node-schedule');
 const admin = require('firebase-admin');
 const { Op } = require("sequelize");
 
-// let serviceAccount = require('./config/hazel-cedar-312311-firebase-adminsdk-75xw8-efe9c58e9f.json')
-// admin.initializeApp({
-//     credential: admin.credential.cert(serviceAccount)
-// });
+let serviceAccount = require('./config/hazel-cedar-312311-firebase-adminsdk-75xw8-efe9c58e9f.json')
+admin.initializeApp({
+    credential: admin.credential.cert(serviceAccount)
+});
 
 module.exports = {
   check: () => {
@@ -44,46 +44,6 @@ module.exports = {
                             token: fcm_token
                         }
 
-                        // admin
-                        // .messaging()
-                        // .send(message)
-                        // .then(function(response){
-                        //     console.log('Successfully sent message:', response)
-                        //     // return res.status(200).json({success: true})
-                        // })
-                        // .catch(function(err) {
-                        //     console.log('Error Sending message!!! : ', err)
-                        //     // return res.status(400).json({success: false})
-                        // });
-                    })
-                })
-                });
-
-        })
-
-    })
-
-    }
-}
-
-
-
-/*
-            Welfare.findAll({order: ['like_count', 'DESC'], raw: true})
-            .then(welfare_info=>{
-                
-            })
-
-                        // 3. 푸시알림을 보낸다.
-                        let message = 
-                        {
-                            notification : {
-                                title: '모두를 위한 복지 알림입니다.',
-                                body: "모두를 위한 복지",
-                            },
-                            token:"faOKk6bCQ4qzp1hKDDanw3:APA91bHK09p1i941ckEhiYJWP3pB3gMK9zX7c41LIkMI2MOTNJ06d3Bj8YepchK7I3bZMtVuxvB-mP7vuGDVCM9KYbe7_s5gQekb4ERYgPRoW8HAWwDU3W99G22pq0n5JXKWqYY0p1TX"
-                        }
-
                         admin
                         .messaging()
                         .send(message)
@@ -95,4 +55,13 @@ module.exports = {
                             console.log('Error Sending message!!! : ', err)
                             // return res.status(400).json({success: false})
                         });
-*/
+                    })
+                })
+                });
+
+        })
+
+    })
+
+    }
+}
