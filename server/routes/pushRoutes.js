@@ -3,6 +3,6 @@ const router = express.Router();
 const pushController = require('../controllers/pushController');
 
 router.post('/push/toggle', pushController.pushToggle);
-router.post('/push/getPushAlarm', pushController.getPushAlarm);
+//router.post('/push/getPushAlarm', pushController.getPushAlarm);
 
 module.exports = router;

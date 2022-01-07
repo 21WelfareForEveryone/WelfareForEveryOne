@@ -5,6 +5,7 @@ const sequelize = require('../utils/database');
 
 const Push_alarm = sequelize.define('push_alarm', {
     user_id : {
+        primaryKey : true,
         allowNull : false,
         type : Sequelize.STRING,
     }
