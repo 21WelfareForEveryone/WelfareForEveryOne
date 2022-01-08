@@ -2,9 +2,11 @@ package com.example.welfareapp;
 
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
@@ -12,6 +14,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.Spinner;
@@ -23,6 +26,8 @@ import com.android.volley.Request;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
+import com.google.android.material.bottomsheet.BottomSheetDialog;
+import com.makeramen.roundedimageview.RoundedImageView;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -85,14 +90,10 @@ public class ProfileActivity extends AppCompatActivity {
     int interest;
 
     // photo upload and edit
-    static final int REQUEST_IMAGE_CAPTURE = 1;
-    static final int REQUEST_TAKE_PHOTO = 1;
-    static final int REQUEST_IMAGE_CROP = 1;
-    ImageView img_view;
-    String mCurrentPhotoPath;
-    Uri photoURI, albumURI = null;
-    Boolean album;
+    int img_idx;
 
+    // User Image
+    ImageView user_img_view;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -122,6 +123,132 @@ public class ProfileActivity extends AppCompatActivity {
         // spinner(주소)
         spinner_address_city = (Spinner)findViewById(R.id.spinner_address_city);
         spinner_address_gu = (Spinner)findViewById(R.id.spinner_address_gu);
+
+        // User Image Dialog
+        user_img_view = (ImageView)findViewById(R.id.img_view);
+        ImageView iv_photo_add = (ImageView)findViewById(R.id.iv_photo_add);
+        iv_photo_add.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                BottomSheetDialog bottomSheetDialog = new BottomSheetDialog(
+                        ProfileActivity.this, R.style.BottomSheetDialogTheme
+                );
+                View bottomSheetView = LayoutInflater.from(getApplicationContext())
+                        .inflate(
+                                R.layout.user_img_select_dialog,
+                                (LinearLayout)findViewById(R.id.profileImageContainer)
+                        );
+
+                RoundedImageView image_baby = bottomSheetView.findViewById(R.id.image_baby);
+                image_baby.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        Toast.makeText(ProfileActivity.this, "선택한 이미지를 프로필로 설정합니다", Toast.LENGTH_SHORT).show();
+                        bottomSheetDialog.dismiss();
+                        img_idx = 0;
+                        user_img_view.setImageResource(R.drawable.baby);
+                    }
+                });
+                bottomSheetDialog.setContentView(bottomSheetView);
+                bottomSheetDialog.show();
+                RoundedImageView image_child = bottomSheetView.findViewById(R.id.image_child);
+                image_child.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        Toast.makeText(ProfileActivity.this, "선택한 이미지를 프로필로 설정합니다", Toast.LENGTH_SHORT).show();
+                        bottomSheetDialog.dismiss();
+                        img_idx = 1;
+                        user_img_view.setImageResource(R.drawable.children);
+                    }
+                });
+                bottomSheetDialog.setContentView(bottomSheetView);
+                bottomSheetDialog.show();
+                RoundedImageView image_woman = bottomSheetView.findViewById(R.id.image_woman);
+                image_woman.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        Toast.makeText(ProfileActivity.this, "선택한 이미지를 프로필로 설정합니다", Toast.LENGTH_SHORT).show();
+                        bottomSheetDialog.dismiss();
+                        img_idx = 2;
+                        user_img_view.setImageResource(R.drawable.woman);
+                    }
+                });
+                bottomSheetDialog.setContentView(bottomSheetView);
+                bottomSheetDialog.show();
+                RoundedImageView image_man = bottomSheetView.findViewById(R.id.image_man);
+                image_man.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        Toast.makeText(ProfileActivity.this, "선택한 이미지를 프로필로 설정합니다", Toast.LENGTH_SHORT).show();
+                        bottomSheetDialog.dismiss();
+                        img_idx = 3;
+                        user_img_view.setImageResource(R.drawable.man);
+                    }
+                });
+                bottomSheetDialog.setContentView(bottomSheetView);
+                bottomSheetDialog.show();
+                RoundedImageView image_old_woman = bottomSheetView.findViewById(R.id.image_old_woman);
+                image_old_woman.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        Toast.makeText(ProfileActivity.this, "선택한 이미지를 프로필로 설정합니다", Toast.LENGTH_SHORT).show();
+                        bottomSheetDialog.dismiss();
+                        img_idx = 4;
+                        user_img_view.setImageResource(R.drawable.old_woman);
+                    }
+                });
+                bottomSheetDialog.setContentView(bottomSheetView);
+                bottomSheetDialog.show();
+                RoundedImageView image_old_man = bottomSheetView.findViewById(R.id.image_old_man);
+                image_old_man.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        Toast.makeText(ProfileActivity.this, "선택한 이미지를 프로필로 설정합니다", Toast.LENGTH_SHORT).show();
+                        bottomSheetDialog.dismiss();
+                        img_idx = 5;
+                        user_img_view.setImageResource(R.drawable.old_man);
+                    }
+                });
+                bottomSheetDialog.setContentView(bottomSheetView);
+                bottomSheetDialog.show();
+                RoundedImageView image_pregnant = bottomSheetView.findViewById(R.id.image_pregnant);
+                image_pregnant.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        Toast.makeText(ProfileActivity.this, "선택한 이미지를 프로필로 설정합니다", Toast.LENGTH_SHORT).show();
+                        bottomSheetDialog.dismiss();
+                        img_idx = 6;
+                        user_img_view.setImageResource(R.drawable.pregnant);
+                    }
+                });
+                bottomSheetDialog.setContentView(bottomSheetView);
+                bottomSheetDialog.show();
+                RoundedImageView image_multicultural = bottomSheetView.findViewById(R.id.image_multicultural);
+                image_multicultural.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        Toast.makeText(ProfileActivity.this, "선택한 이미지를 프로필로 설정합니다", Toast.LENGTH_SHORT).show();
+                        bottomSheetDialog.dismiss();
+                        img_idx = 7;
+                        user_img_view.setImageResource(R.drawable.multicultural);
+                    }
+                });
+                bottomSheetDialog.setContentView(bottomSheetView);
+                bottomSheetDialog.show();
+                RoundedImageView image_disabled = bottomSheetView.findViewById(R.id.image_disabled);
+                image_disabled.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        Toast.makeText(ProfileActivity.this, "선택한 이미지를 프로필로 설정합니다", Toast.LENGTH_SHORT).show();
+                        bottomSheetDialog.dismiss();
+                        img_idx = 8;
+                        user_img_view.setImageResource(R.drawable.disabled);
+                    }
+                });
+                bottomSheetDialog.setContentView(bottomSheetView);
+                bottomSheetDialog.show();
+            }
+        });
 
         // income preprocessing
         ArrayAdapter<String> adapter = new ArrayAdapter<String>(getApplicationContext(), android.R.layout.simple_spinner_item, income_items);
@@ -224,15 +351,6 @@ public class ProfileActivity extends AppCompatActivity {
             }
         });
 
-        // photo uploaded
-//        img_view = (ImageView)findViewById(R.id.img_view);
-//        img_view.setOnTouchListener(new View.OnTouchListener(){
-//            @Override
-//            public boolean onTouch(View v, MotionEvent event) {
-//                return false;
-//            }
-//        });
-
         // transfer user data to EditText data
         Button btn_edit = (Button)findViewById(R.id.btn_edit);
         btn_edit.setOnClickListener(new View.OnClickListener(){
@@ -323,7 +441,7 @@ public class ProfileActivity extends AppCompatActivity {
 
                 editUserInfo(user_name, user_id, user_password, user_gender,
                         user_income, user_address, user_life_cycle, user_is_multicultural,
-                        user_is_one_parent, user_is_disabled, user_interest);
+                        user_is_one_parent, user_is_disabled, user_interest, img_idx);
 
                 Intent intent = new Intent(ProfileActivity.this, com.example.welfareapp.MainActivity.class);
                 intent.putExtras(bundle);
@@ -375,6 +493,7 @@ public class ProfileActivity extends AppCompatActivity {
                     int user_is_one_parent = response.getInt("user_is_one_parent");
                     int user_is_disabled = response.getInt("user_is_disabled");
                     int user_interest = response.getInt("user_interest");
+                    int user_img_idx = response.getInt("img_idx");
 
                     et_username.setText(user_name);
                     et_id.setText(user_id);
@@ -436,7 +555,7 @@ public class ProfileActivity extends AppCompatActivity {
     // function for edit button click
     private void editUserInfo(String user_name, String user_id, String user_password, int user_gender,
                               int user_income, String user_address, int user_life_cycle, int user_is_multicultural,
-                              int user_is_one_parent, int user_is_disabled, int user_interest){
+                              int user_is_one_parent, int user_is_disabled, int user_interest, int img_idx){
 
         Bundle bundle = (Bundle) getIntent().getExtras();
         String token = bundle.getString("token");
@@ -471,6 +590,7 @@ public class ProfileActivity extends AppCompatActivity {
             params.put("user_interest", user_interest);
             params.put("token", token);
             params.put("token_firebase", "");
+            params.put("img_idx", img_idx);
             Log.v("editUserInfo params added","success");
         }
         catch(JSONException e){
@@ -508,23 +628,4 @@ public class ProfileActivity extends AppCompatActivity {
         VolleySingleton.getInstance(this).addToRequestQueue(jsonRequest);
         Toast.makeText(getApplicationContext(), "개인 정보수정에 성공하셨습니다.", Toast.LENGTH_SHORT).show();
     };
-
-//    private void takeAlbumAction(){
-//        Intent intent = new Intent(Intent.ACTION_PICK);
-//        intent.setType(MediaStore.Images.Media.CONTENT_TYPE);
-//        startActivityForResult(intent, REQUEST_TAKE_PHOTO);
-//    };
-//
-//    private void cropImage(){
-//        Intent cropIntent = new Intent("com.android.camera.action.CROP");
-//        cropIntent.setDataAndType(photoURI, "image/*");
-//        cropIntent.putExtra("scale", true);
-//        if(!album){
-//            cropIntent.putExtra("output", photoURI);
-//        }
-//        else if(album){
-//            cropIntent.putExtra("output", albumURI);
-//        }
-//        startActivityForResult(cropIntent, REQUEST_IMAGE_CROP);
-//    }
 }
