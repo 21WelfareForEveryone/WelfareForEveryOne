@@ -11,4 +11,4 @@ WORKDIR /workspace/KoSentenceBERT
 
 RUN conda install -y -c conda-forge uwsgi
 
-ENTRYPOINT ["uwsgi", "--ini", "uwsgi.ini"]
+ENTRYPOINT [ "uwsgi", "--ini", "uwsgi.ini" ]
