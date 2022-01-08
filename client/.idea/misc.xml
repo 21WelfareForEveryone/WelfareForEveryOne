@@ -3,8 +3,16 @@
   <component name="DesignSurface">
     <option name="filePathToZoomLevelMap">
       <map>
+        <entry key="..\:/Users/haemi/AndroidStudioProjects/WelfareForEveryOne/client/app/src/main/res/drawable-v24/ic_baseline_notifications_active_24.xml" value="0.26979166666666665" />
+        <entry key="..\:/Users/haemi/AndroidStudioProjects/WelfareForEveryOne/client/app/src/main/res/layout/activity_push_update.xml" value="0.1793478260869565" />
         <entry key="..\:/Users/haemi/AndroidStudioProjects/welfareapp/app/src/main/res/layout/activity_login.xml" value="0.2708333333333333" />
         <entry key="..\:/Users/haemi/AndroidStudioProjects/welfareapp/app/src/main/res/layout/activity_register.xml" value="0.1634963768115942" />
+        <entry key="app/src/main/res/layout/activity_map.xml" value="0.25" />
+        <entry key="app/src/main/res/layout/activity_push.xml" value="0.16621376811594202" />
+        <entry key="app/src/main/res/layout/activity_push_notification.xml" value="0.16168478260869565" />
+        <entry key="app/src/main/res/layout/activity_push_update.xml" value="0.25" />
+        <entry key="app/src/main/res/layout/card_component_notification.xml" value="0.16168478260869565" />
+        <entry key="app/src/main/res/layout/toolbar_push.xml" value="0.16168478260869565" />
       </map>
     </option>
   </component>

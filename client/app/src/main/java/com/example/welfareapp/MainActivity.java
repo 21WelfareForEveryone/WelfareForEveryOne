@@ -56,40 +56,12 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        // Firebase App init
-        FirebaseApp.initializeApp(getApplicationContext());
-
-        try{
-            // Firebase Message Receiver : Error 발생(10.31)
-            FirebaseMessaging.getInstance().getToken()
-                    .addOnCompleteListener(new OnCompleteListener<String>() {
-                        @Override
-                        public void onComplete(@NonNull Task<String> task) {
-                            if (!task.isSuccessful()) {
-                                Log.w(TAG, "Fetching FCM registration token failed", task.getException());
-                                return;
-                            }
-
-                            // Get new FCM registration token
-                            String token = task.getResult();
-
-                            // Log and toast
-                            String msg = getString(R.string.msg_token_fmt, token);
-                            Log.d(TAG, msg);
-                            Log.v(TAG, msg);
-                            //Toast.makeText(MainActivity.this, msg, Toast.LENGTH_SHORT).show();
-                        }
-                    });
-        }
-        catch(Exception err){
-            err.printStackTrace();
-            Log.v("FirebaseApp error", err.getMessage());
-        }
-
         // bundle loaded
 
         Bundle bundle = getIntent().getExtras();
         String token = bundle.getString("token");
+
+        Log.v("MainActivity bundle", bundle.toString());
 
         RecyclerView RV_category = (RecyclerView)findViewById(R.id.RV_category);
         categoryList = new ArrayList<>();
@@ -122,7 +94,13 @@ public class MainActivity extends AppCompatActivity {
         welfareRecommendedRV.setAdapter(welfareViewAdapter);
 
         try{
-            getRecommendWelfareInfo(token);
+           // getRecommendWelfareInfo(token);
+            requestRecommendWelfareInfo(token, new VolleyCallBack() {
+                @Override
+                public void onSuccess() {
+                    updateRecommendWelfareInfoOnUi(token);
+                }
+            });
             Log.v("MainActivity recommended welfare info load process","pass");
         }
         catch(Exception err){
@@ -173,6 +151,197 @@ public class MainActivity extends AppCompatActivity {
                 return false;
             }
         });
+    }
+
+    public interface VolleyCallBack {
+        void onSuccess();
+    }
+
+    private synchronized void requestRecommendWelfareInfo(String token, final VolleyCallBack volleyCallBack){
+        JSONObject params = new JSONObject();
+        try{
+            params.put("token", token);
+        }
+        catch(JSONException e){
+            e.printStackTrace();
+            return;
+        }
+        SharedPreferences recommendWelfareInfo = getSharedPreferences("recommendWelfareInfo", MODE_PRIVATE);
+        SharedPreferences.Editor editor = recommendWelfareInfo.edit();
+
+        final JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(Request.Method.POST, url_welfare_recommend, params, new Response.Listener<JSONObject>() {
+            @Override
+            public void onResponse(JSONObject response) {
+                try{
+                    Boolean isSuccess = response.getBoolean("success");
+                    int statusCode = response.getInt("statusCode");
+                    String responseToken = response.getString("token");
+                    JSONArray jar = response.getJSONArray("recommend_welfare_list");
+
+                    editor.putBoolean("success", isSuccess);
+                    editor.putInt("statusCode", statusCode);
+                    editor.putInt("totalNum", jar.length());
+
+                    if(jar.length() > 0){
+                        for(int i = 0; i < jar.length();i++){
+
+                            int welfare_id = jar.getJSONObject(i).getInt("welfare_id");
+                            String title = jar.getJSONObject(i).getString("title");
+                            String summary = jar.getJSONObject(i).getString("summary");
+                            String who = jar.getJSONObject(i).getString("who");
+                            String criteria = jar.getJSONObject(i).getString("criteria");
+                            String what = jar.getJSONObject(i).getString("what");
+                            String how = jar.getJSONObject(i).getString("how");
+                            String info_calls = jar.getJSONObject(i).getString("calls");
+                            String sites  = jar.getJSONObject(i).getString("sites");
+                            int category = jar.getJSONObject(i).getInt("category");
+                            Boolean isLiked = jar.getJSONObject(i).getBoolean("isLiked");
+
+                            String key = "welfare_info_" + Integer.toString(i);
+                            ArrayList<String> list = new ArrayList<String>();
+                            list.add(Integer.toString(welfare_id));
+                            list.add(title);
+                            list.add(summary);
+                            list.add(who);
+                            list.add(criteria);
+                            list.add(what);
+                            list.add(how);
+                            list.add(info_calls);
+                            list.add(sites);
+                            list.add(Integer.toString(category));
+
+                            if(isLiked){
+                                list.add(Integer.toString(1));
+                            }
+                            else{
+                                list.add(Integer.toString(0));
+                            }
+
+                            JSONArray a = new JSONArray();
+                            for (int j = 0; j < list.size(); j++) {
+                                a.put(list.get(j));
+                            }
+                            if (!list.isEmpty()) {
+                                editor.putString(key, a.toString());
+                                Log.v("MainActivity json array", a.toString());
+                            } else {
+                                editor.putString(key, null);
+                            }
+                        }
+                        editor.commit();
+                        volleyCallBack.onSuccess();
+                    }
+                }
+                catch(JSONException e){
+                    e.printStackTrace();
+                }
+            }
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                error.printStackTrace();
+                editor.putBoolean("success", false);
+                editor.commit();
+            }
+        });
+        jsonObjectRequest.setShouldCache(false);
+        VolleySingleton.getInstance(this).addToRequestQueue(jsonObjectRequest);
+    }
+
+    private void updateRecommendWelfareInfoOnUi(String token){
+        SharedPreferences recommendWelfareInfo = getSharedPreferences("recommendWelfareInfo", MODE_PRIVATE);
+        if(recommendWelfareInfo.getBoolean("success",false)){
+
+            String text = "총 "+ Integer.toString(recommendWelfareInfo.getInt("totalNum",0)) + "개의 복지가 있습니다.";
+            TextView tv_num_list = (TextView)findViewById(R.id.sub_title);
+            tv_num_list.setText(text);
+
+            int totalNum =  recommendWelfareInfo.getInt("totalNum", 0);
+
+            if(totalNum >= 2){
+                totalNum = 2;
+            }
+
+            for(int i = 0; i < totalNum; i++){
+
+                String key = "welfare_info_" + Integer.toString(i);
+                String json = recommendWelfareInfo.getString(key, null);
+                ArrayList<String> decode_list  = new ArrayList<String>();
+                if (json != null) {
+                    try {
+                        JSONArray a = new JSONArray(json);
+                        for (int j = 0; j < a.length(); j++) {
+                            String str = a.optString(j);
+                            Log.v("MainActivity JSON string parsing", str);
+                            decode_list.add(str);
+                        }
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+                }
+                try{
+
+                    if(Integer.parseInt(decode_list.get(10)) == 1){
+                        Boolean isLiked = true;
+                        welfareInfoComponentArrayList.add(new com.example.welfareapp.WelfareInfoComponent(
+                                Integer.parseInt(decode_list.get(0)),
+                                decode_list.get(1),
+                                decode_list.get(2),
+                                decode_list.get(3),
+                                decode_list.get(4),
+                                decode_list.get(5),
+                                decode_list.get(6),
+                                decode_list.get(7),
+                                decode_list.get(8),
+                                Integer.parseInt(decode_list.get(9)),
+                                token,
+                                isLiked
+                        ));
+                    }
+                    else{
+                        Boolean isLiked = false;
+                        welfareInfoComponentArrayList.add(new com.example.welfareapp.WelfareInfoComponent(
+                                Integer.parseInt(decode_list.get(0)),
+                                decode_list.get(1),
+                                decode_list.get(2),
+                                decode_list.get(3),
+                                decode_list.get(4),
+                                decode_list.get(5),
+                                decode_list.get(6),
+                                decode_list.get(7),
+                                decode_list.get(8),
+                                Integer.parseInt(decode_list.get(9)),
+                                token,
+                                isLiked
+                        ));
+                    }
+                }
+                catch(Exception error){
+                    error.printStackTrace();
+                    Boolean isLiked = false;
+                    welfareInfoComponentArrayList.add(new com.example.welfareapp.WelfareInfoComponent(
+                            Integer.parseInt(decode_list.get(0)),
+                            decode_list.get(1),
+                            decode_list.get(2),
+                            decode_list.get(3),
+                            decode_list.get(4),
+                            decode_list.get(5),
+                            decode_list.get(6),
+                            decode_list.get(7),
+                            decode_list.get(8),
+                            Integer.parseInt(decode_list.get(9)),
+                            token,
+                            isLiked
+                    ));
+                }
+                welfareViewAdapter.notifyDataSetChanged();
+            }
+        }
+        else{
+            String text = "총 0개의 복지가 있습니다.";
+            TextView tv_num_list = (TextView)findViewById(R.id.sub_title);
+            tv_num_list.setText(text);
+        }
     }
 
     private void getRecommendWelfareInfo(String token){
@@ -389,11 +558,6 @@ public class MainActivity extends AppCompatActivity {
                 },
                 1024
         );
-    }
-
-    // FirebaseApp initializeApp
-    public static class MyFirebaseMessagingService extends FirebaseMessagingService {
-
     }
 
     @Override

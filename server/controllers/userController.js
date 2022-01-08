@@ -5,53 +5,104 @@ const User_dibs = require('../models/dibs');
 
 // Import Modules
 let jwt = require("jsonwebtoken"); 
-let secretObj = require("../config/jwt"); 
+let secretObj = process.env.JWT_SECRET
 const crypto = require('crypto'); 
 
 // Import Sequelize Operator
 const { Op } = require("sequelize");
 
-// 로그인 Request 처리
-exports.userLogin = (req, res, next) => {
-    // request로 받은 비밀번호 해시화 
-    const hashed_pw = crypto.createHash('sha256').update(req.body.user_password).digest('base64');
+// 사용자의 로그인 세션을 확인하는 API
+exports.userSession = (req, res, next) => {
+    // 토큰 복호화 
+    const user_info = jwt.verify(req.body.token, secretObj);
 
-    // id로 해당 아이디를 가진 데이터를 db에서 찾기
-    User.findByPk(req.body.user_id).then(user=>{
-        // id, pw 일차하는 유저가 있다면 jwt token 생성 뒤 성공 json 보내기
-        if (req.body.user_id == user.user_id && hashed_pw == user.user_password){
-            // 토큰 생성 
-            let token = jwt.sign({
-                user_id : req.body.user_id,
-                user_password : req.body.user_password
-            }
-            , secretObj.secret
-            , { expiresIn: '365d'});
-
+    // 해당 유저가 존재한다면 성공 response 보내고 없다면 실패 response 보내기 
+    User.findByPk(user_info.user_id)
+    .then(user=>{
+        if(user != undefined){
             // 성공 json 보내기
             res.send(JSON.stringify({
                 "success": true,
                 "statusCode" : 200,
-                "token" : token
+                "token" : req.body.token
             }));
+
+            // request에 refresh된 토큰이 함께 온다면 db를 업데이트한다.
+            if (req.body.refreshed_ftoken != undefined) {   
+                User.update({
+                    user_mToken: req.body.refreshed_ftoken // refresh된 firebase token 
+                }, { where: { user_id: user_info.user_id }})
+            }
         }
-        else{
-            // 없다면 실패 json 보내기
+        else {
+            // 실패 json 보내기
             res.send(JSON.stringify({
                 "success": false,
                 "statusCode" : 202,
-                "token" : "DENIED"
+                "token" : undefined
             }));
         }
     })
-    .catch(err=>{
-        // 오류시 실패 json 보내기
-        res.send(JSON.stringify({
-            "success": false,
-            "statusCode" : 406,
-            "token" : "DENIED"
-        }));
-    });
+    .catch(err=>{console.log(err);})
+
+}
+
+// 로그인 Request 처리
+exports.userLogin = (req, res, next) => {
+    // request로 받은 비밀번호 해시화 
+    const password = req.body.user_password;
+    let encrypt = new Promise((resolve, rejects) => {
+        resolve(crypto.createHash('sha256').update(password).digest('base64'));
+    })
+
+    encrypt
+    .then(hashed_pw => {
+        // id로 해당 아이디를 가진 데이터를 db에서 찾기
+        User.findByPk(req.body.user_id)
+        .then(user=>{
+            // id, pw 일차하는 유저가 있다면 jwt token 생성 뒤 성공 json 보내기
+            if (req.body.user_id == user.user_id && hashed_pw == user.user_password){
+                // 토큰 생성 
+                let token = jwt.sign({
+                    user_id : req.body.user_id,
+                    user_password : req.body.user_password
+                }
+                , secretObj
+                , { expiresIn: '365d'});
+    
+                // 성공 json 보내기
+                res.send(JSON.stringify({
+                    "success": true,
+                    "statusCode" : 200,
+                    "token" : token
+                }));
+                
+                // request에 refresh된 토큰이 함께 온다면 db를 업데이트한다.
+                if (req.body.refreshed_ftoken != undefined) {   
+                    User.update({
+                        user_mToken: req.body.refreshed_ftoken // refresh된 firebase token 
+                    }, { where: { user_id: req.body.user_id }})
+                }
+            }
+            else{
+                // 없다면 실패 json 보내기
+                res.send(JSON.stringify({
+                    "success": false,
+                    "statusCode" : 202,
+                    "token" : "DENIED"
+                }));
+            }
+            return user
+        })
+        .catch(err=>{
+            // 오류시 실패 json 보내기
+            res.send(JSON.stringify({
+                "success": false,
+                "statusCode" : 406,
+                "token" : "DENIED"
+            }));
+        });
+    })
 }
 
 // 회원가입 Request 처리
@@ -71,7 +122,8 @@ exports.userRegister = (req, res, next) => {
         user_is_one_parent: req.body.user_is_one_parent,
         user_income: req.body.user_income,
         user_is_disabled: req.body.user_is_disabled,
-        user_mToken: req.body.token_firebase
+        user_mToken: req.body.token_firebase,
+        img_idx: req.body.img_idx
     })
     .then(result =>{
         // 관심 카테고리 테이블 생성 
@@ -119,7 +171,7 @@ exports.userRegister = (req, res, next) => {
         let token = jwt.sign({
             user_id : req.body.user_id,
             user_password : req.body.user_password
-        }, secretObj.secret, { expiresIn: '365d'});
+        }, secretObj, { expiresIn: '365d'});
 
         // 성공 json 보내기
         res.send(JSON.stringify({
@@ -144,7 +196,7 @@ exports.userRegister = (req, res, next) => {
 // 유저의 정보를 가져다주는 함수
 exports.userRead = (req, res, next) => {
     // 토큰 복호화 
-    const user_info = jwt.verify(req.body.token, secretObj.secret);
+    const user_info = jwt.verify(req.body.token, secretObj);
 
     // 토큰 값으로 해당 유저 검색
     User.findByPk(user_info.user_id)
@@ -177,7 +229,9 @@ exports.userRead = (req, res, next) => {
                 "user_is_one_parent": user.user_is_one_parent,
                 "user_income": user.user_income,
                 "user_is_disabled": user.user_is_disabled,
-                "user_interest" : interest
+                "user_interest" : interest,
+                "user_ftoken" : user.user_mToken,
+                "img_idx": user.img_idx
             }));  
         })
       })
@@ -195,7 +249,7 @@ exports.userRead = (req, res, next) => {
 // 유저 정보 갱신 Request 처리
 exports.userUpdate = (req, res, next) => {
     // 토큰 복호화 
-    const user_info = jwt.verify(req.body.token, secretObj.secret);
+    const user_info = jwt.verify(req.body.token, secretObj);
 
     // request로 받은 비밀번호 해시화 
     const hashed_pw = crypto.createHash('sha256').update(req.body.user_password).digest('base64');
@@ -212,7 +266,8 @@ exports.userUpdate = (req, res, next) => {
         user_is_multicultural: req.body.user_is_multicultural,
         user_family_state: req.body.user_family_state,
         user_income: req.body.user_income,
-        user_is_disabled: req.body.user_is_disabled
+        user_is_disabled: req.body.user_is_disabled,
+        img_idx: req.body.img_idx
     }, { where: { user_id: user_info.user_id }})
     .then(()=>{
         // 관심 카테고리 테이블 수정 
@@ -319,7 +374,7 @@ exports.userUpdate = (req, res, next) => {
 // 유저 삭제 Request 처리
 exports.userDelete = (req, res, next) => {
     // 토큰 복호화 
-    const user_info = jwt.verify(req.body.token, secretObj.secret);
+    const user_info = jwt.verify(req.body.token, secretObj);
 
     // 토큰 값으로 해당 유저 검색
     User.destroy({where: { user_id: user_info.user_id }})

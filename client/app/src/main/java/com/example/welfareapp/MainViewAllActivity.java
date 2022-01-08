@@ -50,7 +50,13 @@ public class MainViewAllActivity extends AppCompatActivity {
         welfareRecommendedRV.setAdapter(welfareViewAdapter);
 
         try{
-            getRecommendWelfareInfo(token);
+            //getRecommendWelfareInfo(token);
+            requestRecommendWelfareInfoAll(token, new VolleyCallBack() {
+                @Override
+                public void onSuccess() {
+                    updateRecommendWelfareAllOnUI(token);
+                }
+            });
             Log.v("MainViewAllActivity recommended welfare info load process","success");
         }
         catch(Exception err){
@@ -68,6 +74,180 @@ public class MainViewAllActivity extends AppCompatActivity {
                 finish();
             }
         });
+    }
+
+    public interface VolleyCallBack{
+        void onSuccess();
+    }
+
+    public synchronized void requestRecommendWelfareInfoAll(String token, final VolleyCallBack volleyCallBack){
+        JSONObject params = new JSONObject();
+        try{
+            params.put("token", token);
+        }
+        catch(JSONException e){
+            e.printStackTrace();
+            return;
+        }
+        SharedPreferences recommendWelfareInfo = getSharedPreferences("recommendWelfareInfo", MODE_PRIVATE);
+        SharedPreferences.Editor editor = recommendWelfareInfo.edit();
+
+        final JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(Request.Method.POST, url_welfare_recommend, params, new Response.Listener<JSONObject>() {
+            @Override
+            public void onResponse(JSONObject response) {
+                try{
+                    Boolean isSuccess = response.getBoolean("success");
+                    int statusCode = response.getInt("statusCode");
+                    String responseToken = response.getString("token");
+                    JSONArray jar = response.getJSONArray("recommend_welfare_list");
+
+                    editor.putBoolean("success", isSuccess);
+                    editor.putInt("statusCode", statusCode);
+                    editor.putInt("totalNum", jar.length());
+
+                    if(jar.length() > 0){
+                        for(int i = 0; i < jar.length();i++){
+                            int welfare_id = jar.getJSONObject(i).getInt("welfare_id");
+                            String title = jar.getJSONObject(i).getString("title");
+                            String summary = jar.getJSONObject(i).getString("summary");
+                            String who = jar.getJSONObject(i).getString("who");
+                            String criteria = jar.getJSONObject(i).getString("criteria");
+                            String what = jar.getJSONObject(i).getString("what");
+                            String how = jar.getJSONObject(i).getString("how");
+                            String info_calls = jar.getJSONObject(i).getString("calls");
+                            String sites  = jar.getJSONObject(i).getString("sites");
+                            int category = jar.getJSONObject(i).getInt("category");
+                            Boolean isLiked = jar.getJSONObject(i).getBoolean("isLiked");
+
+                            String key = "welfare_info_" + Integer.toString(i);
+                            ArrayList<String> list = new ArrayList<String>();
+                            list.add(Integer.toString(welfare_id));
+                            list.add(title);
+                            list.add(summary);
+                            list.add(who);
+                            list.add(criteria);
+                            list.add(what);
+                            list.add(how);
+                            list.add(info_calls);
+                            list.add(sites);
+                            list.add(Integer.toString(category));
+
+                            if(isLiked){
+                                list.add(Integer.toString(1));
+                            }
+                            else{
+                                list.add(Integer.toString(0));
+                            }
+
+                            JSONArray a = new JSONArray();
+                            for (int j = 0; j < list.size(); j++) {
+                                a.put(list.get(j));
+                            }
+                            if (!list.isEmpty()) {
+                                editor.putString(key, a.toString());
+                            } else {
+                                editor.putString(key, null);
+                            }
+                        }
+                        editor.commit();
+                    }
+                    volleyCallBack.onSuccess();
+                }
+                catch(JSONException e){
+                    e.printStackTrace();
+                }
+            }
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                error.printStackTrace();
+                editor.putBoolean("success", false);
+                editor.commit();
+            }
+        });
+        jsonObjectRequest.setShouldCache(false);
+        VolleySingleton.getInstance(this).addToRequestQueue(jsonObjectRequest);
+    }
+
+    public void updateRecommendWelfareAllOnUI(String token){
+        SharedPreferences recommendWelfareInfo = getSharedPreferences("recommendWelfareInfo", MODE_PRIVATE);
+        if(recommendWelfareInfo.getBoolean("success",false)){
+
+            for(int i = 0; i < recommendWelfareInfo.getInt("totalNum", 0); i++){
+
+                String key = "welfare_info_" + Integer.toString(i);
+                String json = recommendWelfareInfo.getString(key, null);
+                ArrayList<String> decode_list  = new ArrayList<String>();
+                if (json != null) {
+                    try {
+                        JSONArray a = new JSONArray(json);
+                        for (int j = 0; j < a.length(); j++) {
+                            String str = a.optString(j);
+                            decode_list.add(str);
+                        }
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+                }
+
+                try{
+                    if(Integer.parseInt(decode_list.get(10)) == 1){
+                        Boolean isLiked = true;
+                        welfareInfoComponentArrayList.add(new com.example.welfareapp.WelfareInfoComponent(
+                                Integer.parseInt(decode_list.get(0)),
+                                decode_list.get(1),
+                                decode_list.get(2),
+                                decode_list.get(3),
+                                decode_list.get(4),
+                                decode_list.get(5),
+                                decode_list.get(6),
+                                decode_list.get(7),
+                                decode_list.get(8),
+                                Integer.parseInt(decode_list.get(9)),
+                                token,
+                                isLiked
+                        ));
+                    }
+                    else{
+                        Boolean isLiked = false;
+                        welfareInfoComponentArrayList.add(new com.example.welfareapp.WelfareInfoComponent(
+                                Integer.parseInt(decode_list.get(0)),
+                                decode_list.get(1),
+                                decode_list.get(2),
+                                decode_list.get(3),
+                                decode_list.get(4),
+                                decode_list.get(5),
+                                decode_list.get(6),
+                                decode_list.get(7),
+                                decode_list.get(8),
+                                Integer.parseInt(decode_list.get(9)),
+                                token,
+                                isLiked
+                        ));
+                    }
+                }
+                catch(Exception error){
+                    error.printStackTrace();
+                    Log.v("MainViewAllActivity welfare isLiked loaded","failed");
+                    Boolean isLiked = false;
+                    welfareInfoComponentArrayList.add(new com.example.welfareapp.WelfareInfoComponent(
+                            Integer.parseInt(decode_list.get(0)),
+                            decode_list.get(1),
+                            decode_list.get(2),
+                            decode_list.get(3),
+                            decode_list.get(4),
+                            decode_list.get(5),
+                            decode_list.get(6),
+                            decode_list.get(7),
+                            decode_list.get(8),
+                            Integer.parseInt(decode_list.get(9)),
+                            token,
+                            isLiked
+                    ));
+                }
+                welfareViewAdapter.notifyDataSetChanged();
+            }
+        }
     }
 
     private void getRecommendWelfareInfo(String token){

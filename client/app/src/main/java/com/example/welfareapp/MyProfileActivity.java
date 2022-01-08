@@ -57,7 +57,13 @@ public class MyProfileActivity extends AppCompatActivity {
 
         /* data loaded from server */
         try{
-            getWelfareInfo(token);
+            //getWelfareInfo(token);
+            requestWelfareInfo(token, new VolleyCallBack() {
+                @Override
+                public void onSuccess() {
+                    updateWelfareInfoOnUI(token);
+                }
+            });
             getUserName(token);
         }
         catch(Exception e){
@@ -111,7 +117,7 @@ public class MyProfileActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 //Toast.makeText(getApplicationContext(), "푸시 알림 기능 ON(아직 개발중입니다..)", Toast.LENGTH_SHORT).show();
-                Intent intent = new Intent(MyProfileActivity.this, PushActivity.class);
+                Intent intent = new Intent(MyProfileActivity.this, PushNotificationActivity.class);
                 intent.putExtras(bundle);
                 startActivity(intent);
                 finish();
@@ -150,6 +156,153 @@ public class MyProfileActivity extends AppCompatActivity {
             }
         });
 
+    }
+
+    public interface VolleyCallBack{
+        void onSuccess();
+    }
+
+    public synchronized void requestWelfareInfo(String token, final VolleyCallBack volleyCallBack){
+        JSONObject params = new JSONObject();
+        try{
+            params.put("token", token);
+        }
+        catch(JSONException e){
+            e.printStackTrace();
+            return;
+        }
+        SharedPreferences welfareInfoResponse = getSharedPreferences("myProfileWelfareResponse", MODE_PRIVATE);
+        SharedPreferences.Editor editor= welfareInfoResponse.edit();
+
+        final JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(Request.Method.POST, url_my_welfare, params, new Response.Listener<JSONObject>() {
+            @Override
+            public void onResponse(JSONObject response) {
+                try{
+                    Boolean isSuccess = response.getBoolean("success");
+                    int statusCode = response.getInt("statusCode");
+                    String responseToken = response.getString("token");
+                    JSONArray jar = response.getJSONArray("recommend_welfare_list");
+                    editor.putBoolean("success", isSuccess);
+                    editor.putInt("statusCode", statusCode);
+                    editor.putInt("totalNum", jar.length());
+
+
+                    /* jar 로부터 복지정보 parsing */
+                    if(jar.length() > 0){
+                        for(int i = 0 ; i < jar.length() ; i++){
+                            int welfare_id = jar.getJSONObject(i).getInt("welfare_id");
+                            String title = jar.getJSONObject(i).getString("title");
+                            String summary = jar.getJSONObject(i).getString("summary");
+                            String who = jar.getJSONObject(i).getString("who");
+                            String criteria = jar.getJSONObject(i).getString("criteria");
+                            String what = jar.getJSONObject(i).getString("what");
+                            String how = jar.getJSONObject(i).getString("how");
+                            String info_calls = jar.getJSONObject(i).getString("calls");
+                            String sites  = jar.getJSONObject(i).getString("sites");
+                            int category = jar.getJSONObject(i).getInt("category");
+                            //Boolean isLiked = jar.getJSONObject(i).getBoolean("isLiked");
+
+                            String key = "welfare_info_" + Integer.toString(i);
+                            ArrayList<String> list = new ArrayList<String>();
+                            list.add(Integer.toString(welfare_id));
+                            list.add(title);
+                            list.add(summary);
+                            list.add(who);
+                            list.add(criteria);
+                            list.add(what);
+                            list.add(how);
+                            list.add(info_calls);
+                            list.add(sites);
+                            list.add(Integer.toString(category));
+                            //list.add(Boolean.toString(isLiked));
+
+                            JSONArray a = new JSONArray();
+                            for (int j = 0; j < list.size(); j++) {
+                                a.put(list.get(j));
+                            }
+                            if (!list.isEmpty()) {
+                                editor.putString(key, a.toString());
+                            } else {
+                                editor.putString(key, null);
+                            }
+                        }
+                        editor.commit();
+                    }
+                    volleyCallBack.onSuccess();
+                }
+                catch(JSONException e){
+                    e.printStackTrace();
+                }
+            }
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                error.printStackTrace();
+                editor.putBoolean("success", false);
+                editor.commit();
+            }
+        });
+        jsonObjectRequest.setShouldCache(false);
+        VolleySingleton.getInstance(this).addToRequestQueue(jsonObjectRequest);
+    }
+
+    public void updateWelfareInfoOnUI(String token){
+        SharedPreferences welfareInfoResponse = getSharedPreferences("myProfileWelfareResponse", MODE_PRIVATE);
+        if(welfareInfoResponse.getBoolean("success", false)){
+
+            TextView tv_num_list = (TextView)findViewById(R.id.text_num_list);
+            String text = "총 " + Integer.toString(welfareInfoResponse.getInt("totalNum",0)) + "개의 복지가 있습니다.";
+            tv_num_list.setText(text);
+
+            int totalNum = welfareInfoResponse.getInt("totalNum", 0);
+
+            if(totalNum < 2){
+
+            }
+            else if(totalNum >= 2){
+                totalNum = 2;
+            }
+
+            for(int i = 0; i < totalNum; i++){
+
+                String key = "welfare_info_" + Integer.toString(i);
+                String json = welfareInfoResponse.getString(key, null);
+                ArrayList<String> decode_list  = new ArrayList<String>();
+                if (json != null) {
+                    try {
+                        JSONArray a = new JSONArray(json);
+                        for (int j = 0; j < a.length(); j++) {
+                            String str = a.optString(j);
+                            decode_list.add(str);
+                        }
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+                }
+
+                int category = Integer.parseInt(decode_list.get(9));
+                welfareInfoComponentArrayList.add(new WelfareInfoComponent(
+                        Integer.parseInt(decode_list.get(0)),
+                        decode_list.get(1),
+                        decode_list.get(2),
+                        decode_list.get(3),
+                        decode_list.get(4),
+                        decode_list.get(5),
+                        decode_list.get(6),
+                        decode_list.get(7),
+                        decode_list.get(8),
+                        category,
+                        token,
+                        true
+                ));
+                welfareViewAdapter.notifyDataSetChanged();
+            }
+        }
+        else{
+            String text = "총 0개의 복지가 있습니다.";
+            TextView tv_num_list = (TextView)findViewById(R.id.text_num_list);
+            tv_num_list.setText(text);
+        }
     }
 
     private void getWelfareInfo(String token){

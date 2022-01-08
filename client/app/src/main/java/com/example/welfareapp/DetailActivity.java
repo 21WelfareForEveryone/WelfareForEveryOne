@@ -47,7 +47,14 @@ public class DetailActivity extends AppCompatActivity {
         Boolean is_liked = bundle.getBoolean("is_liked", false);
 
         try{
-            getDetailInfo(welfare_id, token);
+            //getDetailInfo(welfare_id, token);
+
+            requestDetailInfo(welfare_id, token, new VolleyCallBack() {
+                @Override
+                public void onSuccess() {
+                    updateDetailInfoOnUI(welfare_id, token);
+                }
+            });
             Log.v("DetailActivity bundle data to text view","start");
         }
         catch(Exception err){
@@ -157,6 +164,157 @@ public class DetailActivity extends AppCompatActivity {
             }
         });
 
+    }
+
+    public interface VolleyCallBack {
+        void onSuccess();
+    }
+
+    public synchronized void requestDetailInfo(int welfare_id, String token, final VolleyCallBack volleyCallBack){
+        JSONObject params = new JSONObject();
+        try{
+            params.put("token", token);
+            params.put("welfare_id", welfare_id);
+        }
+        catch(JSONException e){
+            e.printStackTrace();
+            return;
+        }
+
+        SharedPreferences detailInfo = getSharedPreferences("detailInfo", MODE_PRIVATE);
+        SharedPreferences.Editor editor = detailInfo.edit();
+
+        final JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(Request.Method.POST, url_welfare_read, params, new Response.Listener<JSONObject>() {
+            @Override
+            public void onResponse(JSONObject response) {
+                try{
+                    Boolean isSuccess = response.getBoolean("success");
+                    int statusCode = response.getInt("statusCode");
+                    int welfare_id = response.getInt("welfare_id");
+                    String title = response.getString("title");
+                    String summary = response.getString("summary");
+                    String who = response.getString("who");
+                    String criteria = response.getString("criteria");
+                    String how = response.getString("how");
+                    String calls = response.getString("calls");
+                    String sites = response.getString("sites");
+                    //int like_count = response.getInt("like_count");
+                    int category = response.getInt("category");
+                    Boolean isLiked = response.getBoolean("isLiked");
+
+                    editor.putBoolean("success", isSuccess);
+                    editor.putInt("statusCode", statusCode);
+                    editor.putInt("welfare_id", welfare_id);
+                    editor.putString("title", title);
+                    editor.putString("summary", summary);
+                    editor.putString("who", who);
+                    editor.putString("criteria", criteria);
+                    editor.putString("how", how);
+                    editor.putString("calls", calls);
+                    editor.putString("sites", sites);
+                    editor.putInt("category", category);
+                    editor.putBoolean("isLiked", isLiked);
+                    editor.commit();
+                    volleyCallBack.onSuccess();
+                }
+                catch(JSONException err){
+                    err.printStackTrace();
+                }
+            }
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                error.printStackTrace();
+                editor.putBoolean("success", false);
+                editor.commit();
+            }
+        });
+        jsonObjectRequest.setShouldCache(false);
+        AppHelper.requestQueue.add(jsonObjectRequest);
+    }
+    public void updateDetailInfoOnUI(int welfare_id, String token){
+        SharedPreferences detailInfo = getSharedPreferences("detailInfo", MODE_PRIVATE);
+        if(detailInfo.getBoolean("success", false)){
+            TextView tv_title = (TextView) findViewById(R.id.tv_title);
+            TextView tv_detail = (TextView) findViewById(R.id.tv_detail);
+            TextView tv_who = (TextView) findViewById(R.id.tv_who);
+            TextView tv_criteria = (TextView) findViewById(R.id.tv_criteria);
+            TextView tv_how =  (TextView) findViewById(R.id.tv_how);
+            TextView tv_calls =  (TextView) findViewById(R.id.tv_calls);
+            TextView tv_sites =  (TextView) findViewById(R.id.tv_sites);
+
+            tv_title.setText(detailInfo.getString("title",""));
+            tv_detail.setText(detailInfo.getString("summary",""));
+            tv_who.setText(detailInfo.getString("who",""));
+            tv_criteria.setText(detailInfo.getString("criteria",""));
+            tv_how.setText(detailInfo.getString("how",""));
+            tv_calls.setText(detailInfo.getString("calls",""));
+            tv_sites.setText(detailInfo.getString("sites",""));
+
+            ToggleButton toggleButton = (ToggleButton)findViewById(R.id.toggle_favorite);
+            toggleButton.setChecked(detailInfo.getBoolean("isLiked", false));
+
+            ImageView welfare_info_img = (ImageView)findViewById(R.id.welfare_info_img);
+
+            // category 별로 이미지 사진 첨부
+            // post 요청시 category 값을 받아온다면 바로 호출 가능..
+
+            int category_num  = detailInfo.getInt("category",0);
+            Log.v("DetailActivity category_num", Integer.toString(category_num));
+
+            switch(category_num){
+                case 0:
+                    welfare_info_img.setImageResource(R.drawable.img_category_00);
+                    break;
+                case 1:
+                    welfare_info_img.setImageResource(R.drawable.img_category_01);
+                    break;
+                case 2:
+                    welfare_info_img.setImageResource(R.drawable.img_category_02);
+                    break;
+                case 3:
+                    welfare_info_img.setImageResource(R.drawable.img_category_03);
+                    break;
+                case 4:
+                    welfare_info_img.setImageResource(R.drawable.img_category_04);
+                    break;
+                case 5:
+                    welfare_info_img.setImageResource(R.drawable.img_category_05);
+                    break;
+                case 6:
+                    welfare_info_img.setImageResource(R.drawable.img_category_06);
+                    break;
+                case 7:
+                    welfare_info_img.setImageResource(R.drawable.img_category_07);
+                    break;
+                case 8:
+                    welfare_info_img.setImageResource(R.drawable.img_category_08);
+                    break;
+                case 9:
+                    welfare_info_img.setImageResource(R.drawable.img_category_09);
+                    break;
+                case 10:
+                    welfare_info_img.setImageResource(R.drawable.img_category_10);
+                    break;
+                case 11:
+                    welfare_info_img.setImageResource(R.drawable.img_category_11);
+                    break;
+                case 12:
+                    welfare_info_img.setImageResource(R.drawable.img_category_12);
+                    break;
+                case 13:
+                    welfare_info_img.setImageResource(R.drawable.img_category_13);
+                    break;
+                case 14:
+                    welfare_info_img.setImageResource(R.drawable.img_category_14);
+                    break;
+                case 15:
+                    welfare_info_img.setImageResource(R.drawable.img_category_15);
+                    break;
+                default:
+                    break;
+            }
+        }
     }
 
     private void getDetailInfo(int welfare_id, String token){
