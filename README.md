@@ -71,6 +71,5 @@ docker run --gpus all --rm -it -p 5000:8888 --name=kosbert_image kosbert_image:l
 - [Sentence Transformers: Multilingual Sentence Embeddings using BERT / RoBERTa / XLM-RoBERTa & Co. with PyTorch](https://github.com/UKPLab/sentence-transformers)
 
 <br>
-<br>
 
 #### 본 프로젝트는 Google의 GCP Credit 지원을 받고 있습니다. (Google supported this work by providing Google Cloud credit)
