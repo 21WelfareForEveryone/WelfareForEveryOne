@@ -4,6 +4,8 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.Handler;
+import android.text.Html;
+import android.text.method.LinkMovementMethod;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -285,6 +287,8 @@ public class RegisterActivity extends AppCompatActivity {
             }
         });
 
+        checkBox2.setText(Html.fromHtml( "<a href='https://welfareforeveryone.notion.site/12cfd3e97bbc43419596de64138192c3'>서비스 이용 약관 </a>"));
+        checkBox2.setMovementMethod(LinkMovementMethod.getInstance());
         checkBox2.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -298,6 +302,8 @@ public class RegisterActivity extends AppCompatActivity {
             }
         });
 
+        checkBox3.setText(Html.fromHtml( "<a href='https://welfareforeveryone.notion.site/c2797e0445e947808369acf5702cffa0'>개인정보 처리방침</a>"));
+        checkBox3.setMovementMethod(LinkMovementMethod.getInstance());
         checkBox3.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -309,6 +315,8 @@ public class RegisterActivity extends AppCompatActivity {
             }
         });
 
+        checkBox4.setText(Html.fromHtml( "<a href='https://welfareforeveryone.notion.site/5011d8fa8f9441bfb22fc85d95f45178 '>위치정보 이용약관</a>"));
+        checkBox4.setMovementMethod(LinkMovementMethod.getInstance());
         checkBox4.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
