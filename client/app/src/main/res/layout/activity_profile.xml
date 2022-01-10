@@ -44,13 +44,12 @@
                 app:layout_constraintRight_toRightOf="parent"
                 android:layout_marginTop="60dp"
                 android:layout_marginLeft="60dp"
-                android:id="@+id/img_view3"
+                android:id="@+id/iv_photo_add"
                 android:layout_width="30dp"
                 android:layout_height="30dp"
                 android:adjustViewBounds="true"
                 android:scaleType="centerCrop"
                 android:src="@drawable/photo_button">
-
             </ImageView>
 
             <LinearLayout

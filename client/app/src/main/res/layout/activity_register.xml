@@ -30,16 +30,14 @@
                 android:id = "@+id/user_img"
                 android:layout_gravity="center"
                 app:cardElevation="0dp">
-
                 <ImageView
                     android:contentDescription="프로필 사진 추가하기"
-                    android:id="@+id/img_view2"
+                    android:id="@+id/iv_user_img"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:adjustViewBounds="true"
                     android:scaleType="centerCrop"
                     android:src="@drawable/profile_default">
-
                 </ImageView>
             </androidx.cardview.widget.CardView>
 
@@ -49,7 +47,7 @@
                 app:layout_constraintRight_toRightOf="parent"
                 android:layout_marginTop="60dp"
                 android:layout_marginLeft="40dp"
-                android:id="@+id/img_view3"
+                android:id="@+id/iv_photo_add"
                 android:layout_width="30dp"
                 android:layout_height="30dp"
                 android:adjustViewBounds="true"

@@ -41,18 +41,16 @@ public class IntroActivity extends AppCompatActivity {
 
 
         // 기존 IntroActivity : 2s 기다린 후 handler 내 run 메서드에서 intent 전환
-        Handler handler = new Handler();
-        handler.postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                Intent intent = new Intent(IntroActivity.this, LoginActivity.class);
-                startActivity(intent);
-                finish();
-            }
-        }, 2000);
+//        Handler handler = new Handler();
+//        handler.postDelayed(new Runnable() {
+//            @Override
+//            public void run() {
+//                Intent intent = new Intent(IntroActivity.this, LoginActivity.class);
+//                startActivity(intent);
+//                finish();
+//            }
+//        }, 2000);
 
-
-        /*
         // (21.12.29) sharedpreferences에 이미 token_firebase와 token이 있을 경우 자동 로그인
         requestLoginStatus(token, token_firebase, new VolleyCallBack() {
             @Override
@@ -75,8 +73,6 @@ public class IntroActivity extends AppCompatActivity {
                 }
             }
         });
-
-         */
     }
 
     public interface VolleyCallBack {
