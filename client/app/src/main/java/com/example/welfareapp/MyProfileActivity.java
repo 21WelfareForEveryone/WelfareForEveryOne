@@ -11,6 +11,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -38,10 +39,13 @@ public class MyProfileActivity extends AppCompatActivity {
     private ArrayList<com.example.welfareapp.WelfareInfoComponent> welfareInfoComponentArrayList;
 
     private static long back_pressed;
+    ImageView user_img_view;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_my_profile);
+
+        user_img_view = (ImageView) findViewById(R.id.user_img_view);
 
         Bundle bundle = (Bundle) getIntent().getExtras();
         String token = bundle.getString("token");
@@ -117,7 +121,7 @@ public class MyProfileActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 //Toast.makeText(getApplicationContext(), "푸시 알림 기능 ON(아직 개발중입니다..)", Toast.LENGTH_SHORT).show();
-                Intent intent = new Intent(MyProfileActivity.this, PushActivity.class);
+                Intent intent = new Intent(MyProfileActivity.this, PushNotificationActivity.class);
                 intent.putExtras(bundle);
                 startActivity(intent);
                 finish();
@@ -496,6 +500,47 @@ public class MyProfileActivity extends AppCompatActivity {
                     String text = username + "님";
                     TextView tv_user_name = (TextView)findViewById(R.id.tv_user_name);
                     tv_user_name.setText(text);
+                    Log.v("MyProfileActivity user name", username);
+
+                    int img_idx;
+                    if(response.get("img_idx").toString() != null){
+                        img_idx = response.getInt("img_idx");
+                        switch (img_idx){
+                            case 0:
+                                user_img_view.setImageResource(R.drawable.baby);
+                                break;
+                            case 1:
+                                user_img_view.setImageResource(R.drawable.children);
+                                break;
+                            case 2:
+                                user_img_view.setImageResource(R.drawable.woman);
+                                break;
+                            case 3:
+                                user_img_view.setImageResource(R.drawable.man);
+                                break;
+                            case 4:
+                                user_img_view.setImageResource(R.drawable.old_woman);
+                                break;
+                            case 5:
+                                user_img_view.setImageResource(R.drawable.old_man);
+                                break;
+                            case 6:
+                                user_img_view.setImageResource(R.drawable.pregnant);
+                                break;
+                            case 7:
+                                user_img_view.setImageResource(R.drawable.multicultural);
+                                break;
+                            case 8:
+                                user_img_view.setImageResource(R.drawable.disabled);
+                                break;
+                            default:
+                                break;
+                        }
+                    }
+                    else{
+                        img_idx = 0;
+                        user_img_view.setImageResource(R.drawable.ic_user_profile);
+                    }
                 }
                 catch(JSONException err){
                     err.printStackTrace();

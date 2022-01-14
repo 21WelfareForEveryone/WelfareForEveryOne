@@ -4,7 +4,10 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.Handler;
+import android.text.Html;
+import android.text.method.LinkMovementMethod;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
@@ -12,6 +15,8 @@ import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.ImageButton;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.Spinner;
@@ -26,8 +31,10 @@ import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
+import com.google.android.material.bottomsheet.BottomSheetDialog;
 import com.google.firebase.FirebaseApp;
 import com.google.firebase.messaging.FirebaseMessaging;
+import com.makeramen.roundedimageview.RoundedImageView;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -89,9 +96,13 @@ public class RegisterActivity extends AppCompatActivity {
 
     int interest;
 
+    int img_idx;
+
     // Firebase Push Notification
     private static final String TAG = "RegisterActivity Firebase Push Token Process";
 
+    // User ImageView
+    ImageView user_img_view;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -126,8 +137,135 @@ public class RegisterActivity extends AppCompatActivity {
             Log.v("FirebaseApp error on RegisterActivity", err.getMessage());
         }
 
-        // agreement
+        // User Image Selection
+        // User Image Dialog
+        user_img_view = (ImageView)findViewById(R.id.iv_user_img);
+        ImageView iv_photo_add = (ImageView)findViewById(R.id.iv_photo_add);
+        iv_photo_add.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                BottomSheetDialog bottomSheetDialog = new BottomSheetDialog(
+                        RegisterActivity.this, R.style.BottomSheetDialogTheme
+                );
+                View bottomSheetView = LayoutInflater.from(getApplicationContext())
+                        .inflate(
+                                R.layout.user_img_select_dialog,
+                                (LinearLayout)findViewById(R.id.profileImageContainer)
+                        );
 
+                RoundedImageView image_baby = bottomSheetView.findViewById(R.id.image_baby);
+                image_baby.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        Toast.makeText(RegisterActivity.this, "선택한 이미지를 프로필로 설정합니다", Toast.LENGTH_SHORT).show();
+                        bottomSheetDialog.dismiss();
+                        img_idx = 0;
+                        user_img_view.setImageResource(R.drawable.baby);
+                    }
+                });
+                bottomSheetDialog.setContentView(bottomSheetView);
+                bottomSheetDialog.show();
+                RoundedImageView image_child = bottomSheetView.findViewById(R.id.image_child);
+                image_child.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        Toast.makeText(RegisterActivity.this, "선택한 이미지를 프로필로 설정합니다", Toast.LENGTH_SHORT).show();
+                        bottomSheetDialog.dismiss();
+                        img_idx = 1;
+                        user_img_view.setImageResource(R.drawable.children);
+                    }
+                });
+                bottomSheetDialog.setContentView(bottomSheetView);
+                bottomSheetDialog.show();
+                RoundedImageView image_woman = bottomSheetView.findViewById(R.id.image_woman);
+                image_woman.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        Toast.makeText(RegisterActivity.this, "선택한 이미지를 프로필로 설정합니다", Toast.LENGTH_SHORT).show();
+                        bottomSheetDialog.dismiss();
+                        img_idx = 2;
+                        user_img_view.setImageResource(R.drawable.woman);
+                    }
+                });
+                bottomSheetDialog.setContentView(bottomSheetView);
+                bottomSheetDialog.show();
+                RoundedImageView image_man = bottomSheetView.findViewById(R.id.image_man);
+                image_man.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        Toast.makeText(RegisterActivity.this, "선택한 이미지를 프로필로 설정합니다", Toast.LENGTH_SHORT).show();
+                        bottomSheetDialog.dismiss();
+                        img_idx = 3;
+                        user_img_view.setImageResource(R.drawable.man);
+                    }
+                });
+                bottomSheetDialog.setContentView(bottomSheetView);
+                bottomSheetDialog.show();
+                RoundedImageView image_old_woman = bottomSheetView.findViewById(R.id.image_old_woman);
+                image_old_woman.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        Toast.makeText(RegisterActivity.this, "선택한 이미지를 프로필로 설정합니다", Toast.LENGTH_SHORT).show();
+                        bottomSheetDialog.dismiss();
+                        img_idx = 4;
+                        user_img_view.setImageResource(R.drawable.old_woman);
+                    }
+                });
+                bottomSheetDialog.setContentView(bottomSheetView);
+                bottomSheetDialog.show();
+                RoundedImageView image_old_man = bottomSheetView.findViewById(R.id.image_old_man);
+                image_old_man.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        Toast.makeText(RegisterActivity.this, "선택한 이미지를 프로필로 설정합니다", Toast.LENGTH_SHORT).show();
+                        bottomSheetDialog.dismiss();
+                        img_idx = 5;
+                        user_img_view.setImageResource(R.drawable.old_man);
+                    }
+                });
+                bottomSheetDialog.setContentView(bottomSheetView);
+                bottomSheetDialog.show();
+                RoundedImageView image_pregnant = bottomSheetView.findViewById(R.id.image_pregnant);
+                image_pregnant.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        Toast.makeText(RegisterActivity.this, "선택한 이미지를 프로필로 설정합니다", Toast.LENGTH_SHORT).show();
+                        bottomSheetDialog.dismiss();
+                        img_idx = 6;
+                        user_img_view.setImageResource(R.drawable.pregnant);
+                    }
+                });
+                bottomSheetDialog.setContentView(bottomSheetView);
+                bottomSheetDialog.show();
+                RoundedImageView image_multicultural = bottomSheetView.findViewById(R.id.image_multicultural);
+                image_multicultural.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        Toast.makeText(RegisterActivity.this, "선택한 이미지를 프로필로 설정합니다", Toast.LENGTH_SHORT).show();
+                        bottomSheetDialog.dismiss();
+                        img_idx = 7;
+                        user_img_view.setImageResource(R.drawable.multicultural);
+                    }
+                });
+                bottomSheetDialog.setContentView(bottomSheetView);
+                bottomSheetDialog.show();
+                RoundedImageView image_disabled = bottomSheetView.findViewById(R.id.image_disabled);
+                image_disabled.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        Toast.makeText(RegisterActivity.this, "선택한 이미지를 프로필로 설정합니다", Toast.LENGTH_SHORT).show();
+                        bottomSheetDialog.dismiss();
+                        img_idx = 8;
+                        user_img_view.setImageResource(R.drawable.disabled);
+                    }
+                });
+                bottomSheetDialog.setContentView(bottomSheetView);
+                bottomSheetDialog.show();
+            }
+        });
+
+
+        // agreement
         //전체동의
         CheckBox checkBox=findViewById(R.id.checkBox);
         CheckBox checkBox2=findViewById(R.id.checkBox2);
@@ -149,6 +287,8 @@ public class RegisterActivity extends AppCompatActivity {
             }
         });
 
+        checkBox2.setText(Html.fromHtml( "<a href='https://welfareforeveryone.notion.site/12cfd3e97bbc43419596de64138192c3'>서비스 이용 약관 </a>"));
+        checkBox2.setMovementMethod(LinkMovementMethod.getInstance());
         checkBox2.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -162,6 +302,8 @@ public class RegisterActivity extends AppCompatActivity {
             }
         });
 
+        checkBox3.setText(Html.fromHtml( "<a href='https://welfareforeveryone.notion.site/c2797e0445e947808369acf5702cffa0'>개인정보 처리방침</a>"));
+        checkBox3.setMovementMethod(LinkMovementMethod.getInstance());
         checkBox3.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -173,6 +315,8 @@ public class RegisterActivity extends AppCompatActivity {
             }
         });
 
+        checkBox4.setText(Html.fromHtml( "<a href='https://welfareforeveryone.notion.site/5011d8fa8f9441bfb22fc85d95f45178 '>위치정보 이용약관</a>"));
+        checkBox4.setMovementMethod(LinkMovementMethod.getInstance());
         checkBox4.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -377,12 +521,9 @@ public class RegisterActivity extends AppCompatActivity {
 
                 registerUser(user_name, user_id, user_password, user_gender,
                         user_income, user_address, user_life_cycle, user_is_multicultural,
-                        user_is_one_parent, user_is_disabled, user_interest, token_firebase);
-
-                new Handler().postDelayed(
-                        new Runnable() {
+                        user_is_one_parent, user_is_disabled, user_interest, token_firebase, img_idx, new VolleyCallBack() {
                             @Override
-                            public void run() {
+                            public void onSuccess() {
                                 SharedPreferences sharedPreferences= getSharedPreferences("user_info", MODE_PRIVATE);
                                 Boolean isSuccess  = sharedPreferences.getBoolean("success", false);
                                 String mToken = sharedPreferences.getString("token", "");
@@ -405,9 +546,7 @@ public class RegisterActivity extends AppCompatActivity {
                                     Log.v("Register Process","failed");
                                 }
                             }
-                        },
-                        1024
-                );
+                        });
             }
         });
 
@@ -421,12 +560,13 @@ public class RegisterActivity extends AppCompatActivity {
             }
         });
     }
+    public interface VolleyCallBack {
+        void onSuccess();
+    }
 
     private void registerUser(String user_name, String user_id, String user_password, int user_gender,
                               int user_income, String user_address, int user_life_cycle, int user_is_multicultural,
-                              int user_is_one_parent, int user_is_disabled, int user_interest, String token_firebase){
-
-        // String token_firebase = "";
+                              int user_is_one_parent, int user_is_disabled, int user_interest, String token_firebase, int img_idx, final VolleyCallBack volleyCallBack){
 
         // log list for variable request check
         Log.v("user_name_check", "user_name: " + user_name);
@@ -440,6 +580,7 @@ public class RegisterActivity extends AppCompatActivity {
         Log.v("user_is_one_parent_check", "user_is_one_parent: " + user_is_one_parent);
         Log.v("user_is_disabled_check", "user_is_disabled: " + user_is_disabled);
         Log.v("user_interest_check", "user_interest: " + user_interest);
+        Log.v("user_token_firebase", "token_firebase: " + token_firebase);
 
         // Register Request
         JSONObject params = new JSONObject();
@@ -457,12 +598,14 @@ public class RegisterActivity extends AppCompatActivity {
             params.put("user_is_disabled", user_is_disabled);
             params.put("user_interest", user_interest);
             params.put("token_firebase", token_firebase);
+            params.put("img_idx", img_idx);
 
             Log.v("Register params input process","success");
         }
         catch(JSONException e){
             e.printStackTrace();
             Log.v("Register params input process","failed");
+            return;
         }
 
         Log.v("RegisterActivity params", params.toString());
@@ -484,6 +627,7 @@ public class RegisterActivity extends AppCompatActivity {
                     editor.putInt("statusCode", statusCode);
                     editor.putBoolean("success", isSuccess);
                     editor.commit();
+                    volleyCallBack.onSuccess();
 
                     Log.v("on register response isSuccess: ", isSuccess.toString());
                     Log.v("on register response statusCode : ", Integer.toString(statusCode));

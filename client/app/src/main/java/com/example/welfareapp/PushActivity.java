@@ -171,9 +171,7 @@ public class PushActivity extends AppCompatActivity {
                     @Override
                     public void run() {
                         if(pushResponse.getBoolean("success", false)){
-
                             for(int i = 0; i < pushResponse.getInt("totalNum", 0); i++){
-
                                 String key = "welfare_info_" + Integer.toString(i);
                                 String json = pushResponse.getString(key, null);
                                 Log.v("PushActivity JSON string type loaded", json.toString());
@@ -190,7 +188,6 @@ public class PushActivity extends AppCompatActivity {
                                         e.printStackTrace();
                                     }
                                 }
-
                                 pushNotificationComponentArrayList.add(new PushNotificationComponent(
                                         Integer.parseInt(decode_list.get(0)),
                                         decode_list.get(1),

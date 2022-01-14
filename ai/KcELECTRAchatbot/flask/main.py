@@ -27,7 +27,7 @@ class TrainDataset(Dataset):
         self.labels = [np.int32(i[1]) for i in dataset]
 
     def __len__(self):
-        return len(self.labels)
+        return (len(self.labels))
 
     def __getitem__(self, i):
         text = self.sentences[i]
@@ -91,11 +91,10 @@ def get_feature_dataframe(user):
     cursor = conn.cursor()
 
     feature_table = []
-    col_name = ["user_id", "user_gender", "user_age", "user_life_cycle", "user_is_multicultural", "user_is_one_parent", "user_income", "user_is_disabled"]
+    col_name = ["user_id", "user_gender", "user_life_cycle", "user_is_multicultural", "user_is_one_parent", "user_income", "user_is_disabled"]
 
     cursor.execute('SELECT * FROM user WHERE user_id = "%s"' % user)
-
-    user_feature = cursor.fetchone()[0:8]
+    user_feature = cursor.fetchone()[0:7]
     feature_table.append(list(user_feature))
 
     cursor.execute('SELECT * FROM user WHERE user_id != "%s"' % user)
@@ -103,7 +102,7 @@ def get_feature_dataframe(user):
     another_user_feature = cursor.fetchall()
 
     for i in another_user_feature:
-        feature_table.append(list(i[0:8]))
+        feature_table.append(list(i[0:7]))
     similarity_dataframe = pd.DataFrame(feature_table, columns=col_name)
     similarity_dataframe.set_index('user_id', inplace=True)
 
@@ -151,7 +150,7 @@ def get_collaborative_filtering_welfare(user, size):
 
 
 # 관심 카테고리 복지 중 좋아요 개수 상위
-def get_interest_most_like_welfare(user, size):
+def get_interest_most_like_welfare(user):
 
     # MySQL 연결
     conn = pymysql.connect(
@@ -166,17 +165,21 @@ def get_interest_most_like_welfare(user, size):
     cursor = conn.cursor()
 
     welfare_list = []
+    category_list = []
+    cursor.execute('SELECT category_id '
+                   'FROM user_interest '
+                   'WHERE user_id = "%s" ' % user)
+    category = cursor.fetchall()
+    for i in category:
+        category_list.append(i[0])
 
-    cursor.execute('SELECT b.welfare_id FROM user_interest a '
-                   'INNER JOIN welfare_category b ON a.category_id = b.category_id '
-                   'INNER JOIN welfare c ON b.welfare_id = c.welfare_id '
-                   'WHERE a.user_id = "%s"ORDER BY c.like_count DESC' % user)
-    welfare = cursor.fetchmany(size=size)
-
-    for i in welfare:
-        welfare_list.append(i[0])
-
-    conn.close()
+    for i in category_list:
+        cursor.execute('SELECT b.welfare_id FROM user_interest a '
+                       'INNER JOIN welfare_category b ON a.category_id = b.category_id '
+                       'INNER JOIN welfare c ON b.welfare_id = c.welfare_id '
+                       'WHERE a.user_id = "%s" and b.category_id = "%d" ORDER BY c.like_count DESC ' % (user, i))
+        welfare = cursor.fetchone()
+        welfare_list.append(welfare[0])
 
     return welfare_list
 
@@ -212,7 +215,7 @@ def get_most_like_welfare(size):
 # 메인 화면 추천 6개
 def main_recommend(user):
     welfare1 = get_collaborative_filtering_welfare(user, 2)
-    welfare2 = get_interest_most_like_welfare(user, 2)
+    welfare2 = get_interest_most_like_welfare(user)
     welfare3 = get_most_like_welfare(2)
 
     welfare_list = welfare1 + welfare2 + welfare3
@@ -222,10 +225,9 @@ def main_recommend(user):
 
 # 개인 복지 추천 3개
 def personal_recommend(user):
-    welfare1 = get_collaborative_filtering_welfare(user, 2)
-    welfare2 = get_interest_most_like_welfare(user, 1)
+    welfare1 = get_collaborative_filtering_welfare(user, 3)
 
-    welfare_list = welfare1 + welfare2
+    welfare_list = welfare1
 
     return welfare_list
 
@@ -235,6 +237,8 @@ device = torch.device('cpu')
 
 # LOAD CHATBOT MODEL
 model = load_model()
+model = model.to(device)
+model.eval()
 
 # Initialize
 app = Flask(__name__)
@@ -260,15 +264,9 @@ Flask Server의 Response
 # Define a route for url
 @app.route('/chatbot', methods=['GET', 'POST'])
 def action():
-    global model
-
     reqJson = request.get_json()
     user_message = reqJson["message"]
     user_id = reqJson["id"]
-
-    model = model.to(device)
-
-    model.eval()
 
     chatbot_label = predict(user_message)
 
@@ -301,7 +299,7 @@ Node Server의 Request
 
 Flask Server의 Response
     {
-        "welfare" : ["welfareid1","welfareid2","welfareid3","welfareid4","welfareid5","welfareid6"]    
+        "welfare" : ["welfareid1","welfareid2","welfareid3", ...]    
     }
 """
 
@@ -323,4 +321,4 @@ def action2():
 
 # Run the app
 if __name__ == '__main__':
-    app.run(host='0.0.0.0', debug=True, port=8000)
+    app.run(host='0.0.0.0', port=8000)

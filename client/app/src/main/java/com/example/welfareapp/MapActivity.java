@@ -96,9 +96,13 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
     // A default location and default zoom to use when location permission is not granted
     private final LatLng defaultLocation = new LatLng(37.513055, 127.059765); // 서울 강남구 위치를 디폴트 값으로 설정
     private static final int DEFAULT_ZOOM = 15;
+    int CURRENT_ZOOM = 15;
+    int ZOOM_MAX = 17;
+    int ZOOM_MIN = 13;
     private static final int PERMISSIONS_REQUEST_ACCESS_FINE_LOCATION = 1;
     private boolean locationPermissionGranted;
     private Location lastKnownLocation;
+    private LatLng currentLocation;
 
     // Keys for storing activity state.
     private static final String KEY_CAMERA_POSITION = "camera_position";
@@ -153,11 +157,11 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
         // Prompt the user for permission.
         getLocationPermission();
 
-        // Turn on the My Location layer and the related control on the map.
-        updateUserLocation();
-
         // Get the current location of the device and set the position of the map.
         getDeviceLocation();
+
+        // Turn on the My Location layer and the related control on the map.
+        updateUserLocation();
 
         BottomNavigationView bottomNavigationView = findViewById(R.id.nav_view);
         bottomNavigationView.setSelectedItemId(R.id.navigation_3);
@@ -248,6 +252,7 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
                 TextView txt_search_radius = findViewById(R.id.txt_search_radius);
                 txt_search_radius.setText(String.format("검색반경:%d(m)", seekBar.getProgress()));
                 searchRadius = (int)seekBar.getProgress();
+                zoomControl(searchRadius);
             }
             @Override
             public void onStartTrackingTouch(SeekBar seekBar) {
@@ -263,7 +268,7 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
                 new Button.OnClickListener() {
                     public void onClick(View v) {
                         previous_marker.clear();
-                        String url = downloadUrl.getUrl("복지회관", 5000, placeAPIKey, defaultLocation);
+                        String url = downloadUrl.getUrl("복지회관", searchRadius, placeAPIKey, currentLocation);
                         downloadUrl.getPlaceDataFromUrl(url, new VolleyCallBack() {
                             @Override
                             public void onSuccess() {
@@ -277,7 +282,7 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
                 new Button.OnClickListener() {
                     public void onClick(View v) {
                         previous_marker.clear();
-                        String url = downloadUrl.getUrl("보건소", searchRadius, placeAPIKey, defaultLocation);
+                        String url = downloadUrl.getUrl("보건소", searchRadius, placeAPIKey, currentLocation);
                         downloadUrl.getPlaceDataFromUrl(url, new VolleyCallBack() {
                             @Override
                             public void onSuccess() {
@@ -291,7 +296,7 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
                 new Button.OnClickListener() {
                     public void onClick(View v) {
                         previous_marker.clear();
-                        String url = downloadUrl.getUrl("경로당", searchRadius, placeAPIKey, defaultLocation);
+                        String url = downloadUrl.getUrl("경로당", searchRadius, placeAPIKey, currentLocation);
                         downloadUrl.getPlaceDataFromUrl(url, new VolleyCallBack() {
                             @Override
                             public void onSuccess() {
@@ -305,7 +310,7 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
                 new Button.OnClickListener() {
                     public void onClick(View v) {
                         previous_marker.clear();
-                        String url = downloadUrl.getUrl("주민센터", searchRadius, placeAPIKey, defaultLocation);
+                        String url = downloadUrl.getUrl("주민센터", searchRadius, placeAPIKey, currentLocation);
                         downloadUrl.getPlaceDataFromUrl(url, new VolleyCallBack() {
                             @Override
                             public void onSuccess() {
@@ -318,14 +323,31 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
         findViewById(R.id.map_button_5).setOnClickListener(
                 new Button.OnClickListener() {
                     public void onClick(View v) {
-                        showPlaceInformation(defaultLocation, PlaceType.LOCAL_GOVERNMENT_OFFICE, searchRadius);
+                        //showPlaceInformation(defaultLocation, PlaceType.LOCAL_GOVERNMENT_OFFICE, searchRadius);
+
+                        previous_marker.clear();
+                        String url = downloadUrl.getUrl("구청|시청", searchRadius, placeAPIKey,currentLocation);
+                        downloadUrl.getPlaceDataFromUrl(url, new VolleyCallBack() {
+                            @Override
+                            public void onSuccess() {
+                                updatePlaceListOnMapUI(placeList);
+                            }
+                        });
                     }
                 }
         );
         findViewById(R.id.map_button_6).setOnClickListener(
                 new Button.OnClickListener() {
                     public void onClick(View v) {
-                        showPlaceInformation(defaultLocation, PlaceType.HOSPITAL, searchRadius);
+                        //showPlaceInformation(defaultLocation, PlaceType.HOSPITAL, searchRadius);
+                        previous_marker.clear();
+                        String url = downloadUrl.getUrl("병원|의원", searchRadius, placeAPIKey, currentLocation);
+                        downloadUrl.getPlaceDataFromUrl(url, new VolleyCallBack() {
+                            @Override
+                            public void onSuccess() {
+                                updatePlaceListOnMapUI(placeList);
+                            }
+                        });
                     }
                 }
         );
@@ -333,16 +355,19 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
         findViewById(R.id.map_button_7).setOnClickListener(
                 new Button.OnClickListener() {
                     public void onClick(View v) {
-                        LatLng location = new LatLng(37.513055, 127.059765);
                         MarkerOptions makerOptions = new MarkerOptions();
                         makerOptions.snippet("현재 위치");
-                        makerOptions.position(location);
+                        makerOptions.position(currentLocation);
                         mMap.addMarker(makerOptions);
-                        mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(location,14));
+                        mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(currentLocation,14));
                     }
                 }
         );
+    }
 
+    private void zoomControl(int searchRadius){
+        CURRENT_ZOOM = (int) (ZOOM_MIN + (ZOOM_MAX - ZOOM_MIN) * (1000 - searchRadius) / 1000);
+        mMap.animateCamera(CameraUpdateFactory.zoomTo(CURRENT_ZOOM), 512, null);
     }
 
     @Override
@@ -378,15 +403,17 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
                             // Set the map's camera position to the current location of the device.
                             lastKnownLocation = task.getResult(); // 현재 null object 형태로 생성됨
                             if (lastKnownLocation != null) {
-                                /*
                                 // 현재는 구글 본사를 현재 위치로 인식하고 있음
                                 // 공기계 혹은 다른 임베디드 환경에서 어떤 식으로 위치를 인식하는지 미리 파악할 필요 있음
+                                currentLocation = new LatLng(
+                                        lastKnownLocation.getLatitude(),
+                                        lastKnownLocation.getLongitude()
+                                );
                                 mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(
                                         new LatLng(lastKnownLocation.getLatitude(),
                                                 lastKnownLocation.getLongitude()), DEFAULT_ZOOM));
 
-                                 */
-                                mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(defaultLocation, DEFAULT_ZOOM));
+                                //mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(defaultLocation, DEFAULT_ZOOM));
                                 mMap.getUiSettings().setMyLocationButtonEnabled(false);
                             }
                         } else {
@@ -419,10 +446,11 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
                 mMap.setMyLocationEnabled(true);
                 MarkerOptions makerOptions = new MarkerOptions();
                 makerOptions.title("현재위치");
-                makerOptions.snippet("코엑스");
-                makerOptions.position(defaultLocation);
+                LatLng newLocation = new LatLng(lastKnownLocation.getLatitude(), lastKnownLocation.getLongitude());
+                //makerOptions.position(defaultLocation);
+                makerOptions.position(newLocation);
                 mMap.addMarker(makerOptions);
-                mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(defaultLocation, DEFAULT_ZOOM));
+                mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(newLocation, DEFAULT_ZOOM));
                 mMap.getUiSettings().setMyLocationButtonEnabled(false); // 현재 위치 update 버튼을 활성화시킨다
             } else {
                 mMap.setMyLocationEnabled(false);
@@ -583,6 +611,7 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
     }
 
     public void updatePlaceListOnMapUI(List<HashMap<String, String>> placeList){
+        mMap.clear();
         if(previous_marker != null){
             previous_marker.clear();
         }
@@ -642,7 +671,7 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
                     longitude /= previous_marker.size();
 
                     LatLng centerLatLng = new LatLng(latitude, longitude);
-                    mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(centerLatLng, DEFAULT_ZOOM));
+                    mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(centerLatLng, CURRENT_ZOOM));
                 }
             }
         });
@@ -657,6 +686,12 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
             googleURL.append("&radius=" + searchRadius);
             googleURL.append("&name=" + placeType);
             googleURL.append("&sensor=true");
+            if(placeType == "병원|의원"){
+                googleURL.append("&type=hospital");
+            }
+            if(placeType == "구청|시청"){
+                googleURL.append("&type=local_government_office");
+            }
             googleURL.append("&key=" + placeAPIKey);
             Log.d("MapActivity DownloadUrl class", "url = " + googleURL.toString());
             return googleURL.toString();

@@ -56,7 +56,7 @@ exports.getResponse = (req, res, next) =>{
 
     // send Request to kmg2933
     const options = {
-        uri: 'http://localhost:4000/chatbot',
+        uri: 'http://localhost:8000/chatbot',
         method: 'POST',
         json: {
             "message" : user_message,
@@ -118,7 +118,7 @@ exports.getResponse = (req, res, next) =>{
                 if (kmgResponse.type == 'message' && kmgResponse.message == '360') {
                     // send Request to kobert
                     const optionsKobert = {
-                        uri: 'http://localhost:5000/sebert',
+                        uri: 'http://localhost:8080/sebert',
                         method: 'POST',
                         json: {
                             "query" : user_message,
