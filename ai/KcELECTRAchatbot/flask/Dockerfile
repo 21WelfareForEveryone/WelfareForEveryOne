@@ -6,6 +6,6 @@ WORKDIR /workspace/KcELECTRA
 
 COPY . .
 
-RUN conda install -c conda-forge uwsgi
+RUN conda install -y -c conda-forge uwsgi
 
 ENTRYPOINT ["uwsgi", "--ini", "uwsgi.ini"]
