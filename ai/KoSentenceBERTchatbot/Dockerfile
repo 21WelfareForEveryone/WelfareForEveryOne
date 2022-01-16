@@ -9,6 +9,6 @@ COPY KoSentenceBERT ./KoSentenceBERT
 
 WORKDIR /workspace/KoSentenceBERT
 
-RUN conda install -c conda-forge uwsgi
+RUN conda install -y -c conda-forge uwsgi
 
-ENTRYPOINT ["uwsgi", "--ini", "uwsgi.ini"]
+ENTRYPOINT [ "uwsgi", "--ini", "uwsgi.ini" ]

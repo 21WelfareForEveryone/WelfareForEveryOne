@@ -5,13 +5,7 @@ import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.Handler;
 import android.text.Html;
-import android.text.SpannableString;
-import android.text.Spanned;
-import android.text.TextPaint;
-import android.text.TextUtils;
 import android.text.method.LinkMovementMethod;
-import android.text.style.ClickableSpan;
-import android.text.style.URLSpan;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -329,6 +323,7 @@ public class RegisterActivity extends AppCompatActivity {
                 }
             }
         });
+
 
         checkBoxTv4.setText(Html.fromHtml( "<a href='https://welfareforeveryone.notion.site/5011d8fa8f9441bfb22fc85d95f45178 '>[필수] 위치정보 이용약관</a>"));
         checkBoxTv4.setClickable(true);

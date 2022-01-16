@@ -57,7 +57,7 @@ docker run --gpus all --rm -it -p 5000:8888 --name=kosbert_image kosbert_image:l
 
 ## 멤버 소개
 
-| <img src = "https://avatars.githubusercontent.com/u/46372624?v=4" width = "100px">| <img src="https://avatars.githubusercontent.com/u/61974170?v=4" width="100px"> | <img src="https://scontent-ssn1-1.xx.fbcdn.net/v/t1.18169-9/29472873_2111783802184178_233437763155161632_n.jpg?_nc_cat=106&ccb=1-5&_nc_sid=09cbfe&_nc_ohc=HMIdukAcR0MAX__-_Wf&_nc_ht=scontent-ssn1-1.xx&oh=8acbc20fe7958bc9c0fe6dda88eb7177&oe=61BE67C2" width="100px"> | <img src="https://avatars.githubusercontent.com/u/68273065?v=4" width="100px"> | <img src="https://www.notion.so/image/https%3A%2F%2Fs3-us-west-2.amazonaws.com%2Fsecure.notion-static.com%2F0b7ddd17-0bca-4c31-811c-97951980da37%2FKakaoTalk_20210205_212818264.jpg?table=block&id=3b214631-fe5a-4d79-8a85-9c0d695ed5ba&spaceId=6f0402d5-807a-4a27-a6e0-ca357f56d338&width=250&userId=f7b06525-8aba-4d21-b98f-69034e959047&cache=v2" width="100px"> |
+| <img src = "https://avatars.githubusercontent.com/u/46372624?v=4" width = "100px">| <img src="https://avatars.githubusercontent.com/u/61974170?v=4" width="100px"> | <img src="https://user-images.githubusercontent.com/33998183/147872777-84707c11-f5f2-49f5-8bb1-5d9d1c837491.png" width="100px"> | <img src="https://avatars.githubusercontent.com/u/68273065?v=4" width="100px"> | <img src="https://www.notion.so/image/https%3A%2F%2Fs3-us-west-2.amazonaws.com%2Fsecure.notion-static.com%2F0b7ddd17-0bca-4c31-811c-97951980da37%2FKakaoTalk_20210205_212818264.jpg?table=block&id=3b214631-fe5a-4d79-8a85-9c0d695ed5ba&spaceId=6f0402d5-807a-4a27-a6e0-ca357f56d338&width=250&userId=f7b06525-8aba-4d21-b98f-69034e959047&cache=v2" width="100px"> |
 | :-----------------------------------------------------------------------: | :-----------------------------------------------------------------------: | :-----------------------------------------------------------------------: | :-----------------------------------------------------------------------: | :-----------------------------------------------------------------------: |
 |[김진수](https://github.com/zinzinbin) | [박해미](https://github.com/parkhaemi) | [권태훈](https://github.com/Oxymoron957) | [김민규](https://github.com/MingyuKim-2933) |[문혜현](https://github.com/hyehyeonmoon) |
 | App Frontend | App Frontend | App Backend | Chatbot AI |Chatbot AI |
@@ -70,6 +70,4 @@ docker run --gpus all --rm -it -p 5000:8888 --name=kosbert_image kosbert_image:l
 - [KorNLU Datasets](https://github.com/kakaobrain/KorNLUDatasets)
 - [Sentence Transformers: Multilingual Sentence Embeddings using BERT / RoBERTa / XLM-RoBERTa & Co. with PyTorch](https://github.com/UKPLab/sentence-transformers)
 
-<br>
-
-#### 본 프로젝트는 Google의 GCP Credit 지원을 받고 있습니다. (Google supported this work by providing Google Cloud credit)
+#### * 본 프로젝트는 Google의 GCP Credit 지원을 받고 있습니다. (Google supported this work by providing Google Cloud credit)
