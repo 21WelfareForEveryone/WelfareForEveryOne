@@ -2,6 +2,7 @@ package com.example.welfareapp;
 
 import static android.speech.tts.TextToSpeech.ERROR;
 import static com.example.welfareapp.URLs.url_chatbot;
+import static com.example.welfareapp.URLs.url_read;
 
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -68,6 +69,9 @@ public class ChatActivity extends AppCompatActivity {
     // back button listener
     private static long back_pressed;
 
+    // user img idx
+    int img_idx;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -79,7 +83,9 @@ public class ChatActivity extends AppCompatActivity {
 
         Bundle bundle = getIntent().getExtras();
         String token = bundle.getString("token");
-        Log.v("chatbot bundle token", token);
+
+        // load user img from chat cardview
+        loadUserImg(token);
 
         // keyboard disappeared
         EditText et_message = (EditText)findViewById(R.id.et_message);
@@ -101,7 +107,7 @@ public class ChatActivity extends AppCompatActivity {
                 "“나한테 맞는 복지 추천해줘”를 입력하시면 알맞은 복지를 추천해 드립니다.\n" +
                 "관심 있는 복지 정보를 알고 싶다면 관련 “아동”과 같이 키워드 또는 “아이를 돌봐줄 곳이 필요해”와 같이 문장을 적어주시면 가장 유사한 복지를 추천해 드립니다.";
 
-        chatModelArrayList.add(new ChatModel(initMessage, BOT_KEY, null, null, 0, token));
+        chatModelArrayList.add(new ChatModel(initMessage, BOT_KEY, null, null, 0, -1, token));
         chatRVAdapter.notifyDataSetChanged();
 
         // push button event listener
@@ -114,10 +120,6 @@ public class ChatActivity extends AppCompatActivity {
                     return;
                 }
                 else{
-                    //getResponse(et_message.getText().toString(), token);
-                    //et_message.setText("");
-
-                    // method2 synchronized
                     DialogResponse dialogResponse = new DialogResponse();
                     dialogResponse.request(et_message.getText().toString(), token, new VolleyCallBack() {
                         @Override
@@ -233,239 +235,43 @@ public class ChatActivity extends AppCompatActivity {
         });
     }
 
-    // get & post api
-    private void getResponse(String text, String token){
-
-        // user message to chatRVAdapter
-        chatModelArrayList.add(new ChatModel(text, USER_KEY, null, null, 0, token));
-        chatRVAdapter.notifyDataSetChanged();
-
-        // params for post api
+    public void loadUserImg(String token){
         JSONObject params = new JSONObject();
         try{
             params.put("token", token);
-            params.put("chat_message", text);
-            Log.v("chatbot params complete: ", "true");
         }
         catch(JSONException e){
             e.printStackTrace();
             return;
         }
 
-        // response waiting
-        chatModelArrayList.add(new ChatModel("", BOT_WAITING_KEY, null, null, 0, token));
-        chatRVAdapter.notifyDataSetChanged();
-
-        SharedPreferences chatResponse = getSharedPreferences("chatResponse", MODE_PRIVATE);
-        SharedPreferences.Editor editor= chatResponse.edit();
-
-        //String url_test = "http://34.64.176.63/chatbot/getresponse/dummy0"; // dummy 데이터를 모아놓은 임시 url
-        final JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(Request.Method.POST, url_chatbot, params, new Response.Listener<JSONObject>(){
-            @Override
-            public void onResponse(JSONObject response) {
-                Log.v("ChatActivity chatbot response", "true");
-                try{
-                    int message_type = response.getInt("message_type");
-                    if(message_type == 0){
-                        Boolean isSuccess = response.getBoolean("success");
-                        int statusCode = response.getInt("statusCode");
-                        String message_content = response.getString("message_content");
-
-                        editor.putBoolean("success", isSuccess);
-                        editor.putInt("statusCode", statusCode);
-                        editor.putInt("message_type", message_type);
-                        editor.putString("message_content", message_content);
-
-                        Log.v("chatbot message response isSuccess", isSuccess.toString());
-                        Log.v("chatbot message response statusCode", Integer.toString(statusCode));
-                        Log.v("chatbot message response message_type", Integer.toString(message_type));
-                        Log.v("chatbot message response message_content", message_content);
-
-                        editor.commit();
+        final JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(Request.Method.POST, url_read, params, new Response.Listener<JSONObject>() {
+                @Override
+                public void onResponse(JSONObject response) {
+                    try{
+                        img_idx = response.getInt("img_idx");
                     }
-                    else if(message_type == 1){
-                        Boolean isSuccess = response.getBoolean("success");
-                        int statusCode = response.getInt("statusCode");
-                        String message_content = response.getString("message_content");
-                        JSONArray welfare_info = response.getJSONArray("welfare_info");
-
-                        int jar_len = welfare_info.length();
-                        if(jar_len >0){
-                            for(int i = 0; i < jar_len; i++){
-
-                                Log.v("ChatActivity for loop start",Integer.toString(i));
-                                Log.v("ChatActivity jar", welfare_info.toString());
-                                Log.v("ChatActivity jar JSONObject", welfare_info.getJSONObject(i).toString());
-                                Log.v("ChatActivity jar obj", welfare_info.get(i).toString());
-
-                                // using JSONObject
-                                JSONObject obj = welfare_info.getJSONObject(i);
-
-                                String titleName = "welfare_title" + Integer.toString(i+1);
-                                String summaryName = "welfare_summary" + Integer.toString(i+1);
-
-                                int welfare_id = obj.getInt("welfare_id");
-                                String title = obj.getString("title");
-                                String summary = obj.getString("summary");
-
-                                String key = "welfare_info_" + Integer.toString(i);
-                                ArrayList<String> list = new ArrayList<String>();
-                                list.add(Integer.toString(welfare_id));
-                                list.add(title);
-                                list.add(summary);
-
-                                JSONArray a = new JSONArray();
-                                for (int j = 0; j < list.size(); j++) {
-                                    a.put(list.get(j));
-                                }
-                                if (!list.isEmpty()) {
-                                    editor.putString(key, a.toString());
-                                    Log.v("ChatActivity json array", a.toString());
-                                } else {
-                                    editor.putString(key, null);
-                                }
-                            }
-                        }
-
-                        editor.putInt("num_info", jar_len);
-                        editor.putBoolean("success", isSuccess);
-                        editor.putInt("statusCode", statusCode);
-                        editor.putInt("message_type", message_type);
-                        editor.putString("message_content", message_content);
-
-                        Log.v("chatbot message response isSuccess", isSuccess.toString());
-                        Log.v("chatbot message response statusCode", Integer.toString(statusCode));
-                        Log.v("chatbot message response message_type", Integer.toString(message_type));
-                        Log.v("chatbot message response message_content", message_content);
-                        Log.v("chatbot message response num_info", Integer.toString(jar_len));
-
-                        editor.commit();
+                    catch(JSONException err){
+                        img_idx = 0;
                     }
                 }
-                catch(JSONException e){
-                    e.printStackTrace();
-                    Log.v("chatbot JSONException", e.toString());
-                    Log.v("chatbot message response error", e.getMessage());
+            }, new Response.ErrorListener() {
+                @Override
+                public void onErrorResponse(VolleyError error) {
+                    error.printStackTrace();
                 }
-            }
-        }, new Response.ErrorListener(){
-            @Override
-            public void onErrorResponse(VolleyError error) {
-
-                if (error instanceof NetworkError) {
-                } else if (error instanceof ServerError) {
-                    Log.v("chatbot Server Error", "response denied");
-                } else if (error instanceof AuthFailureError) {
-                } else if (error instanceof ParseError) {
-                } else if (error instanceof NoConnectionError) {
-                } else if (error instanceof TimeoutError) {
-                    Toast.makeText(getApplicationContext(), "Timeout error", Toast.LENGTH_LONG).show();
-                }
-
-                Log.v("chatbot onErrorResponse", error.toString());
-                error.printStackTrace();
-                editor.putBoolean("success", false);
-                editor.putInt("statusCode", 500);
-                editor.commit();
-            }
-        });
-
-        Log.v("jsonObjectRequest", jsonObjectRequest.toString());
-        Log.v("jsonObjectRequest url", jsonObjectRequest.getUrl());
-
-        jsonObjectRequest.setRetryPolicy(new RetryPolicy() {
-            @Override
-            public int getCurrentTimeout() {
-                return 20000;
-            }
-
-            @Override
-            public int getCurrentRetryCount() {
-                return 20000;
-            }
-
-            @Override
-            public void retry(VolleyError error) throws VolleyError {
-                error.printStackTrace();
-                Log.v("chatbot setRetryPolicy error", error.toString());
-            }
-        });
-        if(AppHelper.requestQueue == null){
-            AppHelper.requestQueue = Volley.newRequestQueue(getApplicationContext());
-        }
+            });
         jsonObjectRequest.setShouldCache(false);
         AppHelper.requestQueue.add(jsonObjectRequest);
-
-        new Handler().postDelayed(
-                new Runnable() {
-                    @Override
-                    public void run() {
-                        if(chatResponse.getBoolean("success",false)){
-                            Log.v("chatResponse  isSuccess","true");
-                            if(chatResponse.getInt("message_type",0)==0){
-
-                                int arrayLength = chatModelArrayList.size();
-                                chatModelArrayList.remove(arrayLength -1);
-
-                                Log.v("ChatBot response with message_type", Integer.toString(chatResponse.getInt("message_type",0)));
-                                String chat_response = chatResponse.getString("message_content", "");
-                                chatModelArrayList.add(new ChatModel(chat_response, BOT_KEY, null, null, 0, token));
-                                chatRVAdapter.notifyDataSetChanged();
-                            }
-                            else if(chatResponse.getInt("message_type",0)==1){
-
-                                int arrayLength = chatModelArrayList.size();
-                                chatModelArrayList.remove(arrayLength -1);
-
-                                Log.v("ChatBot response with message_type", Integer.toString(chatResponse.getInt("message_type",0)));
-                                for(int i = 0; i < chatResponse.getInt("num_info",0); i++){
-                                    String key = "welfare_info_" + Integer.toString(i);
-                                    String json = chatResponse.getString(key, null);
-
-                                    Log.v("ChatActivity JSON string type loaded", json.toString());
-                                    ArrayList<String> decode_list  = new ArrayList<String>();
-                                    if (json != null) {
-                                        try {
-                                            JSONArray a = new JSONArray(json);
-                                            for (int j = 0; j < a.length(); j++) {
-                                                String str = a.optString(j);
-                                                Log.v("ChatActivity JSON string parsing", str);
-                                                decode_list.add(str);
-                                            }
-                                        } catch (JSONException e) {
-                                            e.printStackTrace();
-                                        }
-                                    }
-
-                                    int welfare_id = Integer.parseInt(decode_list.get(0));
-                                    String title = decode_list.get(1);
-                                    String summary = decode_list.get(2);
-
-                                    chatModelArrayList.add(new ChatModel("", BOT_INFO_KEY, title, summary, welfare_id, token));
-                                    chatRVAdapter.notifyDataSetChanged();
-                                }
-                            }
-                        }
-                        else{
-                            int arrayLength = chatModelArrayList.size();
-                            chatModelArrayList.remove(arrayLength -1);
-
-                            chatModelArrayList.add(new ChatModel("Server Error!", BOT_KEY, null, null, 0, token));
-                            chatRVAdapter.notifyDataSetChanged();
-                        }
-                    }
-                },
-                9000
-        );
-    };
+    }
 
     public interface VolleyCallBack {
         void onSuccess();
     }
 
     public class DialogResponse{
-        public synchronized void request(String text, String token, final VolleyCallBack volleyCallBack){
-            chatModelArrayList.add(new ChatModel(text, USER_KEY, null, null, 0, token));
+        public synchronized void request(String text, String token,  final VolleyCallBack volleyCallBack){
+            chatModelArrayList.add(new ChatModel(text, USER_KEY, null, null, 0, img_idx,  token));
             chatRVAdapter.notifyDataSetChanged();
 
             RecyclerView chatRVList = (RecyclerView)findViewById(R.id.chatList);
@@ -480,7 +286,7 @@ public class ChatActivity extends AppCompatActivity {
                 e.printStackTrace();
                 return;
             }
-            chatModelArrayList.add(new ChatModel("", BOT_WAITING_KEY, null, null, 0, token));
+            chatModelArrayList.add(new ChatModel("", BOT_WAITING_KEY, null, null, 0,-1, token));
             chatRVAdapter.notifyDataSetChanged();
             chatRVList.scrollToPosition(chatRVList.getAdapter().getItemCount() - 1);
 
@@ -616,7 +422,7 @@ public class ChatActivity extends AppCompatActivity {
 
                     Log.v("ChatBot response with message_type", Integer.toString(chatResponse.getInt("message_type",0)));
                     String chat_response = chatResponse.getString("message_content", "");
-                    chatModelArrayList.add(new ChatModel(chat_response, BOT_KEY, null, null, 0, token));
+                    chatModelArrayList.add(new ChatModel(chat_response, BOT_KEY, null, null, 0, -1, token));
                     chatRVAdapter.notifyDataSetChanged();
                     RecyclerView chatRVList = (RecyclerView)findViewById(R.id.chatList);
                     chatRVList.scrollToPosition(chatRVList.getAdapter().getItemCount() - 1);
@@ -650,7 +456,7 @@ public class ChatActivity extends AppCompatActivity {
                         String title = decode_list.get(1);
                         String summary = decode_list.get(2);
 
-                        chatModelArrayList.add(new ChatModel("", BOT_INFO_KEY, title, summary, welfare_id, token));
+                        chatModelArrayList.add(new ChatModel("", BOT_INFO_KEY, title, summary, welfare_id, -1, token));
                         chatRVAdapter.notifyDataSetChanged();
                         RecyclerView chatRVList = (RecyclerView)findViewById(R.id.chatList);
                         chatRVList.scrollToPosition(chatRVList.getAdapter().getItemCount() - 1);
@@ -660,7 +466,7 @@ public class ChatActivity extends AppCompatActivity {
             else{
                 int arrayLength = chatModelArrayList.size();
                 chatModelArrayList.remove(arrayLength -1);
-                chatModelArrayList.add(new ChatModel("Server Error!", BOT_KEY, null, null, 0, token));
+                chatModelArrayList.add(new ChatModel("Server Error!", BOT_KEY, null, null, 0, -1, token));
                 chatRVAdapter.notifyDataSetChanged();
                 RecyclerView chatRVList = (RecyclerView)findViewById(R.id.chatList);
                 chatRVList.scrollToPosition(chatRVList.getAdapter().getItemCount() - 1);

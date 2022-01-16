@@ -20,6 +20,7 @@ import android.widget.LinearLayout;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.Spinner;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -272,6 +273,10 @@ public class RegisterActivity extends AppCompatActivity {
         CheckBox checkBox3=findViewById(R.id.checkBox3);
         CheckBox checkBox4=findViewById(R.id.checkBox4);
 
+        TextView checkBoxTv2 = findViewById(R.id.checkBox2Tv);
+        TextView checkBoxTv3 = findViewById(R.id.checkBox3Tv);
+        TextView checkBoxTv4 = findViewById(R.id.checkBox4Tv);
+
         checkBox.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -287,12 +292,14 @@ public class RegisterActivity extends AppCompatActivity {
             }
         });
 
-        checkBox2.setText(Html.fromHtml( "<a href='https://welfareforeveryone.notion.site/12cfd3e97bbc43419596de64138192c3'>서비스 이용 약관 </a>"));
-        checkBox2.setMovementMethod(LinkMovementMethod.getInstance());
+        checkBoxTv2.setText(Html.fromHtml( "<a href='https://welfareforeveryone.notion.site/12cfd3e97bbc43419596de64138192c3'>[필수] 서비스 이용 약관 </a>"));
+        checkBoxTv2.setClickable(true);
+        checkBoxTv2.setMovementMethod(LinkMovementMethod.getInstance());
         checkBox2.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 //만약 전체 클릭이 true 라면 false로 변경
+                v.cancelPendingInputEvents();
                 if(checkBox.isChecked()){
                     checkBox.setChecked(false);
                     //각 체크박스 체크 여부 확인해서  전체동의 체크박스 변경
@@ -302,11 +309,13 @@ public class RegisterActivity extends AppCompatActivity {
             }
         });
 
-        checkBox3.setText(Html.fromHtml( "<a href='https://welfareforeveryone.notion.site/c2797e0445e947808369acf5702cffa0'>개인정보 처리방침</a>"));
-        checkBox3.setMovementMethod(LinkMovementMethod.getInstance());
+        checkBoxTv3.setText(Html.fromHtml( "<a href='https://welfareforeveryone.notion.site/c2797e0445e947808369acf5702cffa0'>[필수] 개인정보 처리방침</a>"));
+        checkBoxTv3.setClickable(true);
+        checkBoxTv3.setMovementMethod(LinkMovementMethod.getInstance());
         checkBox3.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                v.cancelPendingInputEvents();
                 if(checkBox.isChecked()){
                     checkBox.setChecked(false);
                 }else if(checkBox2.isChecked()&&checkBox3.isChecked()&&checkBox4.isChecked()){
@@ -315,8 +324,10 @@ public class RegisterActivity extends AppCompatActivity {
             }
         });
 
-        checkBox4.setText(Html.fromHtml( "<a href='https://welfareforeveryone.notion.site/5011d8fa8f9441bfb22fc85d95f45178 '>위치정보 이용약관</a>"));
-        checkBox4.setMovementMethod(LinkMovementMethod.getInstance());
+
+        checkBoxTv4.setText(Html.fromHtml( "<a href='https://welfareforeveryone.notion.site/5011d8fa8f9441bfb22fc85d95f45178 '>[필수] 위치정보 이용약관</a>"));
+        checkBoxTv4.setClickable(true);
+        checkBoxTv4.setMovementMethod(LinkMovementMethod.getInstance());
         checkBox4.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

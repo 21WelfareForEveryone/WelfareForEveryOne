@@ -493,7 +493,6 @@ public class ProfileActivity extends AppCompatActivity {
                     int user_is_one_parent = response.getInt("user_is_one_parent");
                     int user_is_disabled = response.getInt("user_is_disabled");
                     int user_interest = response.getInt("user_interest");
-                    int user_img_idx = response.getInt("img_idx");
 
                     et_username.setText(user_name);
                     et_id.setText(user_id);
@@ -531,6 +530,46 @@ public class ProfileActivity extends AppCompatActivity {
                         rb_is_disabled_false.setChecked(true);
                     }
 
+                    // img_idx -> user img loaded
+                    int img_idx;
+                    if(response.get("img_idx").toString() != null){
+                        img_idx = response.getInt("img_idx");
+                        switch (img_idx){
+                            case 0:
+                                user_img_view.setImageResource(R.drawable.baby);
+                                break;
+                            case 1:
+                                user_img_view.setImageResource(R.drawable.children);
+                                break;
+                            case 2:
+                                user_img_view.setImageResource(R.drawable.woman);
+                                break;
+                            case 3:
+                                user_img_view.setImageResource(R.drawable.man);
+                                break;
+                            case 4:
+                                user_img_view.setImageResource(R.drawable.old_woman);
+                                break;
+                            case 5:
+                                user_img_view.setImageResource(R.drawable.old_man);
+                                break;
+                            case 6:
+                                user_img_view.setImageResource(R.drawable.pregnant);
+                                break;
+                            case 7:
+                                user_img_view.setImageResource(R.drawable.multicultural);
+                                break;
+                            case 8:
+                                user_img_view.setImageResource(R.drawable.disabled);
+                                break;
+                            default:
+                                break;
+                        }
+                    }
+                    else{
+                        img_idx = 0;
+                        user_img_view.setImageResource(R.drawable.ic_user_profile);
+                    }
                 }
                 catch(JSONException e){
                     e.printStackTrace();
@@ -540,8 +579,7 @@ public class ProfileActivity extends AppCompatActivity {
         }, new Response.ErrorListener() {
                 @Override
                 public void onErrorResponse(VolleyError error) {
-                    //Log.v("fetchData request error", error.getMessage());
-                    //Toast.makeText(ProfileActivity.this, error.getMessage(), Toast.LENGTH_SHORT).show();
+                    Toast.makeText(ProfileActivity.this, "회원 정보를 불러올 수 없습니다(서버 에러)", Toast.LENGTH_SHORT).show();
                 }
             });
 

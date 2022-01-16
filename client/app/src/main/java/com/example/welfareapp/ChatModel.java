@@ -10,6 +10,7 @@ public class ChatModel {
     private String summary;
     private int welfare_id;
     private String token;
+    private int imgIdx;
 
     public String getMessage() {
         return message;
@@ -27,20 +28,14 @@ public class ChatModel {
         this.sender = sender;
     }
 
-//    public ChatModel(String message, String sender, String[] welfareInfoTitleArray, String[] welfareInfoSummaryArray) {
-//        this.message = message;
-//        this.sender = sender;
-//        this.welfareInfoTitleArray = welfareInfoTitleArray;
-//        this.welfareInfoSummaryArray = welfareInfoSummaryArray;
-//    }
-
-    public ChatModel(String message, String sender, String title, String summary, int welfare_id, String token){
+    public ChatModel(String message, String sender, String title, String summary, int welfare_id, int imgIdx, String token){
         this.message = message;
         this.sender = sender;
         this.title = title;
         this.summary = summary;
         this.welfare_id = welfare_id;
         this.token = token;
+        this.imgIdx = imgIdx;
     }
 
     public String getToken(){
@@ -90,4 +85,7 @@ public class ChatModel {
     public void setWelfare_id(int welfare_id) {
         this.welfare_id = welfare_id;
     }
+
+    public void setImgIdx(int imgIdx){this.imgIdx = imgIdx;}
+    public int getImgIdx(){return imgIdx;}
 }
