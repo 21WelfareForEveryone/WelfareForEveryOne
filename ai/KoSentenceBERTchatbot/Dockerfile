@@ -12,6 +12,6 @@ COPY KoSentenceBERT/corpus_embedding.csv .
 
 RUN cp -r /workspace/KoSentenceBERT_SKTBERT/output /workspace/KoSentenceBERT/output
 
-RUN pip install gunicorn
+RUN pip install gunicorn && pip install gevent
 
 ENTRYPOINT ["gunicorn", "--bind", "0.0.0.0:8080", "wsgi:app", "--timeout", "6000"]
