@@ -530,6 +530,12 @@ public class RegisterActivity extends AppCompatActivity {
                 String token_firebase = sharedPreferences.getString("token_firebase", "");
                 Log.v("RegisterActivity token_firebase", token_firebase);
 
+                /* 유효성 검사 */
+                if(!checkBox.isChecked()){
+                    Toast.makeText(getApplicationContext(), "체크리스트에 모두 동의해주시기 바랍니다.", Toast.LENGTH_SHORT).show();
+                    return;
+                }
+
                 registerUser(user_name, user_id, user_password, user_gender,
                         user_income, user_address, user_life_cycle, user_is_multicultural,
                         user_is_one_parent, user_is_disabled, user_interest, token_firebase, img_idx, new VolleyCallBack() {
