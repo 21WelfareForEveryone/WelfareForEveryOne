@@ -1,0 +1,44 @@
+version: '3.8'
+
+services:
+  # db:
+  #   image: postgres
+  #   environment:
+  #     - POSTGRES_DB=test
+  #     - POSTGRES_USER=test
+  #     - POSTGRES_PASSWORD=test
+  #     - POSTGRES_INITDB_ARGS=--encoding=UTF-8
+
+  server:
+    build:
+      context: .
+      dockerfile: ./Dockerfile
+    environment:
+      - DB_PORT=5432
+      - DB_NAME=test
+      - DB_USERNAME=test
+      - DB_HOST = 34.64.116.88
+      - DB_PASSWORD = 1357
+      - DB_USER = root
+      - JWT_SECRET = welfareforeveryone
+    depends_on:
+      - db
+    ports:
+      - "3000:3000"
+    command:
+      - npm start
+    volumes:
+      - ./:/seerver/
+
+
+  model:
+    build:
+      context: .
+      dockerfile: ./KcELECTRAchatbot/flask/Dockerfile
+    container_name: KcELECTRAchatbotcontainer
+
+  model2:
+    build: 
+      context: .
+      dockerfile: ./KoSentenceBERTchatbot/KoSentenceBERT/Dockerfile
+    container_name: KoSentenceBERTchatbotcontainer
