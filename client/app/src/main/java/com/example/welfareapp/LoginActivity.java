@@ -47,6 +47,7 @@ public class LoginActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
+
         // 이전 데이터 초기화
         clearApplicationData();
 
@@ -90,56 +91,6 @@ public class LoginActivity extends AppCompatActivity {
         et_id = findViewById(R.id.et_Id);
         et_pwd = findViewById(R.id.et_pwd);
         Button btn_login = (Button)findViewById(R.id.btn_login);
-        /*
-        btn_login.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-
-                userLogin();
-
-                new Handler().postDelayed(
-                        new Runnable() {
-                            @Override
-                            public void run() {
-                                SharedPreferences sharedPreferences;
-                                sharedPreferences= getSharedPreferences("user_info", MODE_PRIVATE);
-                                Boolean isSuccess  = sharedPreferences.getBoolean("success", false);
-                                String mToken = sharedPreferences.getString("token", "");
-                                int statusCode = sharedPreferences.getInt("statusCode",0);
-                                //String token_firebase = sharedPreferences.getString("token_firebase", "");
-
-                                Log.v("sharedPreference  isSuccess", Boolean.toString(isSuccess));
-                                Log.v("sharedPreference  mToken", mToken);
-
-                                if(isSuccess){
-
-                                    Log.v("Login Process", isSuccess.toString());
-                                    Toast.makeText(getApplicationContext(), "로그인에 성공하셨습니다.", Toast.LENGTH_SHORT).show();
-                                    Bundle bundle = new Bundle();
-                                    bundle.putString("token", mToken);
-                                    //bundle.putString("token_firebase", token_firebase);
-
-                                    Intent intent = new Intent(LoginActivity.this, com.example.welfareapp.MainActivity.class);
-                                    if(bundle!=null){
-                                        intent.putExtras(bundle);
-                                    }
-                                    Log.v("intent change", "start!");
-                                    startActivity(intent);
-                                    finish();
-                                }
-                                else{
-                                    Toast.makeText(getApplicationContext(), "로그인에 실패했습니다..", Toast.LENGTH_SHORT).show();
-                                    Log.v("Login Process","failed");
-                                }
-                            }
-                        },
-                        1024
-                );
-
-            }
-        });
-         */
-
         /* (21.12.30) volley callback을 이용한 동기화 */
         btn_login.setOnClickListener(new View.OnClickListener(){
             @Override
