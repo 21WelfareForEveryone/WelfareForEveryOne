@@ -10,6 +10,7 @@ import android.widget.Toast;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.android.volley.DefaultRetryPolicy;
 import com.android.volley.Request;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
@@ -39,32 +40,27 @@ public class IntroActivity extends AppCompatActivity {
         String token = sharedPreferences.getString("token", "");
         String token_firebase = sharedPreferences.getString("token_firebase","");
 
-
-        // 기존 IntroActivity : 2s 기다린 후 handler 내 run 메서드에서 intent 전환
-//        Handler handler = new Handler();
-//        handler.postDelayed(new Runnable() {
-//            @Override
-//            public void run() {
-//                Intent intent = new Intent(IntroActivity.this, LoginActivity.class);
-//                startActivity(intent);
-//                finish();
-//            }
-//        }, 2000);
-
         // (21.12.29) sharedpreferences에 이미 token_firebase와 token이 있을 경우 자동 로그인
         requestLoginStatus(token, token_firebase, new VolleyCallBack() {
             @Override
             public void onSuccess() {
                 if(sharedPreferences.getBoolean("success",false)){
-                    Intent intent = new Intent(IntroActivity.this, MainActivity.class);
-                    Bundle bundle = new Bundle();
-                    bundle.putString("token", sharedPreferences.getString("token",""));
-                    bundle.putString("token_firebase", sharedPreferences.getString("token_firebase",""));
-                    bundle.putInt("statusCode", sharedPreferences.getInt("statusCode",500));
-                    bundle.putBoolean("success", sharedPreferences.getBoolean("success",false));
-                    intent.putExtras(bundle);
-                    startActivity(intent);
-                    finish();
+                    Handler handler = new Handler();
+                    handler.postDelayed(new Runnable() {
+                        @Override
+                        public void run() {
+                            Log.v("IntroActivity token",  sharedPreferences.getString("token",""));
+                            Intent intent = new Intent(IntroActivity.this, MainActivity.class);
+                            Bundle bundle = new Bundle();
+                            bundle.putString("token", sharedPreferences.getString("token",""));
+                            bundle.putString("token_firebase", sharedPreferences.getString("token_firebase",""));
+                            bundle.putInt("statusCode", sharedPreferences.getInt("statusCode",500));
+                            bundle.putBoolean("success", sharedPreferences.getBoolean("success",false));
+                            intent.putExtras(bundle);
+                            startActivity(intent);
+                            finish();
+                        }
+                    }, 1024);
                 }
                 else{
                     Intent intent = new Intent(IntroActivity.this, LoginActivity.class);
@@ -72,11 +68,24 @@ public class IntroActivity extends AppCompatActivity {
                     finish();
                 }
             }
+            @Override
+            public void onFailure() {
+                Handler handler = new Handler();
+                handler.postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        Intent intent = new Intent(IntroActivity.this, LoginActivity.class);
+                        startActivity(intent);
+                        finish();
+                    }
+                }, 1024);
+            }
         });
     }
 
     public interface VolleyCallBack {
         void onSuccess();
+        void onFailure();
     }
 
     private synchronized void requestLoginStatus(String token, String token_firebase, final VolleyCallBack volleyCallBack){
@@ -112,6 +121,7 @@ public class IntroActivity extends AppCompatActivity {
                 catch(JSONException e){
                     e.printStackTrace();
                     Log.d("JSONException error", e.getMessage());
+                    volleyCallBack.onFailure();
                 }
             }
         }, new Response.ErrorListener(){
@@ -120,8 +130,14 @@ public class IntroActivity extends AppCompatActivity {
                 Log.v("IntroActivity Post process isSuccess?", "false");
                 error.printStackTrace();
                 Log.v("IntroActivty requestLoginStatus onResponse", error.toString());
+                volleyCallBack.onFailure();
             }
         });
+        jsonRequest.setRetryPolicy(new DefaultRetryPolicy(
+                1024 * 4,
+                DefaultRetryPolicy.DEFAULT_MAX_RETRIES,
+                DefaultRetryPolicy.DEFAULT_BACKOFF_MULT)
+        );
         AppHelper.requestQueue.add(jsonRequest);
     }
 }
