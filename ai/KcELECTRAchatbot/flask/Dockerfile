@@ -8,4 +8,4 @@ COPY . .
 
 RUN pip install gunicorn && pip install gevent
 
-ENTRYPOINT ["gunicorn", "--bind", "0.0.0.0:8000", "wsgi:app", "--timeout", "6000"]
+ENTRYPOINT ["gunicorn", "--bind", "0.0.0.0:8000", "wsgi:app", "-k", "gevent", "--timeout", "6000"]
