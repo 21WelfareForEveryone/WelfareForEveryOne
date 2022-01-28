@@ -1,9 +1,13 @@
 // Importing Modules
 const express = require('express');
-// const bodyParser = require('body-parser');
-// const path = require('path');
 const morgan = require('morgan');
-require("dotenv").config();
+const dotenv = require('dotenv');
+const path = require('path');
+// require("dotenv").config();
+
+dotenv.config({
+  path: path.resolve(process.cwd(), '.env.' + process.env.NODE_ENV),
+});
 
 const app = express();
 
@@ -37,5 +41,6 @@ app.use(dibsRoutes);
 app.use(chatbotRoutes);
 
 app.listen(3000,() => {
+    console.log(process.env.VERSION + ' version');
     console.log(`listening at http://localhost:3000`)
-  });
+});
