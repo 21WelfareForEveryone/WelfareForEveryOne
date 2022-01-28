@@ -2,6 +2,8 @@ package com.example.welfareapp;
 
 import static android.speech.tts.TextToSpeech.ERROR;
 import static com.example.welfareapp.URLs.url_chatbot;
+import static com.example.welfareapp.URLs.url_chatbot_counseling;
+import static com.example.welfareapp.URLs.url_chatbot_get_wel_rcmd;
 import static com.example.welfareapp.URLs.url_read;
 
 import android.content.Intent;
@@ -13,10 +15,15 @@ import android.speech.tts.TextToSpeech;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.ImageButton;
+import android.widget.Spinner;
 import android.widget.Toast;
+import android.widget.ToggleButton;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
@@ -40,6 +47,8 @@ import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.RequestFuture;
 import com.android.volley.toolbox.Volley;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
+import com.google.android.material.button.MaterialButton;
+import com.google.android.material.button.MaterialButtonToggleGroup;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -72,6 +81,9 @@ public class ChatActivity extends AppCompatActivity {
     // user img idx
     int img_idx;
 
+    // chat mode
+    int chat_mode = 0;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -84,7 +96,7 @@ public class ChatActivity extends AppCompatActivity {
         Bundle bundle = getIntent().getExtras();
         String token = bundle.getString("token");
 
-        // load user img from chat cardview
+        // load user img from chat CardView
         loadUserImg(token);
 
         // keyboard disappeared
@@ -131,6 +143,7 @@ public class ChatActivity extends AppCompatActivity {
             }
         });
 
+        /*
         // header btn_back onCLickListener
         ImageButton btn_back = (ImageButton)findViewById(R.id.btn_back);
         btn_back.setOnClickListener(new View.OnClickListener() {
@@ -142,6 +155,60 @@ public class ChatActivity extends AppCompatActivity {
                 finish();
             }
         });
+         */
+
+        /*
+        MaterialButtonToggleGroup toggle_chat_mode = (MaterialButtonToggleGroup) findViewById(R.id.toggle_chat_mode);
+        chat_mode = toggle_chat_mode.getCheckedButtonId();
+        Log.v("ChatActivity chat_mode", Integer.toString(chat_mode));
+         */
+
+        /*
+        ToggleButton toggle_chat_mode = (ToggleButton)findViewById(R.id.toggle_chat_mode);
+        toggle_chat_mode.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
+                if(b){
+                    chat_mode = 0;
+                }
+                else{
+                    chat_mode = 1;
+                }
+            }
+        });
+         */
+
+        Button toggle_chat_mode_1 = (Button)findViewById(R.id.toggle_chat_mode_1);
+        Button toggle_chat_mode_2 = (Button)findViewById(R.id.toggle_chat_mode_2);
+
+        if(chat_mode == 0){
+            toggle_chat_mode_1.setBackgroundResource(R.drawable.toggle_chat_mode_on);
+            toggle_chat_mode_2.setBackgroundResource(R.drawable.toggle_chat_mode_off);
+        }
+        else{
+            toggle_chat_mode_2.setBackgroundResource(R.drawable.toggle_chat_mode_on);
+            toggle_chat_mode_1.setBackgroundResource(R.drawable.toggle_chat_mode_off);
+        }
+
+        toggle_chat_mode_1.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                chat_mode = 0;
+                toggle_chat_mode_1.setBackgroundResource(R.drawable.toggle_chat_mode_on);
+                toggle_chat_mode_2.setBackgroundResource(R.drawable.toggle_chat_mode_off);
+            }
+        });
+
+        toggle_chat_mode_2.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                chat_mode = 1;
+                toggle_chat_mode_2.setBackgroundResource(R.drawable.toggle_chat_mode_on);
+                toggle_chat_mode_1.setBackgroundResource(R.drawable.toggle_chat_mode_off);
+            }
+        });
+
+
 
         // tts initiate
         tts = new TextToSpeech(getApplicationContext(), new TextToSpeech.OnInitListener() {
@@ -210,7 +277,7 @@ public class ChatActivity extends AppCompatActivity {
 
                 switch(item.getItemId()){
                     case R.id.navigation_1:
-                        Intent intent = new Intent(ChatActivity.this, com.example.welfareapp.MainActivity.class);
+                        Intent intent = new Intent(ChatActivity.this, MainActivity.class);
                         intent.putExtras(bundle);
                         startActivity(intent);
                         finish();
@@ -218,7 +285,7 @@ public class ChatActivity extends AppCompatActivity {
                     case R.id.navigation_2:
                         return true;
                     case R.id.navigation_3:
-                        Intent intent3 = new Intent(ChatActivity.this, com.example.welfareapp.MapActivity.class);
+                        Intent intent3 = new Intent(ChatActivity.this, MapActivity.class);
                         intent3.putExtras(bundle);
                         startActivity(intent3);
                         finish();
@@ -296,7 +363,9 @@ public class ChatActivity extends AppCompatActivity {
             SharedPreferences chatResponse = getSharedPreferences("chatResponse", MODE_PRIVATE);
             SharedPreferences.Editor editor= chatResponse.edit();
 
-            final JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(Request.Method.POST, url_chatbot, params, new Response.Listener<JSONObject>(){
+            String url_chatbot_mode = chat_mode == 0 ? url_chatbot_get_wel_rcmd : url_chatbot_counseling;
+            Log.v("ChatActivity chat_mode", Integer.toString(chat_mode));
+            final JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(Request.Method.POST, url_chatbot_mode, params, new Response.Listener<JSONObject>(){
                 @Override
                 public void onResponse(JSONObject response) {
                     Log.v("ChatActivity chatbot response", "true");
