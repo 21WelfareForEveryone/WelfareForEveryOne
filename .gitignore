@@ -595,4 +595,5 @@ hs_err_pid*
 config.py
 *.csv
 *.pt
+*.conf
 # End of https://www.toptal.com/developers/gitignore/api/windows,macos,visualstudiocode,androidstudio,pycharm,node,jupyternotebooks,python
