@@ -185,7 +185,7 @@ exports.recommendedWelfare = (req, res, next) => {
 
     // option parameter 지정
     const options = {
-        uri: 'http://localhost:8000/main',
+        uri: process.env.KcELEC_RECOMMEND,
         method: 'POST',
         json: {
             "id" : user_info.user_id
