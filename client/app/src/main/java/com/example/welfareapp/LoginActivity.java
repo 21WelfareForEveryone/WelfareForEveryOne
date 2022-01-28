@@ -118,7 +118,7 @@ public class LoginActivity extends AppCompatActivity {
                             finish();
                         }
                         else{
-                            Toast.makeText(getApplicationContext(), "로그인에 실패했습니다..", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(getApplicationContext(), "로그인에 실패했습니다...(기입 오류)", Toast.LENGTH_SHORT).show();
                         }
                     }
                 });
@@ -191,7 +191,7 @@ public class LoginActivity extends AppCompatActivity {
         }, new Response.ErrorListener(){
             @Override
             public void onErrorResponse(VolleyError error) {
-                Toast.makeText(LoginActivity.this, error.getMessage(), Toast.LENGTH_SHORT).show();
+                Toast.makeText(LoginActivity.this, "로그인에 실패하였습니다...(서버 에러)", Toast.LENGTH_SHORT).show();
                 Log.v("Login onResponse Error", error.toString());
             }
         });

@@ -34,5 +34,6 @@ public class URLs {
     public static final String url_push_toggle = root_url + "/push/toggle";
     public static final String url_push_getPushAlarm = root_url + "/push/getPushAlarm";
     public static final String url_session = root_url + "/rest/user/session";
-
+    public static final String url_chatbot_counseling = root_url + "/chatbot/counseling";
+    public static final String url_chatbot_get_wel_rcmd = root_url + "/chatbot/get_wel_rcmd";
 }
