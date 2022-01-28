@@ -6,6 +6,6 @@ WORKDIR /workspace/KcELECTRA
 
 COPY . .
 
-RUN conda install -c conda-forge uwsgi
+RUN pip install gunicorn && pip install gevent
 
-ENTRYPOINT ["uwsgi", "--ini", "uwsgi.ini"]
+ENTRYPOINT ["gunicorn", "--bind", "0.0.0.0:8000", "wsgi:app", "--timeout", "6000"]

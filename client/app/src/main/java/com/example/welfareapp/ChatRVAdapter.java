@@ -8,6 +8,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -51,21 +52,45 @@ public class ChatRVAdapter extends RecyclerView.Adapter{
         switch(chatModel.getSender()){
             case "user":
                 ((UserViewHolder)holder).userTV.setText(chatModel.getMessage());
+                switch (chatModel.getImgIdx()){
+                    case 0:
+                        ((UserViewHolder)holder).userImg.setImageResource(R.drawable.baby);
+                        break;
+                    case 1:
+                        ((UserViewHolder)holder).userImg.setImageResource(R.drawable.children);
+                        break;
+                    case 2:
+                        ((UserViewHolder)holder).userImg.setImageResource(R.drawable.woman);
+                        break;
+                    case 3:
+                        ((UserViewHolder)holder).userImg.setImageResource(R.drawable.man);
+                        break;
+                    case 4:
+                        ((UserViewHolder)holder).userImg.setImageResource(R.drawable.old_woman);
+                        break;
+                    case 5:
+                        ((UserViewHolder)holder).userImg.setImageResource(R.drawable.old_man);
+                        break;
+                    case 6:
+                        ((UserViewHolder)holder).userImg.setImageResource(R.drawable.pregnant);
+                        break;
+                    case 7:
+                        ((UserViewHolder)holder).userImg.setImageResource(R.drawable.multicultural);
+                        break;
+                    case 8:
+                        ((UserViewHolder)holder).userImg.setImageResource(R.drawable.disabled);
+                        break;
+                    default:
+                        ((UserViewHolder)holder).userImg.setImageResource(R.drawable.ic_user_profile);
+                        break;
+                }
+
+
                 break;
             case "bot":
                 ((BotViewHolder)holder).botMsgTV.setText(chatModel.getMessage());
                 break;
             case "bot-welfare-info":
-                /* bot_msg_toolbox2 component editor */
-                /*
-                ((BotViewHolder2)holder).botMsgTV_title1.setText(chatModel.getWelfareInfoTitleArray()[0]);
-                ((BotViewHolder2)holder).botMsgTV_title2.setText(chatModel.getWelfareInfoTitleArray()[1]);
-                ((BotViewHolder2)holder).botMsgTV_title3.setText(chatModel.getWelfareInfoTitleArray()[2]);
-                ((BotViewHolder2)holder).botMsgTV_summary1.setText(chatModel.getWelfareInfoSummaryArray()[0]);
-                ((BotViewHolder2)holder).botMsgTV_summary2.setText(chatModel.getWelfareInfoSummaryArray()[1]);
-                ((BotViewHolder2)holder).botMsgTV_summary3.setText(chatModel.getWelfareInfoSummaryArray()[2]);
-                break;
-                 */
                 ((BotInfoViewHolder)holder).botMsgTV_title.setText(chatModel.getTitle());
                 ((BotInfoViewHolder)holder).botMsgTV_summary.setText(chatModel.getSummary());
                 ((BotInfoViewHolder)holder).btn_detail.setOnClickListener(new View.OnClickListener() {
@@ -115,9 +140,12 @@ public class ChatRVAdapter extends RecyclerView.Adapter{
     // user and  bot view holder
     public static class UserViewHolder extends RecyclerView.ViewHolder{
         TextView userTV;
+        ImageView userImg;
+
         public UserViewHolder(@NonNull View itemView) {
             super(itemView);
             userTV = itemView.findViewById(R.id.idTVUser);
+            userImg = itemView.findViewById(R.id.img_view);
         }
     }
 

@@ -39,9 +39,3 @@ def method():
         
         return json.dumps({"recommend":top_results},ensure_ascii=False)
 
-
-if __name__ == '__main__': 
-    print("Something wrong")
-    app.run(port=8080, host="0.0.0.0")
-
-

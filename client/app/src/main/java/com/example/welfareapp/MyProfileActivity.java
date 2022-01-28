@@ -108,6 +108,12 @@ public class MyProfileActivity extends AppCompatActivity {
             public void onClick(View v) {
                 Intent intent = new Intent(MyProfileActivity.this, LoginActivity.class);
                 bundle.clear();
+
+                SharedPreferences sharedPreferences = getSharedPreferences("user_info", MODE_PRIVATE);
+                SharedPreferences.Editor editor = sharedPreferences.edit();
+                editor.clear();
+                editor.apply();
+
                 Toast.makeText(getApplicationContext(), "로그아웃 되었습니다.", Toast.LENGTH_SHORT).show();
                 startActivity(intent);
                 clearApplicationData();
