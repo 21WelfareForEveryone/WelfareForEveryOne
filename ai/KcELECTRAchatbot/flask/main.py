@@ -31,7 +31,7 @@ class TrainDataset(Dataset):
 
     def __getitem__(self, i):
         text = self.sentences[i]
-        y = self.labels[i]F
+        y = self.labels[i]
 
         inputs = self.tokenizer(
             text,
