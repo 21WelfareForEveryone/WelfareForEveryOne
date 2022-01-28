@@ -61,7 +61,7 @@ def predict(sentence):
     dataset_another = [data]
     logits = 0
     another_test = TrainDataset(dataset_another)
-    test_dataloader = torch.utils.data.DataLoader(another_test)
+    test_dataloader = torch.utils.data.DataLoader(another_test, num_workers=4)
 
     for input_ids_batch, attention_masks_batch, y_batch in test_dataloader:
         y_batch = y_batch.long().to(device)
