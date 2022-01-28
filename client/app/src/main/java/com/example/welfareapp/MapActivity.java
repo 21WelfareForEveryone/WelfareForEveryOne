@@ -131,13 +131,14 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_map);
 
+        // pixel scaling factor
+        final float scale = getApplicationContext().getResources().getDisplayMetrics().density;
+
         // 최근 항목(위치, 카메라) 불러오기
-        /*
         if (savedInstanceState != null) {
             lastKnownLocation = savedInstanceState.getParcelable(KEY_LOCATION);
             cameraPosition = savedInstanceState.getParcelable(KEY_CAMERA_POSITION);
         }
-         */
 
         // Construct a PlacesClient
         Places.initialize(getApplicationContext(), placeAPIKey);
@@ -194,6 +195,7 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
             @Override
             public void onCheckedChanged(CompoundButton compoundButton, boolean isChecked) {
                 if(isChecked){
+                    int h_min = (int) (48 * scale + 0.5f);
                     findViewById(R.id.map_button_1).setVisibility(View.INVISIBLE);
                     findViewById(R.id.map_button_2).setVisibility(View.INVISIBLE);
                     findViewById(R.id.map_button_3).setVisibility(View.INVISIBLE);
@@ -201,11 +203,12 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
                     findViewById(R.id.map_button_5).setVisibility(View.INVISIBLE);
                     findViewById(R.id.map_button_6).setVisibility(View.INVISIBLE);
                     findViewById(R.id.map_button_7).setVisibility(View.INVISIBLE);
-                    findViewById(R.id.map_btn_container).getLayoutParams().height = 48;
+                    findViewById(R.id.map_btn_container).getLayoutParams().height = h_min;
                     findViewById(R.id.map_btn_container).getBackground().setAlpha(128);
                     findViewById(R.id.map_btn_container).requestLayout();
                 }
                 else{
+                    int h_max = (int) (225 * scale + 0.5f);
                     findViewById(R.id.map_button_1).setVisibility(View.VISIBLE);
                     findViewById(R.id.map_button_2).setVisibility(View.VISIBLE);
                     findViewById(R.id.map_button_3).setVisibility(View.VISIBLE);
@@ -213,7 +216,7 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
                     findViewById(R.id.map_button_5).setVisibility(View.VISIBLE);
                     findViewById(R.id.map_button_6).setVisibility(View.VISIBLE);
                     findViewById(R.id.map_button_7).setVisibility(View.VISIBLE);
-                    findViewById(R.id.map_btn_container).getLayoutParams().height = 225;
+                    findViewById(R.id.map_btn_container).getLayoutParams().height = h_max;
                     findViewById(R.id.map_btn_container).getBackground().setAlpha(255);
                     findViewById(R.id.map_btn_container).requestLayout();
                 }
@@ -317,8 +320,6 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
         findViewById(R.id.map_button_5).setOnClickListener(
                 new Button.OnClickListener() {
                     public void onClick(View v) {
-                        //showPlaceInformation(defaultLocation, PlaceType.LOCAL_GOVERNMENT_OFFICE, searchRadius);
-
                         previous_marker.clear();
                         String url = downloadUrl.getUrl("구청|시청", searchRadius, placeAPIKey,currentLocation);
                         downloadUrl.getPlaceDataFromUrl(url, new VolleyCallBack() {
@@ -330,6 +331,7 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
                     }
                 }
         );
+
         findViewById(R.id.map_button_6).setOnClickListener(
                 new Button.OnClickListener() {
                     public void onClick(View v) {
@@ -403,6 +405,14 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
                                         lastKnownLocation.getLongitude()
                                 );
                                 mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(currentLocation, DEFAULT_ZOOM));
+                                mMap.getUiSettings().setMyLocationButtonEnabled(false);
+                            }
+                            else{
+                                currentLocation = new LatLng(
+                                        defaultLocation.latitude,
+                                        defaultLocation.longitude
+                                );
+                                mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(defaultLocation, DEFAULT_ZOOM));
                                 mMap.getUiSettings().setMyLocationButtonEnabled(false);
                             }
                         } else {
