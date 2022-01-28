@@ -81,7 +81,7 @@
         android:textSize="10sp"
         android:textColor="#50242424"
         android:id = "@+id/tv_user_register_text"
-        android:text="2021.10.28 가입"/>
+        android:text=""/>
 
     <Button
         android:contentDescription="내 정보 수정하기 버튼"

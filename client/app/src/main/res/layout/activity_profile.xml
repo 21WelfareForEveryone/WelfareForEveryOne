@@ -184,7 +184,7 @@
                     android:layout_marginLeft="30dp"
                     android:layout_marginRight="30dp"
                     android:layout_marginBottom="5dp"
-                    android:text = "Gender"
+                    android:text = "성별"
                     android:fontFamily="@font/font"
                     android:textStyle="normal"
                     android:textSize="15sp"
@@ -212,7 +212,7 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:id = "@+id/btn_male"
-                            android:text="Male">
+                            android:text="남자">
                         </RadioButton>
                         <RadioButton
                             android:focusableInTouchMode="true"
@@ -221,7 +221,7 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:id = "@+id/btn_female"
-                            android:text="Female">
+                            android:text="여자">
                         </RadioButton>
                     </RadioGroup>
                 </LinearLayout>
