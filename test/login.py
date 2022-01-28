@@ -3,7 +3,6 @@ from config import config
 import json
 
 class test(HttpUser):
-    wait_time = between(1, 5)
 
     @task
     def connect(self):
