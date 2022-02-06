@@ -9,7 +9,7 @@
       "client_info": {
         "mobilesdk_app_id": "1:977988153518:android:d699b98ee2db02d6dc3d3f",
         "android_client_info": {
-          "package_name": "com.example.welfareapp"
+          "package_name": "com.product.welfareapp"
         }
       },
       "oauth_client": [
@@ -17,7 +17,7 @@
           "client_id": "977988153518-bh67kkjtqbdgsvi6lmubunoobjb1gtgu.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {
-            "package_name": "com.example.welfareapp",
+            "package_name": "com.product.welfareapp",
             "certificate_hash": "17333669ccc0c25db93f33ea13516440c8ec05aa"
           }
         },
@@ -25,7 +25,7 @@
           "client_id": "977988153518-chjadskdbpt2dqo1kq03sesp8vbr4q7g.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {
-            "package_name": "com.example.welfareapp",
+            "package_name": "com.product.welfareapp",
             "certificate_hash": "8668bd39604e99b718c6c6739ed3adc858c04cb8"
           }
         },
