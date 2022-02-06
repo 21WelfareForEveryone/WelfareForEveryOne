@@ -3,7 +3,7 @@ const express = require('express');
 const morgan = require('morgan');
 const dotenv = require('dotenv');
 const path = require('path');
-// require("dotenv").config();
+const logger = require('./utils/logger')
 
 dotenv.config({
   path: path.resolve(process.cwd(), '.env.' + process.env.NODE_ENV),
@@ -31,7 +31,7 @@ admin.initializeApp({
 // Parsing middleware 
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
-app.use(morgan('dev'));
+app.use(morgan('combined', {stream: logger.stream}));
 
 // Routers 
 app.use(pushRoutes);

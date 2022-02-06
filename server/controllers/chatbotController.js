@@ -17,7 +17,7 @@ exports.counseling = (req, res, next) => {
 
     // send Request to kmg2933
     const options = {
-        uri: 'http://localhost:8000/chatbot',
+        uri: process.env.KcELEC,
         method: 'POST',
         json: {
             "message" : user_message,
@@ -68,7 +68,7 @@ exports.get_wel_rcmd = (req, res, next) => {
 
     // send Request to kobert
     const optionsKobert = {
-        uri: 'http://localhost:8080/sebert',
+        uri: process.env.KsBERT,
         method: 'POST',
         json: {
             "query" : user_message,
