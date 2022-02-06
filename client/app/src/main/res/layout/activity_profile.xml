@@ -184,7 +184,7 @@
                     android:layout_marginLeft="30dp"
                     android:layout_marginRight="30dp"
                     android:layout_marginBottom="5dp"
-                    android:text = "성별"
+                    android:text = "Gender"
                     android:fontFamily="@font/font"
                     android:textStyle="normal"
                     android:textSize="15sp"
@@ -212,7 +212,7 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:id = "@+id/btn_male"
-                            android:text="남자">
+                            android:text="Male">
                         </RadioButton>
                         <RadioButton
                             android:focusableInTouchMode="true"
@@ -221,7 +221,7 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:id = "@+id/btn_female"
-                            android:text="여자">
+                            android:text="Female">
                         </RadioButton>
                     </RadioGroup>
                 </LinearLayout>
@@ -287,7 +287,7 @@
                 </TextView>
                 <LinearLayout
                     android:layout_width="match_parent"
-                    android:layout_height="60dp"
+                    android:layout_height="wrap_content"
                     android:layout_marginLeft="30dp"
                     android:layout_marginRight="30dp"
                     android:orientation="horizontal">
@@ -298,9 +298,8 @@
                         <Spinner
                             android:layout_marginTop = "10dp"
                             android:layout_marginLeft="10dp"
-                            android:layout_marginBottom="10dp"
                             android:layout_width="match_parent"
-                            android:layout_height="40dp"
+                            android:layout_height="wrap_content"
                             android:id = "@+id/spinner_address_city"
                             android:layout_gravity="center_vertical">
                         </Spinner>
@@ -312,9 +311,8 @@
                         <Spinner
                             android:layout_marginTop = "10dp"
                             android:layout_marginLeft="10dp"
-                            android:layout_marginBottom="10dp"
                             android:layout_width="match_parent"
-                            android:layout_height="40dp"
+                            android:layout_height="wrap_content"
                             android:id = "@+id/spinner_address_gu"
                             android:layout_gravity="center_vertical">
                         </Spinner>
@@ -394,7 +392,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:id = "@+id/btn_isMultiCulture_true"
-                        android:text="예">
+                        android:text="Y">
                     </RadioButton>
                     <RadioButton
                         android:focusableInTouchMode="true"
@@ -403,7 +401,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:id = "@+id/btn_isMultiCulture_false"
-                        android:text="아니오">
+                        android:text="N">
                     </RadioButton>
                 </RadioGroup>
             </LinearLayout>
@@ -446,7 +444,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:id = "@+id/btn_family_state_true"
-                        android:text="예">
+                        android:text="Y">
                     </RadioButton>
                     <RadioButton
                         android:focusableInTouchMode="true"
@@ -455,7 +453,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:id = "@+id/btn_family_state_false"
-                        android:text="아니오">
+                        android:text="N">
                     </RadioButton>
                 </RadioGroup>
             </LinearLayout>
@@ -504,7 +502,7 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:id = "@+id/btn_isDisabled_true"
-                            android:text="예">
+                            android:text="Y">
                         </RadioButton>
                         <RadioButton
                             android:focusableInTouchMode="true"
@@ -513,7 +511,7 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:id = "@+id/btn_isDisabled_false"
-                            android:text="아니오">
+                            android:text="N">
                         </RadioButton>
                     </RadioGroup>
                 </LinearLayout>

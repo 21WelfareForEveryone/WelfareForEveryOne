@@ -2,16 +2,13 @@ FROM bookbug/kosbert_image
 
 LABEL "title"="KoSBERT"
 
-WORKDIR /workspace/KoSentenceBERT
+WORKDIR /workspace
 
-COPY KoSentenceBERT/main.py .
-COPY KoSentenceBERT/utils.py .
-COPY KoSentenceBERT/wsgi.py .
-COPY KoSentenceBERT/corpus_embedding.csv .
+COPY KoSentenceBERT ./KoSentenceBERT
 # COPY KoSentenceBERT/device/serialization.py /torch/ #GPU
 
-RUN cp -r /workspace/KoSentenceBERT_SKTBERT/output /workspace/KoSentenceBERT/output
+WORKDIR /workspace/KoSentenceBERT
 
-RUN pip install gunicorn && pip install gevent
+RUN conda install -y -c conda-forge uwsgi
 
-ENTRYPOINT ["gunicorn","--bind", "0.0.0.0:8080","wsgi:app", "-k", "gevent", "--timeout", "6000"]
+ENTRYPOINT [ "uwsgi", "--ini", "uwsgi.ini" ]
