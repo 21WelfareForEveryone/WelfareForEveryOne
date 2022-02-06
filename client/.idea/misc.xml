@@ -7,15 +7,27 @@
         <entry key="..\:/Users/haemi/AndroidStudioProjects/WelfareForEveryOne/client/app/src/main/res/layout/activity_push_update.xml" value="0.1793478260869565" />
         <entry key="..\:/Users/haemi/AndroidStudioProjects/welfareapp/app/src/main/res/layout/activity_login.xml" value="0.2708333333333333" />
         <entry key="..\:/Users/haemi/AndroidStudioProjects/welfareapp/app/src/main/res/layout/activity_register.xml" value="0.1634963768115942" />
+        <entry key="app/src/main/res/drawable/btn_design.xml" value="0.24074074074074073" />
+        <entry key="app/src/main/res/drawable/btn_design_current_position.xml" value="0.24074074074074073" />
+        <entry key="app/src/main/res/drawable/btn_design_login.xml" value="0.24074074074074073" />
+        <entry key="app/src/main/res/drawable/toggle_button_off.xml" value="0.24074074074074073" />
+        <entry key="app/src/main/res/drawable/toggle_button_on.xml" value="0.24074074074074073" />
+        <entry key="app/src/main/res/drawable/toggle_chat_mode_off.xml" value="0.24074074074074073" />
+        <entry key="app/src/main/res/drawable/toggle_chat_mode_on.xml" value="0.24074074074074073" />
+        <entry key="app/src/main/res/drawable/toggle_chat_mode_selector.xml" value="0.24074074074074073" />
+        <entry key="app/src/main/res/layout/activity_chat.xml" value="0.25" />
         <entry key="app/src/main/res/layout/activity_map.xml" value="0.25" />
         <entry key="app/src/main/res/layout/activity_my_profile.xml" value="0.13597376387487387" />
-        <entry key="app/src/main/res/layout/activity_profile.xml" value="0.13597376387487387" />
+        <entry key="app/src/main/res/layout/activity_profile.xml" value="0.25" />
         <entry key="app/src/main/res/layout/activity_push.xml" value="0.16621376811594202" />
         <entry key="app/src/main/res/layout/activity_push_notification.xml" value="0.16168478260869565" />
         <entry key="app/src/main/res/layout/activity_push_update.xml" value="0.25" />
         <entry key="app/src/main/res/layout/activity_register.xml" value="0.25" />
+        <entry key="app/src/main/res/layout/card_component.xml" value="0.335" />
         <entry key="app/src/main/res/layout/card_component_notification.xml" value="0.16168478260869565" />
         <entry key="app/src/main/res/layout/photo_select_dialog.xml" value="0.1621376811594203" />
+        <entry key="app/src/main/res/layout/toolbar_chatbot.xml" value="0.25" />
+        <entry key="app/src/main/res/layout/toolbar_chatbot_2.xml" value="0.25" />
         <entry key="app/src/main/res/layout/toolbar_push.xml" value="0.16168478260869565" />
         <entry key="app/src/main/res/layout/user_img_select_dialog.xml" value="0.1621376811594203" />
         <entry key="app/src/main/res/layout/user_msg_toolbox.xml" value="0.13597376387487387" />

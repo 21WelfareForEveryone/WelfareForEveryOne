@@ -2,10 +2,12 @@ FROM node:16
 
 WORKDIR /server
 
-COPY package*.json /server
+COPY package.json .
 
 RUN npm install
 
-COPY . /server
+COPY . ./
+
+EXPOSE 3000
 
 CMD [ "npm", "run", "prod" ]
