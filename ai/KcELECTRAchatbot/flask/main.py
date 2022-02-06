@@ -212,7 +212,7 @@ def get_most_like_welfare(size):
     return welfare_list
 
 
-# 메인 화면 추천
+# 메인 화면 추천 6개
 def main_recommend(user):
     welfare1 = get_collaborative_filtering_welfare(user, 2)
     welfare2 = get_interest_most_like_welfare(user)
@@ -304,7 +304,7 @@ Flask Server의 Response
 """
 
 
-# 홈 화면 추천
+# 홈 화면 추천 - 6개 (2개 사용자 유사도 기반=> API / db접속 pymysql로, 2개 좋아요 상위(node server에서 하는게 굿))
 @app.route('/main', methods=['GET', 'POST'])
 def action2():
     reqJson = request.get_json()

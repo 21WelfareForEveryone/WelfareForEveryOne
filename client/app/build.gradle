@@ -6,7 +6,7 @@ android {
     compileSdk 31
 
     defaultConfig {
-        applicationId "com.product.welfareapp"
+        applicationId "com.example.welfareapp"
         minSdk 24
         targetSdk 30
         versionCode 1
