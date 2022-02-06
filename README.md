@@ -2,16 +2,16 @@
 ![](https://i.imgur.com/LkDevQK.png)  
 복지 사각지대에 계신 분들이 앱 하나로 자신에게 **최적화된 복지 혜택**을 받아 볼 수 있습니다.  
 **최적의 맞춤형 정보제공 챗봇과 실시간 푸시 알림, 주변 복지시설 안내, 관심복지 저장**의 기능을 통해 **복지 사각지대**의 사람들에게 편의를 제공합니다.  
-([2021 프로보노 공모전](https://www.hanium.or.kr/portal/project/awardView.do) 대상 과학기술정보통신부장관상 수상작입니다.)
+([2021 프로보노 공모전](https://www.hanium.or.kr/portal/subscription/info.do?trackSeq=2) 대상 과학기술정보통신부장관상 수상작입니다.)
 
 ## 기술 스택
 
 | Frontend | Backend | DB | DATA |
 | :--------: | :--------: | :--------: | :--------: |
 | <img src="https://img.shields.io/badge/Android Studio-3DDC84?style=flat-square&logo=Android Studio&logoColor=white"/> <img src="https://img.shields.io/badge/Java-007396?style=flat-square&logo=Java&logoColor=white"/> <img src="https://img.shields.io/badge/Volley-3DDC84?style=flat-square&logoColor=white"/> <img src="https://img.shields.io/badge/Google Maps-4285F4?style=flat-square&logo=Google Maps&logoColor=white"/> <img src="https://img.shields.io/badge/Firebase-FFCA28?style=flat-square&logo=firebase&logoColor=white"/>| <img src="https://img.shields.io/badge/NodeJs-339933?style=flat-square&logo=Node.js&logoColor=white"/> <img src="https://img.shields.io/badge/Express-000000?style=flat-square&logo=Express&logoColor=white"/> <img src="https://img.shields.io/badge/PM2-2B037A?style=flat-square&logo=PM2&logoColor=white"/> <img src="https://img.shields.io/badge/Flask-000000?style=flat-square&logo=Flask&logoColor=white"/> <img src="https://img.shields.io/badge/Docker-2496ED?style=flat-square&logo=Docker&logoColor=white"/> <img src="https://img.shields.io/badge/GCP-4285F4?style=flat-square&logo=Google Cloud&logoColor=white"/> <img src="https://img.shields.io/badge/AWS-232F3E?style=flat-square&logo=Amazon AWS&logoColor=white"/> <img src="https://img.shields.io/badge/Sequelize-52B0E7?style=flat-square&logo=Sequelize&logoColor=white"/> <img src="https://img.shields.io/badge/JWT-000000?style=flat-square&logo=Json Web Tokens&logoColor=white"/> <img src="https://img.shields.io/badge/Postman-FF6C37?style=flat-square&logo=postman&logoColor=white"/> |<img src="https://img.shields.io/badge/MySQL-4479A1?style=flat-square&logo=mysql&logoColor=white"/>| <img src="https://img.shields.io/badge/Python-3776AB?style=flat-square&logo=python&logoColor=white"/> <img src="https://img.shields.io/badge/PyTorch-EE4C2C?style=flat-square&logo=pytorch&logoColor=white"/> |
-
-- Front-end Framework and Structure : [Frontend](address)
-- Back-end Framework and Structure : [Backend](address) 
+- Front-end Framework and Structure : [Frontend](https://welfareforeveryone.notion.site/Front-end-Framework-and-Structure-2e8b6b629ea844fd87a32a198ee49fff)
+- Back-end Framework and Structure : [Backend](https://welfareforeveryone.notion.site/Back-end-Framework-and-Structure-7ec49ee09c3a4c9b9a1f500b15aead1c) 
+- 서버 구축까지의 시행착오 : [Server](https://welfareforeveryone.notion.site/Performance-Engineering-1a92fce2b23b4175bc4ce7cba45e141a)
 - KcELECTRA 동작 구조가 궁금하다면? : [KcELECTRA](https://velog.io/@kmg2933/KcELECTRA-%EC%B1%97%EB%B4%87-%EC%84%A4%EA%B3%84%EB%8F%84)
 - KoSBERT에 대해 알고 싶다면? : [KoSBERT](https://www.notion.so/KoSBERT-f17c66df70b8455fb9ecc3441c887857)
 
@@ -26,24 +26,68 @@ Run
 ### 서버 실행 스크립트
 
 server/.env를 참고해서 환경변수 파일을 만들어주세요.
+server/config/ 폴더에 chatbot.json파일을 [여기서](https://www.notion.so/welfareforeveryone/391ccf431eaa449db00c9a36658ee6e8) 다운받아서 넣어주세요.
+server/config/ 폴더에 firebase 인증 키 정보를 넣어주고 추가해주세요. 
 
 ```NodeJs
 cd (backend folder)
 npm install
-npm start 
+npm run prod (production version)
+npm start (development version)
 ```
 ### AI 챗봇 실행 스크립트
 docker image 다운로드: kmg2933/welfare-for-everyone:0916
-```script
-docker run -it -p 4000:8888 --gpus all kmg2933/welfare-for-everyone:0916
+- 파일
 
+model.pt 파일은 해당 [링크](https://welfareforeveryone.notion.site/391ccf431eaa449db00c9a36658ee6e8)에서 받아가세요.
+```python
+config = {
+    'port':'number'
+}
+```
+
+- 실행 스크립트
+```script
+sudo cp model.pt WelfareForEveryOne/ai/KcELECTRAchatbot/flask/model.pt
+sudo cp config.py WelfareForEveryOne/ai/KcELECTRAchatbot/flask/config.py
+
+cd WelfareForEveryOne/ai/KcELECTRAchatbot/flask
+
+// image build
+docker build --no-cache -t kmg2933/welfare-for-everyone:prod .
+
+// cpu
+docker run --rm -it -p [host port]:[container port] kmg2933/welfare-for-everyone:prod
 
 ```
 ### KoSBERT 실행 스크립트
 docker image 다운로드:bookbug/kosbert_image:latest  
-(참고 : CPU로 실행되도록 설정되어 있습니다. GPU로 실행하고 싶으시다면 [GPU 실행](https://www.notion.so/KoSBERT-f17c66df70b8455fb9ecc3441c887857)을 참고해주세요.)
+(참고 : CPU로 실행되도록 설정되어 있습니다. GPU로 실행하고 싶으시다면 [GPU 실행](https://github.com/BM-K/KoSentenceBERT-SKT/issues/8)을 참고해주세요.)
+- 파일
+result.pt 파일은 해당 [링크](https://drive.google.com/drive/folders/1fLYRi7W6J3rxt-KdGALBXMUS2W4Re7II)의 sts/result.pt 파일을output/training_sts/0_Transformer에 넣어주세요.
+corpus_embedding.csv는 해당 [링크](https://www.notion.so/welfareforeveryone/391ccf431eaa449db00c9a36658ee6e8)에서 가져가시고 [출처](https://www.data.go.kr/data/15090532/openapi.do)는 공공데이터포털입니다.
+```python
+config = {
+    'port':'number'
+}
+```
+- 실행 스크립트
 ```script
-docker run --gpus all --rm -it -p 5000:8888 --name=kosbert_image kosbert_image:latest
+// file copy
+sudo cp result.pt WelfareForEveryOne/ai/KoSentenceBERTchatbot/KoSentenceBERT/output/training_sts/0_Transformer/result.pt
+sudo cp corpus_embedding.csv WelfareForEveryOne/ai/KoSentenceBERTchatbot/KoSentenceBERT/corpus_embedding.csv
+sudo cp config.py WelfareForEveryOne/ai/KoSentenceBERTchatbot/KoSentenceBERT/config.py
+
+cd WelfareForEveryOne/ai/KoSentenceBERTchatbot
+
+// image build
+docker build --no-cache -t kosbert_image:prod .
+
+// cpu
+docker run --rm -it -p [host port]:[container port] kosbert_image:prod
+
+// gpu
+docker run --gpus all --rm -it -p [host port]:[container port] kosbert_image:prod
 
 ```
 
