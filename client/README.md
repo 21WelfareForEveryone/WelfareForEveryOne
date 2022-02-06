@@ -19,7 +19,7 @@ run app
 ├── ic_launcher_new-playstore.png
 ├── java
 │   └── com
-│       └── example
+│       └── product
 │           └── welfareapp
 │               ├── AppHelper.java
 │               ├── ChatActivity.java

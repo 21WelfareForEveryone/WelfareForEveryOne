@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    package="com.example.welfareapp">
+    package="com.product.welfareapp">
     <!-- 네트워크 상태 퍼미션 -->
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" /> <!-- GPS/Network 위치 퍼미션 -->
@@ -12,6 +12,7 @@
     <uses-permission android:name="android.permission.CAMERA2" />
     <uses-permission android:name="android.permission.RECORD_AUDIO" /> <!-- Foreground notification -->
     <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
+    <uses-permission android:name="android.permission.ACCESS_BACKGROUND_LOCATION" />
 
     <uses-feature
         android:name="android.hardware.camera"
@@ -37,40 +38,40 @@
             android:value="AIzaSyB0CHCKZmZVUKZdDLtc0_1qOgJ1PJmnR6I" />
 
         <activity
-            android:name=".PushNotificationActivity"
+            android:name="com.product.welfareapp.PushNotificationActivity"
             android:exported="true"
             android:theme="@style/Theme.AppCompat.Light.NoActionBar"/>
 
         <activity
-            android:name=".MyProfileListActivity"
+            android:name="com.product.welfareapp.MyProfileListActivity"
             android:exported="true"
             android:theme="@style/Theme.AppCompat.Light.NoActionBar" />
         <activity
-            android:name=".MainViewAllActivity"
+            android:name="com.product.welfareapp.MainViewAllActivity"
             android:exported="true"
             android:theme="@style/Theme.AppCompat.Light.NoActionBar" />
         <activity
-            android:name=".PushActivity"
+            android:name="com.product.welfareapp.PushActivity"
             android:exported="true"
             android:theme="@style/Theme.AppCompat.Light.NoActionBar" />
         <activity
-            android:name=".WebViewActivity"
+            android:name="com.product.welfareapp.WebViewActivity"
             android:exported="true"
             android:theme="@style/Theme.AppCompat.Light.NoActionBar" />
         <activity
-            android:name=".ChatActivity"
+            android:name="com.product.welfareapp.ChatActivity"
             android:theme="@style/Theme.AppCompat.Light.NoActionBar"
             android:windowSoftInputMode="stateHidden|adjustResize" />
         <activity
-            android:name=".DetailActivity"
+            android:name="com.product.welfareapp.DetailActivity"
             android:theme="@style/Theme.AppCompat.Light.NoActionBar" />
         <activity
-            android:name=".ListActivity"
+            android:name="com.product.welfareapp.ListActivity"
             android:theme="@style/Theme.AppCompat.Light.NoActionBar" />
         <activity
-            android:name=".MapActivity"
+            android:name="com.product.welfareapp.MapActivity"
             android:theme="@style/Theme.AppCompat.Light.NoActionBar"/>
-        <activity android:name=".IntroActivity">
+        <activity android:name="com.product.welfareapp.IntroActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -78,19 +79,19 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".ProfileActivity"
+            android:name="com.product.welfareapp.ProfileActivity"
             android:theme="@style/Theme.AppCompat.Light.NoActionBar" />
         <activity
-            android:name=".RegisterActivity"
+            android:name="com.product.welfareapp.RegisterActivity"
             android:theme="@style/Theme.AppCompat.Light.NoActionBar" />
         <activity
-            android:name=".LoginActivity"
+            android:name="com.product.welfareapp.LoginActivity"
             android:theme="@style/Theme.AppCompat.Light.NoActionBar" />
         <activity
-            android:name=".MainActivity"
+            android:name="com.product.welfareapp.MainActivity"
             android:theme="@style/Theme.AppCompat.Light.NoActionBar" />
         <activity
-            android:name=".MyProfileActivity"
+            android:name="com.product.welfareapp.MyProfileActivity"
             android:theme="@style/Theme.AppCompat.Light.NoActionBar" />
     </application>
 

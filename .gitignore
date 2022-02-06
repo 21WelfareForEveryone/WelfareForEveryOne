@@ -121,9 +121,9 @@ web_modules/
 .yarn-integrity
 
 # dotenv environment variables file
-.env
 .env.test
 .env.production
+.env.development
 
 # parcel-bundler cache (https://parceljs.org/)
 .cache
@@ -594,4 +594,5 @@ hs_err_pid*
 config.py
 *.csv
 *.pt
+*.conf
 # End of https://www.toptal.com/developers/gitignore/api/windows,macos,visualstudiocode,androidstudio,pycharm,node,jupyternotebooks,python
