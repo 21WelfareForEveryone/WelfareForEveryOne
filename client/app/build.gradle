@@ -1,6 +1,10 @@
 plugins {
     id 'com.android.application'
+    id 'com.google.android.libraries.mapsplatform.secrets-gradle-plugin'
 }
+
+Properties properties = new Properties()
+properties.load(project.rootProject.file('local.properties').newDataInputStream())
 
 android {
     compileSdk 31
@@ -13,6 +17,14 @@ android {
         versionName "1.0.0"
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+
+        buildConfigField("String", "GOOGLE_PLACE_KEY", properties.getProperty("google_place_key"))
+        buildConfigField("String", "GOOGLE_MAP_KEY", properties.getProperty("google_map_key"))
+
+        manifestPlaceholders = [
+                GOOGLE_MAP_KEY: properties.getProperty("google_map_key"),
+                GOOGLE_PLACE_KEY: properties.getProperty("google_place_key")
+        ]
     }
 
     buildTypes {
@@ -59,5 +71,6 @@ dependencies {
 
     //profile
     implementation 'com.makeramen:roundedimageview:2.3.0'
+
 }
 apply plugin: 'com.google.gms.google-services'
