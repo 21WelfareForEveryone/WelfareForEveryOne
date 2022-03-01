@@ -2,6 +2,7 @@ package com.product.welfareapp;
 
 import android.Manifest;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
@@ -13,6 +14,7 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBar;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
@@ -56,68 +58,83 @@ public class IntroActivity extends AppCompatActivity {
          * GPS Permission Denied => Exit whole process
          */
 
-        // initialize locationPermissionGranted
-        locationPermissionGranted = false;
+        // step 1 : google policy 정책 사항 안내문(개인 위치 정보 활용 내용)
+        AlertDialog.Builder dlg = new AlertDialog.Builder(IntroActivity.this);
+        dlg.setTitle("백그라운드 위치 정보 액세스 요청"); //제목
+        String message = "모두의 복지는 앱이 종료되었거나 사용 중이 아닐 때도 위치 데이터를 수집하여 인근 복지시설 위치 정보 기능을 지원합니다";
+        dlg.setMessage(message); // 메시지
+        dlg.setPositiveButton("확인",new DialogInterface.OnClickListener(){
 
-        checkLocationPermission(new VolleyCallBack() {
-            @Override
-            public void onSuccess() {
-                Log.v("IntroActivity checkLocationPermission", "success");
-                requestLoginStatus(token, token_firebase, new VolleyCallBack() {
+            public void onClick(DialogInterface dialog, int which) {
+                // step 2 : 앱 접근 권한 설정(gps 사용 유무)
+
+                // init locationPermissionGranted
+                locationPermissionGranted = false;
+
+                // check location permission
+                checkLocationPermission(new VolleyCallBack() {
                     @Override
                     public void onSuccess() {
-                        if(sharedPreferences.getBoolean("success",false)){
-                            Log.v("IntroActivity Login Status", "remained");
-                            Handler handler = new Handler();
-                            handler.postDelayed(new Runnable() {
-                                @Override
-                                public void run() {
-                                    Log.v("IntroActivity token",  sharedPreferences.getString("token",""));
-                                    Intent intent = new Intent(IntroActivity.this, MainActivity.class);
-                                    Bundle bundle = new Bundle();
-                                    bundle.putString("token", sharedPreferences.getString("token",""));
-                                    bundle.putString("token_firebase", sharedPreferences.getString("token_firebase",""));
-                                    bundle.putInt("statusCode", sharedPreferences.getInt("statusCode",500));
-                                    bundle.putBoolean("success", sharedPreferences.getBoolean("success",false));
-                                    intent.putExtras(bundle);
-                                    startActivity(intent);
-                                    finish();
+                        // if succeed, check login status and convert activity
+                        Log.v("IntroActivity checkLocationPermission", "success");
+                        requestLoginStatus(token, token_firebase, new VolleyCallBack() {
+                            @Override
+                            public void onSuccess() {
+                                if(sharedPreferences.getBoolean("success",false)){
+                                    Log.v("IntroActivity Login Status", "remained");
+                                    Handler handler = new Handler();
+                                    handler.postDelayed(new Runnable() {
+                                        @Override
+                                        public void run() {
+                                            Log.v("IntroActivity token",  sharedPreferences.getString("token",""));
+                                            Intent intent = new Intent(IntroActivity.this, MainActivity.class);
+                                            Bundle bundle = new Bundle();
+                                            bundle.putString("token", sharedPreferences.getString("token",""));
+                                            bundle.putString("token_firebase", sharedPreferences.getString("token_firebase",""));
+                                            bundle.putInt("statusCode", sharedPreferences.getInt("statusCode",500));
+                                            bundle.putBoolean("success", sharedPreferences.getBoolean("success",false));
+                                            intent.putExtras(bundle);
+                                            startActivity(intent);
+                                            finish();
+                                        }
+                                    }, 1024);
                                 }
-                            }, 1024);
-                        }
-                        else{
-                            Log.v("IntroActivity Login Status", "not remained");
-                            Handler handler = new Handler();
-                            handler.postDelayed(new Runnable() {
-                                @Override
-                                public void run() {
-                                    Intent intent = new Intent(IntroActivity.this, LoginActivity.class);
-                                    startActivity(intent);
-                                    finish();
+                                else{
+                                    Log.v("IntroActivity Login Status", "not remained");
+                                    Handler handler = new Handler();
+                                    handler.postDelayed(new Runnable() {
+                                        @Override
+                                        public void run() {
+                                            Intent intent = new Intent(IntroActivity.this, LoginActivity.class);
+                                            startActivity(intent);
+                                            finish();
+                                        }
+                                    }, 1024);
                                 }
-                            }, 1024);
-                        }
+                            }
+                            @Override
+                            public void onFailure() {
+                                Log.v("IntroActivity Login Status", "process failed");
+                                Handler handler = new Handler();
+                                handler.postDelayed(new Runnable() {
+                                    @Override
+                                    public void run() {
+                                        Intent intent = new Intent(IntroActivity.this, LoginActivity.class);
+                                        startActivity(intent);
+                                        finish();
+                                    }
+                                }, 1024);
+                            }
+                        });
                     }
                     @Override
                     public void onFailure() {
-                        Log.v("IntroActivity Login Status", "process failed");
-                        Handler handler = new Handler();
-                        handler.postDelayed(new Runnable() {
-                            @Override
-                            public void run() {
-                                Intent intent = new Intent(IntroActivity.this, LoginActivity.class);
-                                startActivity(intent);
-                                finish();
-                            }
-                        }, 1024);
+                        requestLocationPermission();
                     }
                 });
             }
-            @Override
-            public void onFailure() {
-                requestLocationPermission();
-            }
         });
+        dlg.show();
     }
 
     @Override
@@ -205,6 +222,7 @@ public class IntroActivity extends AppCompatActivity {
         );
     }
 
+    // requestPermissions 호출시 override해서 popup 버튼 클릭에 따른 동작 결정
     @Override
     public void onRequestPermissionsResult(int requestCode,
                                           @NonNull String[] permissions,

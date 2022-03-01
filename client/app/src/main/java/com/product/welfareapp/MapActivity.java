@@ -102,7 +102,7 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
     private List<Marker> previous_marker = null;
 
     // Place API key
-    private final String placeAPIKey = "AIzaSyDmaHqwSUJSjaS07Hod_L81DUynQBeV8m4";
+    private final String placeAPIKey = BuildConfig.GOOGLE_PLACE_KEY;
 
     private int searchRadius = 500;
 

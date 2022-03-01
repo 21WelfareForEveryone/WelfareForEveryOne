@@ -10,12 +10,17 @@
         <entry key="app/src/main/res/drawable/btn_design.xml" value="0.24074074074074073" />
         <entry key="app/src/main/res/drawable/btn_design_current_position.xml" value="0.24074074074074073" />
         <entry key="app/src/main/res/drawable/btn_design_login.xml" value="0.24074074074074073" />
+        <entry key="app/src/main/res/drawable/ic_gps.xml" value="0.24537037037037038" />
+        <entry key="app/src/main/res/drawable/ic_launcher_background.xml" value="0.24537037037037038" />
+        <entry key="app/src/main/res/drawable/ic_launcher_new_background.xml" value="0.24537037037037038" />
+        <entry key="app/src/main/res/drawable/menu_chat.xml" value="0.24537037037037038" />
         <entry key="app/src/main/res/drawable/toggle_button_off.xml" value="0.24074074074074073" />
         <entry key="app/src/main/res/drawable/toggle_button_on.xml" value="0.24074074074074073" />
         <entry key="app/src/main/res/drawable/toggle_chat_mode_off.xml" value="0.24074074074074073" />
         <entry key="app/src/main/res/drawable/toggle_chat_mode_on.xml" value="0.24074074074074073" />
         <entry key="app/src/main/res/drawable/toggle_chat_mode_selector.xml" value="0.24074074074074073" />
         <entry key="app/src/main/res/layout/activity_chat.xml" value="0.25" />
+        <entry key="app/src/main/res/layout/activity_intro.xml" value="0.14855072463768115" />
         <entry key="app/src/main/res/layout/activity_map.xml" value="0.25" />
         <entry key="app/src/main/res/layout/activity_my_profile.xml" value="0.13597376387487387" />
         <entry key="app/src/main/res/layout/activity_profile.xml" value="0.25" />
@@ -31,6 +36,7 @@
         <entry key="app/src/main/res/layout/toolbar_push.xml" value="0.16168478260869565" />
         <entry key="app/src/main/res/layout/user_img_select_dialog.xml" value="0.1621376811594203" />
         <entry key="app/src/main/res/layout/user_msg_toolbox.xml" value="0.13597376387487387" />
+        <entry key="app/src/main/res/mipmap-anydpi-v26/ic_launcher.xml" value="0.24537037037037038" />
       </map>
     </option>
   </component>
