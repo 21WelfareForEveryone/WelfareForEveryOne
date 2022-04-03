@@ -2,7 +2,7 @@ from sentence_transformers import SentenceTransformer
 import pandas as pd
 import json
 
-from utils import extract_top
+from utils import extract_top, extract_welfare_id
 
 from flask import Flask, request 
 
@@ -33,9 +33,11 @@ def method():
         
         standard = params['standard']
         em_se_embedding = corpus_embedding['embedding_'+standard]
+        corpus_welfare_id = corpus_embedding['welfare_id']
 
         top_k=3
         top_results = extract_top(em_se_embedding, query_embedding, top_k)
+        top_welfare_id = extract_welfare_id(corpus_welfare_id, top_results)
         
-        return json.dumps({"recommend":top_results},ensure_ascii=False)
+        return json.dumps({"recommend":top_welfare_id},ensure_ascii=False)
 
