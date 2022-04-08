@@ -177,69 +177,89 @@ exports.searchWelfare = (req, res, next) => {
     }
 */
 exports.recommendedWelfare = (req, res, next) => {
-    // 토큰 복호화 
-    const user_info = jwt.verify(req.body.token, secretObj);
+    let dummy_wel_list = [0, 1, 2, 3, 4, 5]
 
-    // 민규 서버로 Request 보내기 
-    // Response로 도착한 추천복지 6개의 id의 전체 정보를 서버로부터 받아서 res로 전달
-
-    // option parameter 지정
-    const options = {
-        uri: process.env.KcELEC_RECOMMEND,
-        method: 'POST',
-        json: {
-            "id" : user_info.user_id
-        }
-    };
-
-    // 해당 유저가 찜한 복지정보 User_dibs model에서 가져오기
-    let likedWelfareIds = [];
-    User_dibs.findAll({where: {user_id: user_info.user_id}, raw: true})
-    .then(results => {
-        // 유저가 찜한 복지 정보의 id를 likedWelfareIds에 저장한다. 
-        results.forEach(element => {
-            likedWelfareIds.push(element.welfare_id)
+    Welfare.findAll({where: {welfare_id: dummy_wel_list}, raw: true})
+    .then(result => {
+        result.forEach(element => {
+            element.isLiked = false;
         });
+        return result;
     })
-
-    // Request를 보내서 추천 복지정보 Response로 얻는다.
-    request(options, function (error, response, body) {
-        let welfare_list = []
-        if (!error && response.statusCode == 200) {
-            Welfare.findAll({where: {welfare_id:body['welfare']}, raw: true})
-            .then(result => {
-                welfare_list = result;
-                Welfare_category.findAll({where:{welfare_id:body['welfare']}, raw: true})
-                .then(result=>{
-                    result.forEach(element1 => {
-                        welfare_list.forEach(element2 => {
-                            // AI로부터 추천받은 복지 정보가 사용자가 찜한 복지정보인지 검사하고 isLiked attribute 추가
-                            if(element1.welfare_id == element2.welfare_id){
-                                element2.category = element1.category_id
-                            }
-                            if(likedWelfareIds.includes(element2.welfare_id)){
-                                element2.isLiked = true;
-                            }
-                            else {
-                                element2.isLiked = false;
-                            }
-                        })
-                    });
-                })
-                .then(()=>{
-                    // App에 Repsonse 보내기
-                    res.send(JSON.stringify({
-                        "success" : true,
-                        "statusCode": 200,
-                        "recommend_welfare_list" :welfare_list,
-                        "token" : req.body.token
-                    }));
-                })
-            })
-
-        }
-    });
+    .then(result => {
+        res.send(JSON.stringify({
+            "success" : true,
+            "statusCode": 200,
+            "recommend_welfare_list" :result,
+            "token" : req.body.token
+        }));
+    })
 }
+
+// exports.recommendedWelfare = (req, res, next) => {
+//     // 토큰 복호화 
+//     const user_info = jwt.verify(req.body.token, secretObj);
+
+//     // 민규 서버로 Request 보내기 
+//     // Response로 도착한 추천복지 6개의 id의 전체 정보를 서버로부터 받아서 res로 전달
+
+//     // option parameter 지정
+//     const options = {
+//         uri: process.env.KcELEC_RECOMMEND,
+//         method: 'POST',
+//         json: {
+//             "id" : user_info.user_id
+//         }
+//     };
+
+//     // 해당 유저가 찜한 복지정보 User_dibs model에서 가져오기
+//     let likedWelfareIds = [];
+//     User_dibs.findAll({where: {user_id: user_info.user_id}, raw: true})
+//     .then(results => {
+//         // 유저가 찜한 복지 정보의 id를 likedWelfareIds에 저장한다. 
+//         results.forEach(element => {
+//             likedWelfareIds.push(element.welfare_id)
+//         });
+//     })
+
+//     // Request를 보내서 추천 복지정보 Response로 얻는다.
+//     request(options, function (error, response, body) {
+//         let welfare_list = []
+//         if (!error && response.statusCode == 200) {
+//             Welfare.findAll({where: {welfare_id:body['welfare']}, raw: true})
+//             .then(result => {
+//                 welfare_list = result;
+//                 Welfare_category.findAll({where:{welfare_id:body['welfare']}, raw: true})
+//                 .then(result=>{
+//                     result.forEach(element1 => {
+//                         welfare_list.forEach(element2 => {
+//                             // AI로부터 추천받은 복지 정보가 사용자가 찜한 복지정보인지 검사하고 isLiked attribute 추가
+//                             if(element1.welfare_id == element2.welfare_id){
+//                                 element2.category = element1.category_id
+//                             }
+//                             if(likedWelfareIds.includes(element2.welfare_id)){
+//                                 element2.isLiked = true;
+//                             }
+//                             else {
+//                                 element2.isLiked = false;
+//                             }
+//                         })
+//                     });
+//                 })
+//                 .then(()=>{
+//                     // App에 Repsonse 보내기
+//                     res.send(JSON.stringify({
+//                         "success" : true,
+//                         "statusCode": 200,
+//                         "recommend_welfare_list" :welfare_list,
+//                         "token" : req.body.token
+//                     }));
+//                 })
+//             })
+
+//         }
+//     });
+// }
 
 // 복지 정보 Delete Request 처리 
 exports.deleteWelfare = (req, res, next) => {
