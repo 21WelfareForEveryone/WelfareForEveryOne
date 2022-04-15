@@ -45,8 +45,6 @@ public class DetailActivity extends AppCompatActivity {
         Boolean is_liked = bundle.getBoolean("is_liked", false);
 
         try{
-            //getDetailInfo(welfare_id, token);
-
             requestDetailInfo(welfare_id, token, new VolleyCallBack() {
                 @Override
                 public void onSuccess() {
@@ -122,7 +120,7 @@ public class DetailActivity extends AppCompatActivity {
                             error.printStackTrace();
                         }
                     });
-                    Toast.makeText(buttonView.getContext(), "내 관심복지 리스트에 등록되었습니다.", Toast.LENGTH_LONG).show();
+                    Toast.makeText(buttonView.getContext(), "내 관심복지 리스트에 등록되었습니다.", Toast.LENGTH_SHORT).show();
                     VolleySingleton.getInstance(buttonView.getContext()).addToRequestQueue(jsonObjectRequest);
                 }
                 else{
@@ -156,7 +154,7 @@ public class DetailActivity extends AppCompatActivity {
                             error.printStackTrace();
                         }
                     });
-                    Toast.makeText(buttonView.getContext(), "내 관심복지 리스트에서 삭제되었습니다.", Toast.LENGTH_LONG).show();
+                    Toast.makeText(buttonView.getContext(), "내 관심복지 리스트에서 삭제되었습니다.", Toast.LENGTH_SHORT).show();
                     VolleySingleton.getInstance(buttonView.getContext()).addToRequestQueue(jsonObjectRequest);
                 }
             }
@@ -199,6 +197,8 @@ public class DetailActivity extends AppCompatActivity {
                     //int like_count = response.getInt("like_count");
                     int category = response.getInt("category");
                     Boolean isLiked = response.getBoolean("isLiked");
+
+                    Log.v("DetailActivity requestDetailInfo", "succeed");
 
                     editor.putBoolean("success", isSuccess);
                     editor.putInt("statusCode", statusCode);

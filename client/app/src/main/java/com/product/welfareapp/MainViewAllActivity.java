@@ -79,6 +79,11 @@ public class MainViewAllActivity extends AppCompatActivity {
         void onSuccess();
     }
 
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+    }
+
     public synchronized void requestRecommendWelfareInfoAll(String token, final VolleyCallBack volleyCallBack){
         JSONObject params = new JSONObject();
         try{
