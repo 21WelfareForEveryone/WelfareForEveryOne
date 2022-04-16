@@ -158,81 +158,46 @@ public class WelfareViewAdapter extends RecyclerView.Adapter<WelfareViewAdapter.
 
         // toggle button
         holder.toggle_favorite.setChecked(favorite);
-        holder.toggle_favorite.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+        holder.toggle_favorite.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                if(isChecked){
-
-                    JSONObject params = new JSONObject();
-                    try{
-                        params.put("token", token);
-                        params.put("welfare_id", welfare_id);
-                    }
-                    catch(JSONException err)
-                    {
-                        err.printStackTrace();
-                        return;
-                    }
-                    JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(Request.Method.POST, URLs.url_favorite_create, params, new Response.Listener<JSONObject>() {
-                        @Override
-                        public void onResponse(JSONObject response) {
-                            try{
-                                Boolean isSuccess = response.getBoolean("success");
-                                int statusCode = response.getInt("statusCode");
-                                Log.v("welfareInfo create favorite info", "true");
-                                Log.v("welfareInfo create favorite, isSuccess", isSuccess.toString());
-                                Log.v("welfareInfo create favorite, statusCode", Integer.toString(statusCode));
-                            }
-                            catch(JSONException err){
-                                err.printStackTrace();
-                            }
+            public void onClick(View view) {
+                JSONObject params = new JSONObject();
+                try{
+                    params.put("token", token);
+                    params.put("welfare_id", welfare_id);
+                }
+                catch(JSONException err)
+                {
+                    err.printStackTrace();
+                    return;
+                }
+                JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(Request.Method.POST, URLs.url_favorite_create, params, new Response.Listener<JSONObject>() {
+                    @Override
+                    public void onResponse(JSONObject response) {
+                        try{
+                            Boolean isSuccess = response.getBoolean("success");
+                            int statusCode = response.getInt("statusCode");
+                            Log.v("welfareInfo create favorite info", "true");
+                            Log.v("welfareInfo create favorite, isSuccess", isSuccess.toString());
+                            Log.v("welfareInfo create favorite, statusCode", Integer.toString(statusCode));
                         }
-                    }, new Response.ErrorListener() {
-                        @Override
-                        public void onErrorResponse(VolleyError error) {
-                            error.printStackTrace();
+                        catch(JSONException err){
+                            err.printStackTrace();
                         }
-                    });
-
-                    Toast.makeText(buttonView.getContext(), "내 관심복지 리스트에 등록되었습니다.", Toast.LENGTH_LONG).show();
-                    VolleySingleton.getInstance(buttonView.getContext()).addToRequestQueue(jsonObjectRequest);
+                    }
+                }, new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        error.printStackTrace();
+                    }
+                });
+                if(holder.toggle_favorite.isChecked()){
+                    Toast.makeText(holder.toggle_favorite.getContext(), "내 관심복지 리스트에 등록되었습니다.", Toast.LENGTH_SHORT).show();
                 }
                 else{
-
-                    JSONObject params = new JSONObject();
-                    try{
-                        params.put("token", token);
-                        params.put("welfare_id", welfare_id);
-                    }
-                    catch(JSONException err)
-                    {
-                        err.printStackTrace();
-                        return;
-                    }
-                    JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(Request.Method.POST, URLs.url_favorite_delete, params, new Response.Listener<JSONObject>() {
-                        @Override
-                        public void onResponse(JSONObject response) {
-                            try{
-                                Boolean isSuccess = response.getBoolean("success");
-                                int statusCode = response.getInt("statusCode");
-                                Log.v("welfareInfo delete favorite info", "true");
-                                Log.v("welfareInfo delete favorite, isSuccess", isSuccess.toString());
-                                Log.v("welfareInfo delete favorite, statusCode", Integer.toString(statusCode));
-                            }
-                            catch(JSONException err){
-                                err.printStackTrace();
-                            }
-                        }
-                    }, new Response.ErrorListener() {
-                        @Override
-                        public void onErrorResponse(VolleyError error) {
-                            error.printStackTrace();
-                        }
-                    });
-
-                    Toast.makeText(buttonView.getContext(), "내 관심복지 리스트에서 삭제되었습니다.", Toast.LENGTH_LONG).show();
-                    VolleySingleton.getInstance(buttonView.getContext()).addToRequestQueue(jsonObjectRequest);
+                    Toast.makeText(holder.toggle_favorite.getContext(), "내 관심복지 리스트에서 삭제되었습니다.", Toast.LENGTH_SHORT).show();
                 }
+                VolleySingleton.getInstance(holder.toggle_favorite.getContext()).addToRequestQueue(jsonObjectRequest);
             }
         });
     }

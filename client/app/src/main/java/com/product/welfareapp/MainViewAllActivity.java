@@ -13,6 +13,7 @@ import android.os.Handler;
 import android.util.Log;
 import android.view.View;
 import android.widget.ImageButton;
+import android.widget.Toast;
 
 import com.android.volley.Request;
 import com.android.volley.Response;
@@ -30,6 +31,9 @@ public class MainViewAllActivity extends AppCompatActivity {
     // Recommended Welfare Info RV list
     private WelfareViewAdapter welfareViewAdapter;
     private ArrayList<WelfareInfoComponent> welfareInfoComponentArrayList;
+
+    // back button listener
+    private static long back_pressed;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -77,6 +81,17 @@ public class MainViewAllActivity extends AppCompatActivity {
 
     public interface VolleyCallBack{
         void onSuccess();
+    }
+
+    @Override
+    public void onBackPressed() {
+        if (back_pressed + 2000 > System.currentTimeMillis()){
+            super.onBackPressed();
+        }
+        else {
+            Toast.makeText(getBaseContext(), "뒤로가기 버튼을 한번 더 누르면 앱이 종료됩니다.", Toast.LENGTH_SHORT).show();
+        }
+        back_pressed = System.currentTimeMillis();
     }
 
     public synchronized void requestRecommendWelfareInfoAll(String token, final VolleyCallBack volleyCallBack){

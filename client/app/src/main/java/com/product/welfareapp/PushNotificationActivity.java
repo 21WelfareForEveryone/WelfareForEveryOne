@@ -23,6 +23,9 @@ import org.json.JSONObject;
 
 public class PushNotificationActivity extends AppCompatActivity {
 
+    // back button listener
+    private static long back_pressed;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -96,4 +99,14 @@ public class PushNotificationActivity extends AppCompatActivity {
         AppHelper.requestQueue.add(jsonObjectRequest);
     }
 
+    @Override
+    public void onBackPressed() {
+        if (back_pressed + 2000 > System.currentTimeMillis()){
+            super.onBackPressed();
+        }
+        else {
+            Toast.makeText(getBaseContext(), "뒤로가기 버튼을 한번 더 누르면 앱이 종료됩니다.", Toast.LENGTH_SHORT).show();
+        }
+        back_pressed = System.currentTimeMillis();
+    }
 }
