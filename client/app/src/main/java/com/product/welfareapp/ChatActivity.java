@@ -103,9 +103,8 @@ public class ChatActivity extends AppCompatActivity {
 
         // chatbot default response 추가
         String initMessage = "안녕하세요, 복덩이입니다.\n" +
-                "오늘 기분은 어떠신가요?\n" +
-                "“나한테 맞는 복지 추천해줘”를 입력하시면 알맞은 복지를 추천해 드립니다.\n" +
-                "관심 있는 복지 정보를 알고 싶다면 관련 “아동”과 같이 키워드 또는 “아이를 돌봐줄 곳이 필요해”와 같이 문장을 적어주시면 가장 유사한 복지를 추천해 드립니다.";
+                "관심 있는 복지에 대한 단어 또는 문장을 적어주세요. (예를 들어, “아동” 또는 “아이를 돌봐줄 곳이 필요해”) 가장 유사한 복지를 추천해 드립니다.\n" +
+                "일상대화에서는 저와 대화를 할 수 있어요. 오늘 기분은 어떠신가요?\n";
 
         chatModelArrayList.add(new ChatModel(initMessage, BOT_KEY, null, null, 0, -1, token));
         chatRVAdapter.notifyDataSetChanged();
