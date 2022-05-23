@@ -6,6 +6,7 @@ WORKDIR /workspace/KoSentenceBERT
 
 COPY KoSentenceBERT/main.py .
 COPY KoSentenceBERT/utils.py .
+COPY KoSentenceBERT/config.py .
 COPY KoSentenceBERT/wsgi.py .
 COPY KoSentenceBERT/corpus_embedding.csv .
 # COPY KoSentenceBERT/device/serialization.py /torch/ #GPU
