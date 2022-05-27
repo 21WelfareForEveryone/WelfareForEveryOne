@@ -121,6 +121,7 @@ public class MainViewAllActivity extends AppCompatActivity {
 
                     if(jar.length() > 0){
                         for(int i = 0; i < jar.length();i++){
+                            Log.v("MainViewAllActivity","jar script : " + jar.getJSONObject(i).toString());
                             int welfare_id = jar.getJSONObject(i).getInt("welfare_id");
                             String title = jar.getJSONObject(i).getString("title");
                             String summary = jar.getJSONObject(i).getString("summary");

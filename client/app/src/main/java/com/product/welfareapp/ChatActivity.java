@@ -358,6 +358,9 @@ public class ChatActivity extends AppCompatActivity {
                 public void onResponse(JSONObject response) {
                     Log.v("ChatActivity chatbot response", "true");
                     try{
+
+                        // 22.05.27 : message_type abolished
+                        /*
                         int message_type = response.getInt("message_type");
                         if(message_type == 0){
                             Boolean isSuccess = response.getBoolean("success");
@@ -415,6 +418,65 @@ public class ChatActivity extends AppCompatActivity {
                             editor.putString("message_content", message_content);
                             editor.commit();
                         }
+                        */
+
+                        // 22.05.27 : replace message_type => do not call from response
+                        if(chat_mode == 1){
+                            Log.v("ChatActivity", "chat_mode = 1 response : " + response.toString());
+                            Boolean isSuccess = response.getBoolean("success");
+                            int statusCode = response.getInt("statusCode");
+                            String message_content = response.getString("message_content");
+
+                            editor.putBoolean("success", isSuccess);
+                            editor.putInt("statusCode", statusCode);
+                            editor.putString("message_content", message_content);
+                            editor.putInt("message_type", 0);
+                            editor.commit();
+                        }
+                        else if(chat_mode == 0){
+                            Boolean isSuccess = response.getBoolean("success");
+                            int statusCode = response.getInt("statusCode");
+                            JSONArray welfare_info = response.getJSONArray("welfare_info");
+
+                            int jar_len = welfare_info.length();
+                            if(jar_len >0){
+                                for(int i = 0; i < jar_len; i++){
+                                    // using JSONObject
+                                    JSONObject obj = welfare_info.getJSONObject(i);
+
+                                    String titleName = "welfare_title" + Integer.toString(i+1);
+                                    String summaryName = "welfare_summary" + Integer.toString(i+1);
+
+                                    int welfare_id = obj.getInt("welfare_id");
+                                    String title = obj.getString("title");
+                                    String summary = obj.getString("summary");
+
+                                    String key = "welfare_info_" + Integer.toString(i);
+                                    ArrayList<String> list = new ArrayList<String>();
+                                    list.add(Integer.toString(welfare_id));
+                                    list.add(title);
+                                    list.add(summary);
+
+                                    JSONArray a = new JSONArray();
+                                    for (int j = 0; j < list.size(); j++) {
+                                        a.put(list.get(j));
+                                    }
+                                    if (!list.isEmpty()) {
+                                        editor.putString(key, a.toString());
+                                        Log.v("ChatActivity json array", a.toString());
+                                    } else {
+                                        editor.putString(key, null);
+                                    }
+                                }
+                            }
+
+                            editor.putInt("num_info", jar_len);
+                            editor.putBoolean("success", isSuccess);
+                            editor.putInt("statusCode", statusCode);
+                            editor.putInt("message_type", 1);
+                            editor.commit();
+                        }
+
                         volleyCallBack.onSuccess();
                     }
                     catch(JSONException e){
