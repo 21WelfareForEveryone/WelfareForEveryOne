@@ -2,142 +2,175 @@
 const User_dibs = require('../models/dibs'); 
 const Welfare = require('../models/welfare');
 const chatbotInfo = require("../config/chatbot.json");  
+const Welfare_category = require('../models/welfare_category'); 
 
 // Import Modules
 let jwt = require("jsonwebtoken"); 
 let secretObj = process.env.JWT_SECRET
 let request = require('request');
 
-exports.counseling = (req, res, next) => {
-    res.send(JSON.stringify({
-        "success": true,
-        "statusCode" : 200,
-        "message_content":  "인공지능 채팅 서비스는 5월 중 업데이트 예정입니다."
-    }));
-}
-
-exports.get_wel_rcmd = (req, res, next) => {
-    let dummy_wel_list = [0, 1, 2]
-
-    Welfare.findAll({where: {welfare_id: dummy_wel_list}, raw: true})
-    .then(result => {
-        result.forEach(element => {
-            element.isLiked = false;
-        });
-        return result;
-    })
-    .then(result => {
-        res.send(JSON.stringify({
-            "success": true,
-            "statusCode" : 200,
-            "welfare_info": result
-        }));
-    })    
-}
+// Counseling Dummy API
 
 // exports.counseling = (req, res, next) => {
-//     // 토큰 복호화 
-//     const user_info = jwt.verify(req.body.token, secretObj);
+//     res.send(JSON.stringify({
+//         "success": true,
+//         "statusCode" : 200,
+//         "message_content":  "인공지능 채팅 서비스는 5월 중 업데이트 예정입니다."
+//     }));
+// }
+
+exports.counseling = (req, res, next) => {
+    // 토큰 복호화 
+    const user_info = jwt.verify(req.body.token, secretObj);
     
-//     // Request로부터 user message 추출 
-//     let user_message = req.body.chat_message;
+    // Request로부터 user message 추출 
+    let user_message = req.body.chat_message;
 
-//     // send Request to kmg2933
-//     const options = {
-//         uri: process.env.KcELEC,
-//         method: 'POST',
-//         json: {
-//             "message" : user_message,
-//             "id" : user_info.user_id
-//         }
-//     };
+    // send Request to kmg2933
+    const options = {
+        uri: process.env.KcELEC,
+        method: 'POST',
+        json: {
+            "message" : user_message,
+            "id" : user_info.user_id
+        }
+    };
 
-//     // Chatbot의 Response를 저장할 변수
-//     let kmgResponse = {};
+    // Chatbot의 Response를 저장할 변수
+    let kmgResponse = {};
 
-//     // Request를 Chatbot 서버에 요청한다.
-//     request(options, function (error, response, body) {    
-//         if (!error && response.statusCode == 200) {
-// 	    	kmgResponse = body;
+    // Request를 Chatbot 서버에 요청한다.
+    request(options, function (error, response, body) {    
+        if (!error && response.statusCode == 200) {
+	    	kmgResponse = body;
             
-//             // Chatbot 서버에서 보낸 응답이 일반 메시지라면 
-//             let message = "";
-//             // 메시지를 attribute에 추가하고 App으로 Response를 보낸다.
-//             chatbotInfo.forEach(element => {
-//                 if (element.id == kmgResponse.message) {
-//                     message = element.message
-//                 }
+            // Chatbot 서버에서 보낸 응답이 일반 메시지라면 
+            let message = "";
+            // 메시지를 attribute에 추가하고 App으로 Response를 보낸다.
+            chatbotInfo.forEach(element => {
+                if (element.id == kmgResponse.message) {
+                    message = element.message
+                }
+            });
+            res.send(JSON.stringify({
+                "success": true,
+                "statusCode" : 200,
+                "message_content":  message
+            }));
+        }	
+    })
+}
+
+// Recommend Dummy API 
+// exports.get_wel_rcmd = (req, res, next) => {
+//     let dummy_wel_list = [1, 2, 3]
+//     let category_list = []
+
+//     Welfare_category.findAll({where:{welfare_id:dummy_wel_list}})
+//     .then(result => {
+//         console.log(result);
+//         result.forEach(element => {
+//             category_list.push(element.category_id);
+//         })
+//     })
+//     .then(() => {
+//         Welfare.findAll({where: {welfare_id: dummy_wel_list}, raw: true})
+//         .then(result => {
+//             result.forEach(element => {
+//                 element.isLiked = false;
 //             });
+//             result.forEach(element => {
+//                 element.category = category_list.pop();
+//             });
+//             return result;
+//         })
+//         .then(result => {
 //             res.send(JSON.stringify({
 //                 "success": true,
 //                 "statusCode" : 200,
-//                 "message_content":  message
+//                 "welfare_info": result
 //             }));
-//         }	
+//         })    
 //     })
 // }
 
-// exports.get_wel_rcmd = (req, res, next) => {
-//     // 토큰 복호화 
-//     const user_info = jwt.verify(req.body.token, secretObj);
+exports.get_wel_rcmd = (req, res, next) => {
+    // 토큰 복호화 
+    const user_info = jwt.verify(req.body.token, secretObj);
+    let category_list = []
     
-//     // Request로부터 user message 추출 
-//     let user_message = req.body.chat_message;
+    // Request로부터 user message 추출 
+    let user_message = req.body.chat_message;
 
-//     // 해당 유저가 찜을 표시한 정보를 User_dibs 모델에서 가져와 저장한다.
-//     let likedWelfareIds = [];
-//     User_dibs.findAll({where: {user_id: user_info.user_id}, raw: true})
-//     .then(results => {
-//         results.forEach(element => {
-//             likedWelfareIds.push(element.welfare_id)
-//         });
-//     })
+    // 해당 유저가 찜을 표시한 정보를 User_dibs 모델에서 가져와 저장한다.
+    let likedWelfareIds = [];
+    User_dibs.findAll({where: {user_id: user_info.user_id}, raw: true})
+    .then(results => {
+        results.forEach(element => {
+            likedWelfareIds.push(element.welfare_id)
+        });
+    })
 
-//     // send Request to kobert
-//     const optionsKobert = {
-//         uri: process.env.KsBERT,
-//         method: 'POST',
-//         json: {
-//             "query" : user_message,
-//             "standard":"full"
-//         }
-//     };
+    // send Request to kobert
+    const optionsKobert = {
+        uri: process.env.KsBERT,
+        method: 'POST',
+        json: {
+            "query" : user_message,
+            "standard":"full"
+        }
+    };
 
-//     // kobert 서버로 Request 요청을 보내고 Data를 받는다.
-//     let kobertResponse = {};
-//     request(optionsKobert, function (error, response, body) {
-//         if (!error && response.statusCode == 200) {
-//             // kobert 서버가 보낸 welfare id의 정보를 Welfare Model에서 얻는다.
-//             kobertResponse = body;
-//             const welfareIdsKobert = kobertResponse.recommend;
+    // kobert 서버로 Request 요청을 보내고 Data를 받는다.
+    let kobertResponse = {};
+    request(optionsKobert, function (error, response, body) {
+        if (!error && response.statusCode == 200) {
+            // kobert 서버가 보낸 welfare id의 정보를 Welfare Model에서 얻는다.
+            kobertResponse = body;
+            const welfareIdsKobert = kobertResponse.recommend;
 
-//             Welfare.findAll({where: { welfare_id: welfareIdsKobert }, raw: true})
-//             .then(result=>{
-//                 // 해당 welfare 정보가 user가 찜을 한 것인지 검사하고 isLiked attribute 추가 
-//                 result.forEach(element => {
-//                     if(likedWelfareIds.includes(element.welfare_id)){
-//                         element.isLiked = true;
-//                     }
-//                     else {
-//                         element.isLiked = false;
-//                     }
-//                 });
-//                 return result;
-//             })
-//             .then(result => {
-//                 // App으로 Response를 보낸다. 
-//                 res.send(JSON.stringify({
-//                     "success": true,
-//                     "statusCode" : 200,
-//                     "welfare_info": result
-//                 }));
-//             })
-//             .catch(err => {
-//                 console.log(err);
-//             })
-//         }
-//     });
-// }
+            Welfare_category.findAll({where:{welfare_id:welfareIdsKobert}})
+            .then(result => {
+                result.forEach(element => {
+                    category_list.push(element.category_id);
+                })
+            })
+            .then(() => {
+                Welfare.findAll({where: { welfare_id: welfareIdsKobert }, raw: true})
+                .then(result=>{
+                    // 해당 welfare 정보가 user가 찜을 한 것인지 검사하고 isLiked attribute 추가 
+                    result.forEach(element => {
+                        if(likedWelfareIds.includes(element.welfare_id)){
+                            element.isLiked = true;
+                        }
+                        else {
+                            element.isLiked = false;
+                        }
+                    });
+                    idx = 0;
+                    result.forEach(element => {
+                        element.category = category_list[idx];
+                        idx += 1;
+                    });
+                    return result;
+                })
+                .then(result => {
+                    // App으로 Response를 보낸다. 
+                    res.send(JSON.stringify({
+                        "success": true,
+                        "statusCode" : 200,
+                        "welfare_info": result
+                    }));
+                })
+                .catch(err => {
+                    console.log(err);
+                })
+
+            });
+        }
+    });
+}
+
 
 /*
 Chatbot Server API 
