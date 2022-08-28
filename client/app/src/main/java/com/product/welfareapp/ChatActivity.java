@@ -165,8 +165,8 @@ public class ChatActivity extends AppCompatActivity {
         });
          */
 
-        Button toggle_chat_mode_1 = (Button)findViewById(R.id.toggle_chat_mode_1);
-        Button toggle_chat_mode_2 = (Button)findViewById(R.id.toggle_chat_mode_2);
+        Button toggle_chat_mode_1 = (Button)findViewById(R.id.toggle_chat_mode_1); // 복지정보 기능
+        Button toggle_chat_mode_2 = (Button)findViewById(R.id.toggle_chat_mode_2); // 일상대화 기능
 
         if(chat_mode == 0){
             toggle_chat_mode_1.setBackgroundResource(R.drawable.toggle_chat_mode_on);
@@ -180,18 +180,28 @@ public class ChatActivity extends AppCompatActivity {
         toggle_chat_mode_1.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                // 복지정보 기능
                 chat_mode = 0;
                 toggle_chat_mode_1.setBackgroundResource(R.drawable.toggle_chat_mode_on);
                 toggle_chat_mode_2.setBackgroundResource(R.drawable.toggle_chat_mode_off);
+
+                chatModelArrayList.add(new ChatModel("복지정보 알림 모드로 전환합니다. ", BOT_KEY, null, null, 0, -1, token));
+                chatRVAdapter.notifyDataSetChanged();
+                chatRVList.scrollToPosition(chatRVList.getAdapter().getItemCount() - 1);
             }
         });
 
         toggle_chat_mode_2.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                // 일상대화 기능
                 chat_mode = 1;
                 toggle_chat_mode_2.setBackgroundResource(R.drawable.toggle_chat_mode_on);
                 toggle_chat_mode_1.setBackgroundResource(R.drawable.toggle_chat_mode_off);
+
+                chatModelArrayList.add(new ChatModel("일상 대화 모드로 전환합니다. ", BOT_KEY, null, null, 0, -1, token));
+                chatRVAdapter.notifyDataSetChanged();
+                chatRVList.scrollToPosition(chatRVList.getAdapter().getItemCount() - 1);
             }
         });
 

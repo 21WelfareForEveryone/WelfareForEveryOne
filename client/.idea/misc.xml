@@ -21,8 +21,10 @@
         <entry key="app/src/main/res/drawable/toggle_chat_mode_selector.xml" value="0.24074074074074073" />
         <entry key="app/src/main/res/font/font.xml" value="0.22962962962962963" />
         <entry key="app/src/main/res/layout/activity_chat.xml" value="0.25" />
+        <entry key="app/src/main/res/layout/activity_detail.xml" value="0.335" />
         <entry key="app/src/main/res/layout/activity_intro.xml" value="0.22" />
         <entry key="app/src/main/res/layout/activity_main.xml" value="0.25" />
+        <entry key="app/src/main/res/layout/activity_main_view_all.xml" value="0.13597376387487387" />
         <entry key="app/src/main/res/layout/activity_map.xml" value="0.25" />
         <entry key="app/src/main/res/layout/activity_my_profile.xml" value="0.21" />
         <entry key="app/src/main/res/layout/activity_profile.xml" value="0.25" />

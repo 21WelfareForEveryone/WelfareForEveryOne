@@ -71,10 +71,14 @@ public class MainViewAllActivity extends AppCompatActivity {
         btn_back.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                /**
+                 * 2022.08.28 : replace startActivity to onBackPressed
                 Intent intent = new Intent(MainViewAllActivity.this, MainActivity.class);
                 intent.putExtras(bundle);
                 startActivity(intent);
                 finish();
+                 */
+                MainViewAllActivity.super.onBackPressed();
             }
         });
     }
@@ -85,13 +89,7 @@ public class MainViewAllActivity extends AppCompatActivity {
 
     @Override
     public void onBackPressed() {
-        if (back_pressed + 2000 > System.currentTimeMillis()){
-            super.onBackPressed();
-        }
-        else {
-            Toast.makeText(getBaseContext(), "뒤로가기 버튼을 한번 더 누르면 앱이 종료됩니다.", Toast.LENGTH_SHORT).show();
-        }
-        back_pressed = System.currentTimeMillis();
+        super.onBackPressed();
     }
 
     public synchronized void requestRecommendWelfareInfoAll(String token, final VolleyCallBack volleyCallBack){
