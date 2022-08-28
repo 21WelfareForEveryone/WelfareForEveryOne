@@ -75,10 +75,14 @@ public class ListActivity extends AppCompatActivity {
         btn_back.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View v) {
+                /**
+                 * 2022.08.28 : replace startActivity to onBackPressed
                 Intent intent = new Intent(ListActivity.this, MainActivity.class);
                 intent.putExtras(bundle);
                 startActivity(intent);
                 finish();
+                */
+                ListActivity.super.onBackPressed();
             }
         });
 
