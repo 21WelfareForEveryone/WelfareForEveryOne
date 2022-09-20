@@ -36,7 +36,7 @@ npm run prod (production version)
 npm start (development version)
 ```
 ### AI 챗봇 실행 스크립트
-docker image 다운로드: kmg2933/welfare-for-everyone:0916
+docker image 다운로드: kmg2933/welfare-for-everyone:0921
 - 파일
 
 model.pt 파일은 해당 [링크](https://welfareforeveryone.notion.site/391ccf431eaa449db00c9a36658ee6e8)에서 받아가세요.
