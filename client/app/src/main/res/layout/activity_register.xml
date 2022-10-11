@@ -208,8 +208,6 @@
                         android:layout_width="match_parent"
                         android:layout_height="match_parent">
                         <RadioButton
-                            android:focusable="true"
-                            android:focusableInTouchMode="true"
                             android:layout_marginLeft="5dp"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
@@ -217,8 +215,6 @@
                             android:text="남성">
                         </RadioButton>
                         <RadioButton
-                            android:focusableInTouchMode="true"
-                            android:focusable="true"
                             android:layout_marginLeft="10dp"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
@@ -396,8 +392,6 @@
                         android:layout_width="match_parent"
                         android:layout_height="match_parent">
                         <RadioButton
-                            android:focusable="true"
-                            android:focusableInTouchMode="true"
                             android:layout_marginLeft="5dp"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
@@ -405,8 +399,6 @@
                             android:text="예">
                         </RadioButton>
                         <RadioButton
-                            android:focusableInTouchMode="true"
-                            android:focusable="true"
                             android:layout_marginLeft="10dp"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
@@ -455,8 +447,6 @@
                         android:layout_width="match_parent"
                         android:layout_height="match_parent">
                         <RadioButton
-                            android:focusable="true"
-                            android:focusableInTouchMode="true"
                             android:layout_marginLeft="5dp"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
@@ -464,8 +454,6 @@
                             android:text="예">
                         </RadioButton>
                         <RadioButton
-                            android:focusableInTouchMode="true"
-                            android:focusable="true"
                             android:layout_marginLeft="10dp"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
@@ -515,8 +503,6 @@
                         android:layout_width="match_parent"
                         android:layout_height="match_parent">
                         <RadioButton
-                            android:focusable="true"
-                            android:focusableInTouchMode="true"
                             android:layout_marginLeft="5dp"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
@@ -524,8 +510,6 @@
                             android:text="예">
                         </RadioButton>
                         <RadioButton
-                            android:focusableInTouchMode="true"
-                            android:focusable="true"
                             android:layout_marginLeft="10dp"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
@@ -576,17 +560,13 @@
                         android:layout_width="match_parent"
                         android:layout_height="match_parent">
                         <RadioButton
-                            android:focusable="true"
                             android:id = "@+id/rb_interest0"
-                            android:focusableInTouchMode="true"
                             android:layout_marginLeft="0dp"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="교육">
                         </RadioButton>
                         <RadioButton
-                            android:focusableInTouchMode="true"
-                            android:focusable="true"
                             android:layout_marginLeft="0dp"
                             android:id = "@+id/rb_interest1"
                             android:layout_width="wrap_content"
@@ -594,8 +574,6 @@
                             android:text="고용">
                         </RadioButton>
                         <RadioButton
-                            android:focusableInTouchMode="true"
-                            android:focusable="true"
                             android:layout_marginLeft="0dp"
                             android:layout_width="wrap_content"
                             android:id = "@+id/rb_interest2"
@@ -603,8 +581,6 @@
                             android:text="주거">
                         </RadioButton>
                         <RadioButton
-                            android:focusableInTouchMode="true"
-                            android:focusable="true"
                             android:layout_marginLeft="0dp"
                             android:layout_width="wrap_content"
                             android:id = "@+id/rb_interest3"
@@ -612,8 +588,6 @@
                             android:text="건강">
                         </RadioButton>
                         <RadioButton
-                            android:focusableInTouchMode="true"
-                            android:focusable="true"
                             android:layout_marginLeft="0dp"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
@@ -630,8 +604,6 @@
                             android:text="문화">
                         </RadioButton>
                         <RadioButton
-                            android:focusableInTouchMode="true"
-                            android:focusable="true"
                             android:layout_marginLeft="0dp"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
@@ -640,28 +612,6 @@
                         </RadioButton>
                     </RadioGroup>
                 </LinearLayout>
-
-<!--                <CheckBox-->
-<!--                    android:layout_marginTop="64dp"-->
-<!--                    android:layout_width="wrap_content"-->
-<!--                    android:layout_height="wrap_content"-->
-<!--                    android:text="전체동의"-->
-<!--                    android:id="@+id/checkBox"/>-->
-<!--                <CheckBox-->
-<!--                    android:layout_width="wrap_content"-->
-<!--                    android:layout_height="wrap_content"-->
-<!--                    android:text="[필수] 서비스 이용 약관"-->
-<!--                    android:id="@+id/checkBox2" />-->
-<!--                <CheckBox-->
-<!--                    android:layout_width="wrap_content"-->
-<!--                    android:layout_height="wrap_content"-->
-<!--                    android:text="[필수] 개인정보 취급방침"-->
-<!--                    android:id="@+id/checkBox3"/>-->
-<!--                <CheckBox-->
-<!--                    android:layout_width="wrap_content"-->
-<!--                    android:layout_height="wrap_content"-->
-<!--                    android:text="[선택] 위치 정보 이용 약관"-->
-<!--                    android:id="@+id/checkBox4"/>-->
 
                 <LinearLayout
                     android:layout_width="match_parent"

@@ -4,5 +4,6 @@
     <font
         android:fontStyle = "normal"
         android:fontWeight = "400"
-        android:font = "@font/noto_sans_kr_medium"/>
+        android:font = "@font/noto_sans_kr_medium"
+        />
 </font-family>

@@ -103,9 +103,8 @@ public class ChatActivity extends AppCompatActivity {
 
         // chatbot default response 추가
         String initMessage = "안녕하세요, 복덩이입니다.\n" +
-                "오늘 기분은 어떠신가요?\n" +
-                "“나한테 맞는 복지 추천해줘”를 입력하시면 알맞은 복지를 추천해 드립니다.\n" +
-                "관심 있는 복지 정보를 알고 싶다면 관련 “아동”과 같이 키워드 또는 “아이를 돌봐줄 곳이 필요해”와 같이 문장을 적어주시면 가장 유사한 복지를 추천해 드립니다.";
+                "관심 있는 복지에 대한 단어 또는 문장을 적어주세요. (예를 들어, “아동” 또는 “아이를 돌봐줄 곳이 필요해”) 가장 유사한 복지를 추천해 드립니다.\n" +
+                "일상대화에서는 저와 대화를 할 수 있어요. 오늘 기분은 어떠신가요?\n";
 
         chatModelArrayList.add(new ChatModel(initMessage, BOT_KEY, null, null, 0, -1, token));
         chatRVAdapter.notifyDataSetChanged();
@@ -166,8 +165,8 @@ public class ChatActivity extends AppCompatActivity {
         });
          */
 
-        Button toggle_chat_mode_1 = (Button)findViewById(R.id.toggle_chat_mode_1);
-        Button toggle_chat_mode_2 = (Button)findViewById(R.id.toggle_chat_mode_2);
+        Button toggle_chat_mode_1 = (Button)findViewById(R.id.toggle_chat_mode_1); // 복지정보 기능
+        Button toggle_chat_mode_2 = (Button)findViewById(R.id.toggle_chat_mode_2); // 일상대화 기능
 
         if(chat_mode == 0){
             toggle_chat_mode_1.setBackgroundResource(R.drawable.toggle_chat_mode_on);
@@ -181,18 +180,28 @@ public class ChatActivity extends AppCompatActivity {
         toggle_chat_mode_1.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                // 복지정보 기능
                 chat_mode = 0;
                 toggle_chat_mode_1.setBackgroundResource(R.drawable.toggle_chat_mode_on);
                 toggle_chat_mode_2.setBackgroundResource(R.drawable.toggle_chat_mode_off);
+
+                chatModelArrayList.add(new ChatModel("복지정보 알림 모드로 전환합니다. ", BOT_KEY, null, null, 0, -1, token));
+                chatRVAdapter.notifyDataSetChanged();
+                chatRVList.scrollToPosition(chatRVList.getAdapter().getItemCount() - 1);
             }
         });
 
         toggle_chat_mode_2.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                // 일상대화 기능
                 chat_mode = 1;
                 toggle_chat_mode_2.setBackgroundResource(R.drawable.toggle_chat_mode_on);
                 toggle_chat_mode_1.setBackgroundResource(R.drawable.toggle_chat_mode_off);
+
+                chatModelArrayList.add(new ChatModel("일상 대화 모드로 전환합니다. ", BOT_KEY, null, null, 0, -1, token));
+                chatRVAdapter.notifyDataSetChanged();
+                chatRVList.scrollToPosition(chatRVList.getAdapter().getItemCount() - 1);
             }
         });
 
@@ -358,6 +367,9 @@ public class ChatActivity extends AppCompatActivity {
                 public void onResponse(JSONObject response) {
                     Log.v("ChatActivity chatbot response", "true");
                     try{
+
+                        // 22.05.27 : message_type abolished
+                        /*
                         int message_type = response.getInt("message_type");
                         if(message_type == 0){
                             Boolean isSuccess = response.getBoolean("success");
@@ -415,6 +427,65 @@ public class ChatActivity extends AppCompatActivity {
                             editor.putString("message_content", message_content);
                             editor.commit();
                         }
+                        */
+
+                        // 22.05.27 : replace message_type => do not call from response
+                        if(chat_mode == 1){
+                            Log.v("ChatActivity", "chat_mode = 1 response : " + response.toString());
+                            Boolean isSuccess = response.getBoolean("success");
+                            int statusCode = response.getInt("statusCode");
+                            String message_content = response.getString("message_content");
+
+                            editor.putBoolean("success", isSuccess);
+                            editor.putInt("statusCode", statusCode);
+                            editor.putString("message_content", message_content);
+                            editor.putInt("message_type", 0);
+                            editor.commit();
+                        }
+                        else if(chat_mode == 0){
+                            Boolean isSuccess = response.getBoolean("success");
+                            int statusCode = response.getInt("statusCode");
+                            JSONArray welfare_info = response.getJSONArray("welfare_info");
+
+                            int jar_len = welfare_info.length();
+                            if(jar_len >0){
+                                for(int i = 0; i < jar_len; i++){
+                                    // using JSONObject
+                                    JSONObject obj = welfare_info.getJSONObject(i);
+
+                                    String titleName = "welfare_title" + Integer.toString(i+1);
+                                    String summaryName = "welfare_summary" + Integer.toString(i+1);
+
+                                    int welfare_id = obj.getInt("welfare_id");
+                                    String title = obj.getString("title");
+                                    String summary = obj.getString("summary");
+
+                                    String key = "welfare_info_" + Integer.toString(i);
+                                    ArrayList<String> list = new ArrayList<String>();
+                                    list.add(Integer.toString(welfare_id));
+                                    list.add(title);
+                                    list.add(summary);
+
+                                    JSONArray a = new JSONArray();
+                                    for (int j = 0; j < list.size(); j++) {
+                                        a.put(list.get(j));
+                                    }
+                                    if (!list.isEmpty()) {
+                                        editor.putString(key, a.toString());
+                                        Log.v("ChatActivity json array", a.toString());
+                                    } else {
+                                        editor.putString(key, null);
+                                    }
+                                }
+                            }
+
+                            editor.putInt("num_info", jar_len);
+                            editor.putBoolean("success", isSuccess);
+                            editor.putInt("statusCode", statusCode);
+                            editor.putInt("message_type", 1);
+                            editor.commit();
+                        }
+
                         volleyCallBack.onSuccess();
                     }
                     catch(JSONException e){

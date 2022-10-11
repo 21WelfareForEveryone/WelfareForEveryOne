@@ -102,6 +102,7 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
     private List<Marker> previous_marker = null;
 
     // Place API key
+    // private final String placeAPIKey = BuildConfig.GOOGLE_PLACE_KEY;
     private final String placeAPIKey = "AIzaSyDmaHqwSUJSjaS07Hod_L81DUynQBeV8m4";
 
     private int searchRadius = 500;
@@ -669,9 +670,9 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
         public String getUrl(String placeType, int searchRadius, String placeAPIKey, LatLng position){
             StringBuilder googleURL = new StringBuilder("https://maps.googleapis.com/maps/api/place/nearbysearch/json?");
 
-            double latitide = position.latitude;
+            double latitude = position.latitude;
             double longitude = position.longitude;
-            googleURL.append("location=" + latitide + "," + longitude);
+            googleURL.append("location=" + latitude + "," + longitude);
             googleURL.append("&radius=" + searchRadius);
             googleURL.append("&name=" + placeType);
             googleURL.append("&sensor=true");

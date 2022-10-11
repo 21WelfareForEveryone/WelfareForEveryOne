@@ -1,10 +1,42 @@
 # 모두의 복지
-## App Development
-- 모두의 복지 어플리케이션
-- Android Studio 2020.03.01 patch2
-- program language : Java
-- MapActivity : Google Map API 활용
-- http: Volley Module
+개인 맞춤형 복지 추천 앱 모두의 복지 프론트엔드 개발 소개 페이지입니다.   <br/>
+- Developer email address :
+  - App Developer(김진수) : wlstn5376@gmail.com<br/>
+  - App Developer(박해미) : 
+- Demo Video : https://www.youtube.com/watch?v=YdwjrgnP7SM <br />
+- 기술 스택 정리(notion) : https://welfareforeveryone.notion.site/Front-end-Framework-and-Structure-2e8b6b629ea844fd87a32a198ee49fff <br/>
+
+## Introduction
+
+모두의 복지는 복지 사각지대에 계신 분들에게 사용자 기반 추천 알고리즘을 적용한 최적화된 복지 혜택을 실시간 제공해주는 어플리케이션입니다. <br/>
+기본적으로 복지 정보 열람 서비스를 제공하고 있으며 (1) 카테고리별 복지 정보 (2) 키워드 기반 추천 복지 정보 (3) 사용자 관심 복지 정보 (4) 대화형 UI 챗봇을 통한 추천 복지의 형태로 실시간 복지 정보를 제공합니다. <br/>
+복지 정보 외에도 복지 시설에 대한 위치 제공 서비스와, 챗봇 UI를 활용한 대화 서비스 또한 제공하며, 더 나아가 푸시 알람 기능을 활용해 사용자가 관심을 가질만한 복지 정보에 대한 마감일 알림 서비스 또한 제공하고 있습니다. 
+
+## UI Implementation
+현재까지 프론트엔드에서 구현된 기능은 다음과 같습니다.
+
+1. 리스트 뷰 형태로 최적의 맞춤형 복지 정보 제공
+2. 챗봇을 통한 실시간 추천 복지 정보 제공 
+3. 챗봇을 통한 실시간 대화 서비스 기능 
+4. 사용자 위치에 따른 복지시설 안내(병원, 공공기관, 노인 복지 등)
+4. 복지 정보에 대한 푸시 알림
+5. 관심 복지 정보에 대한 찜 기능
+
+## Development Environment
+- Tool : Android Studio(ver 2020.03.01 patch2)
+- Language : Java
+- Library to use
+  - http networking : Volley
+  - Push Notification : Firebase
+  - Map UI & Place Searching : Google Map API, Google Place API
+
+## APIs
+- Google Map API : MapActivity google map 시각화
+- Google Place API : MapActivity 복지시설 키워드 검색
+
+## Application Version
+- minSdkVersion : 24
+- targetSdkVersion : 30
 
 ## How to execute
 ```
@@ -13,227 +45,7 @@ build project
 run app
 ```
 
-## 프로젝트 구조
-```
-├── AndroidManifest.xml
-├── ic_launcher_new-playstore.png
-├── java
-│   └── com
-│       └── product
-│           └── welfareapp
-│               ├── AppHelper.java
-│               ├── ChatActivity.java
-│               ├── ChatModel.java
-│               ├── ChatRVAdapter.java
-│               ├── DetailActivity.java
-│               ├── IntroActivity.java
-│               ├── ListActivity.java
-│               ├── LoginActivity.java
-│               ├── MainActivity.java
-│               ├── MainCategoryCard.java
-│               ├── MainRVAdapter.java
-│               ├── MainViewAllActivity.java
-│               ├── MapActivity.java
-│               ├── MyFirebaseMessagingService.java
-│               ├── MyProfileActivity.java
-│               ├── MyProfileListActivity.java
-│               ├── ProfileActivity.java
-│               ├── PushActivity.java
-│               ├── PushNotificationComponent.java
-│               ├── PushViewAdapter.java
-│               ├── RegisterActivity.java
-│               ├── URLs.java
-│               ├── User.java
-│               ├── UserLoginInfo.java
-│               ├── VolleySingleton.java
-│               ├── WebViewActivity.java
-│               ├── WelfareInfoComponent.java
-│               └── WelfareViewAdapter.java
-├── res
-│   ├── drawable
-│   │   ├── bot_msg_box_container.xml
-│   │   ├── bottom_menu_ico_1.png
-│   │   ├── bottom_menu_ico_2.png
-│   │   ├── bottom_menu_ico_3.png
-│   │   ├── bottom_menu_ico_4.png
-│   │   ├── btn_container_map.xml
-│   │   ├── btn_design.xml
-│   │   ├── btn_design_login.xml
-│   │   ├── btn_design_map.xml
-│   │   ├── btn_edit_profile.xml
-│   │   ├── btn_view_more.xml
-│   │   ├── card_component_container.xml
-│   │   ├── chatbot_icon_temp.xml
-│   │   ├── day_notify_container.xml
-│   │   ├── detail_picture.xml
-│   │   ├── et_design_login.xml
-│   │   ├── et_design_register.xml
-│   │   ├── ic_arrow_back.xml
-│   │   ├── ic_back.xml
-│   │   ├── ic_btn_back_white.xml
-│   │   ├── ic_category_btn.xml
-│   │   ├── ic_category_btn2.xml
-│   │   ├── ic_launcher_background.xml
-│   │   ├── ic_launcher_foreground.xml
-│   │   ├── ic_launcher_new_background.xml
-│   │   ├── ic_logout.xml
-│   │   ├── ic_logout2.xml
-│   │   ├── ic_push_notification.xml
-│   │   ├── ic_push_notification2.xml
-│   │   ├── ic_search.xml
-│   │   ├── ic_speach_btn.xml
-│   │   ├── ic_user_profile.jpg
-│   │   ├── img_category_00.jpg
-│   │   ├── img_category_01.jpg
-│   │   ├── img_category_02.jpg
-│   │   ├── img_category_03.jpg
-│   │   ├── img_category_04.jpg
-│   │   ├── img_category_05.jpg
-│   │   ├── img_category_06.jpg
-│   │   ├── img_category_07.jpg
-│   │   ├── img_category_08.jpg
-│   │   ├── img_category_09.jpg
-│   │   ├── img_category_10.jpg
-│   │   ├── img_category_11.jpg
-│   │   ├── img_category_12.jpg
-│   │   ├── img_category_13.jpg
-│   │   ├── img_category_14.jpg
-│   │   ├── img_category_15.jpg
-│   │   ├── img_icon_00.jpg
-│   │   ├── img_icon_01.jpg
-│   │   ├── img_icon_02.jpg
-│   │   ├── img_icon_03.jpg
-│   │   ├── img_icon_04.jpg
-│   │   ├── img_icon_05.jpg
-│   │   ├── img_icon_06.jpg
-│   │   ├── img_icon_07.jpg
-│   │   ├── img_icon_08.jpg
-│   │   ├── img_icon_09.jpg
-│   │   ├── img_icon_10.jpg
-│   │   ├── img_icon_11.jpg
-│   │   ├── img_icon_12.jpg
-│   │   ├── img_icon_13.jpg
-│   │   ├── img_icon_14.jpg
-│   │   ├── img_icon_15.jpg
-│   │   ├── img_main_logo.png
-│   │   ├── intro_background.png
-│   │   ├── intro_background_fit.png
-│   │   ├── map_btn_design.xml
-│   │   ├── map_icon_hospital.xml
-│   │   ├── map_icon_local_hospital.xml
-│   │   ├── map_icon_obstacle.xml
-│   │   ├── map_icon_office.xml
-│   │   ├── map_icon_police.xml
-│   │   ├── menu_chat.xml
-│   │   ├── menu_home.xml
-│   │   ├── menu_map.xml
-│   │   ├── menu_pf.xml
-│   │   ├── menu_push.xml
-│   │   ├── menu_selector_color.xml
-│   │   ├── photo_button.png
-│   │   ├── profile_default.png
-│   │   ├── profile_edit_icon.xml
-│   │   ├── push_list_container.xml
-│   │   ├── recommend_list_container.xml
-│   │   ├── shadow.xml
-│   │   ├── toggle_button_off.xml
-│   │   ├── toggle_button_off2.png
-│   │   ├── toggle_button_on.xml
-│   │   ├── toggle_button_on2.xml
-│   │   ├── toggle_button_selector.xml
-│   │   ├── tv_design_chat.xml
-│   │   ├── tv_main_info_container.xml
-│   │   └── user_msg_box_container.xml
-│   ├── drawable-v24
-│   │   └── ic_launcher_foreground.xml
-│   ├── font
-│   │   ├── font.xml
-│   │   ├── noto_sans_kr_black.otf
-│   │   ├── noto_sans_kr_bold.otf
-│   │   ├── noto_sans_kr_light.otf
-│   │   ├── noto_sans_kr_medium.otf
-│   │   ├── noto_sans_kr_regular.otf
-│   │   └── noto_sans_kr_thin.otf
-│   ├── layout
-│   │   ├── activity_chat.xml
-│   │   ├── activity_detail.xml
-│   │   ├── activity_intro.xml
-│   │   ├── activity_list.xml
-│   │   ├── activity_login.xml
-│   │   ├── activity_main.xml
-│   │   ├── activity_main_view_all.xml
-│   │   ├── activity_map.xml
-│   │   ├── activity_my_profile.xml
-│   │   ├── activity_my_profile_list.xml
-│   │   ├── activity_profile.xml
-│   │   ├── activity_push.xml
-│   │   ├── activity_register.xml
-│   │   ├── activity_web_view.xml
-│   │   ├── bot_info_toolbox.xml
-│   │   ├── bot_msg_toolbox.xml
-│   │   ├── bot_msg_toolbox2.xml
-│   │   ├── card_component.xml
-│   │   ├── card_component_notification.xml
-│   │   ├── category_select_component.xml
-│   │   ├── toolbar_chatbot.xml
-│   │   ├── toolbar_info_detail.xml
-│   │   ├── toolbar_main.xml
-│   │   ├── toolbar_main_info.xml
-│   │   ├── toolbar_main_list.xml
-│   │   ├── toolbar_profile_edit.xml
-│   │   ├── toolbar_profile_list.xml
-│   │   ├── toolbar_push.xml
-│   │   ├── toolbar_register.xml
-│   │   └── user_msg_toolbox.xml
-│   ├── menu
-│   │   └── bottom_nav.xml
-│   ├── mipmap-anydpi-v26
-│   │   ├── ic_launcher.xml
-│   │   ├── ic_launcher_new.xml
-│   │   ├── ic_launcher_new_round.xml
-│   │   └── ic_launcher_round.xml
-│   ├── mipmap-hdpi
-│   │   ├── ic_launcher.webp
-│   │   ├── ic_launcher_new.png
-│   │   ├── ic_launcher_new_foreground.png
-│   │   ├── ic_launcher_new_round.png
-│   │   └── ic_launcher_round.webp
-│   ├── mipmap-mdpi
-│   │   ├── ic_launcher.webp
-│   │   ├── ic_launcher_new.png
-│   │   ├── ic_launcher_new_foreground.png
-│   │   ├── ic_launcher_new_round.png
-│   │   └── ic_launcher_round.webp
-│   ├── mipmap-xhdpi
-│   │   ├── ic_launcher.webp
-│   │   ├── ic_launcher_new.png
-│   │   ├── ic_launcher_new_foreground.png
-│   │   ├── ic_launcher_new_round.png
-│   │   └── ic_launcher_round.webp
-│   ├── mipmap-xxhdpi
-│   │   ├── ic_launcher.webp
-│   │   ├── ic_launcher_new.png
-│   │   ├── ic_launcher_new_foreground.png
-│   │   ├── ic_launcher_new_round.png
-│   │   └── ic_launcher_round.webp
-│   ├── mipmap-xxxhdpi
-│   │   ├── ic_launcher.webp
-│   │   ├── ic_launcher_new.png
-│   │   ├── ic_launcher_new_foreground.png
-│   │   ├── ic_launcher_new_round.png
-│   │   └── ic_launcher_round.webp
-│   ├── raw
-│   │   ├── firstanimation.json
-│   │   └── happychatbot.json
-│   ├── values
-│   │   ├── colors.xml
-│   │   ├── strings.xml
-│   │   └── themes.xml
-│   ├── values-night
-│   │   └── themes.xml
-│   └── xml
-│       └── network_security_config.xml
-└── welfareapp_structure.txt
-20 directories, 199 files
-```
+## Download Application
+- 구글 플레이스토어 링크 : https://play.google.com/store/apps/details?id=com.product.welfareapp 
+
 * 본 프로젝트는 Google의 GCP Credit 지원을 받고 있습니다. (Google supported this work by providing Google Cloud credit)
