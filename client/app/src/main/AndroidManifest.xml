@@ -33,7 +33,7 @@
 
         <meta-data
             android:name="com.google.android.geo.API_KEY"
-            android:value="AIzaSyB0CHCKZmZVUKZdDLtc0_1qOgJ1PJmnR6I" />
+            android:value="${GOOGLE_MAP_KEY}" />
 
         <activity
             android:name="com.product.welfareapp.PushNotificationActivity"
