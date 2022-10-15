@@ -38,6 +38,7 @@
     ```
 
 - 디바이스 환경(모바일) : 구글 플레이 스토어에서 [다운로드](https://play.google.com/store/apps/details?id=com.product.welfareapp) 후 사용 가능
+
 <br/>
 
 ---
@@ -120,13 +121,14 @@
     docker run --gpus all --rm -it -p [host port]:[container port] kosbert_image:prod
 
     ```
-<br/>
+
 
 ## 어플리케이션 시연
 ---
 
-전체 시연 영상은 다음 [데모 영상](https://www.youtube.com/watch?v=YdwjrgnP7SM)을 참고해 주세요. <br/>
-실제 어플리케이션은 [다운로드 링크](https://play.google.com/store/apps/details?id=com.product.welfareapp)를 통해 다운 후 사용해보실 수 있습니다. <br/>
+데모 및 설명은 다음 [데모 영상](https://www.youtube.com/watch?v=YdwjrgnP7SM)을 참고해 주세요.  
+실제 어플리케이션 시연 영상은 다음 [시연 영상](https://www.youtube.com/watch?v=MDyH8tj1s0g)을 참고해 주세요.  
+~~실제 어플리케이션은 [다운로드 링크](https://play.google.com/store/apps/details?id=com.product.welfareapp)를 통해 다운 후 사용해보실 수 있습니다.~~ (현재 서비스 중지)
 
 |추천 복지 열람|챗봇|복지시설 |푸시알림|관심복지 추가|
 |:---:|:---:|:---:|:---:|:---:|
