@@ -176,6 +176,26 @@ exports.searchWelfare = (req, res, next) => {
         "welfare" : ["welfareid1","welfareid2","welfareid3","welfareid4","welfareid5","welfareid6"]    
     }
 */
+// exports.recommendedWelfare = (req, res, next) => {
+//     let dummy_wel_list = [0, 1, 2, 3, 4, 5]
+
+//     Welfare.findAll({where: {welfare_id: dummy_wel_list}, raw: true})
+//     .then(result => {
+//         result.forEach(element => {
+//             element.isLiked = false;
+//         });
+//         return result;
+//     })
+//     .then(result => {
+//         res.send(JSON.stringify({
+//             "success" : true,
+//             "statusCode": 200,
+//             "recommend_welfare_list" :result,
+//             "token" : req.body.token
+//         }));
+//     })
+// }
+
 exports.recommendedWelfare = (req, res, next) => {
     // 토큰 복호화 
     const user_info = jwt.verify(req.body.token, secretObj);
@@ -202,39 +222,55 @@ exports.recommendedWelfare = (req, res, next) => {
         });
     })
 
+    let category_list = [];
+
     // Request를 보내서 추천 복지정보 Response로 얻는다.
     request(options, function (error, response, body) {
         let welfare_list = []
         if (!error && response.statusCode == 200) {
-            Welfare.findAll({where: {welfare_id:body['welfare']}, raw: true})
+            Welfare_category.findAll({where:{welfare_id:body['welfare']}})
             .then(result => {
-                welfare_list = result;
-                Welfare_category.findAll({where:{welfare_id:body['welfare']}, raw: true})
-                .then(result=>{
-                    result.forEach(element1 => {
-                        welfare_list.forEach(element2 => {
-                            // AI로부터 추천받은 복지 정보가 사용자가 찜한 복지정보인지 검사하고 isLiked attribute 추가
-                            if(element1.welfare_id == element2.welfare_id){
-                                element2.category = element1.category_id
-                            }
-                            if(likedWelfareIds.includes(element2.welfare_id)){
-                                element2.isLiked = true;
-                            }
-                            else {
-                                element2.isLiked = false;
-                            }
-                        })
-                    });
+                result.forEach(element => {
+                    category_list.push(element.category_id);
                 })
-                .then(()=>{
-                    // App에 Repsonse 보내기
-                    res.send(JSON.stringify({
-                        "success" : true,
-                        "statusCode": 200,
-                        "recommend_welfare_list" :welfare_list,
-                        "token" : req.body.token
-                    }));
+            })
+            .then(() => {
+                Welfare.findAll({where: {welfare_id:body['welfare']}, raw: true})
+                .then(result => {
+                    welfare_list = result;
+                    Welfare_category.findAll({where:{welfare_id:body['welfare']}, raw: true})
+                    .then(result=>{
+                        result.forEach(element1 => {
+                            welfare_list.forEach(element2 => {
+                                // AI로부터 추천받은 복지 정보가 사용자가 찜한 복지정보인지 검사하고 isLiked attribute 추가
+                                if(element1.welfare_id == element2.welfare_id){
+                                    element2.category = element1.category_id
+                                }
+                                if(likedWelfareIds.includes(element2.welfare_id)){
+                                    element2.isLiked = true;
+                                }
+                                else {
+                                    element2.isLiked = false;
+                                }
+                            })
+                            let idx = 0;
+                            welfare_list.forEach(element => {
+                                element.category = category_list[idx];
+                                idx += 1;
+                            });
+                        });
+                    })
+                    .then(()=>{
+                        // App에 Repsonse 보내기
+                        res.send(JSON.stringify({
+                            "success" : true,
+                            "statusCode": 200,
+                            "recommend_welfare_list" :welfare_list,
+                            "token" : req.body.token
+                        }));
+                    })
                 })
+
             })
 
         }

@@ -13,6 +13,7 @@ import android.os.Handler;
 import android.util.Log;
 import android.view.View;
 import android.widget.ImageButton;
+import android.widget.Toast;
 
 import com.android.volley.Request;
 import com.android.volley.Response;
@@ -30,6 +31,9 @@ public class MainViewAllActivity extends AppCompatActivity {
     // Recommended Welfare Info RV list
     private WelfareViewAdapter welfareViewAdapter;
     private ArrayList<WelfareInfoComponent> welfareInfoComponentArrayList;
+
+    // back button listener
+    private static long back_pressed;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -67,16 +71,25 @@ public class MainViewAllActivity extends AppCompatActivity {
         btn_back.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                /**
+                 * 2022.08.28 : replace startActivity to onBackPressed
                 Intent intent = new Intent(MainViewAllActivity.this, MainActivity.class);
                 intent.putExtras(bundle);
                 startActivity(intent);
                 finish();
+                 */
+                MainViewAllActivity.super.onBackPressed();
             }
         });
     }
 
     public interface VolleyCallBack{
         void onSuccess();
+    }
+
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
     }
 
     public synchronized void requestRecommendWelfareInfoAll(String token, final VolleyCallBack volleyCallBack){
@@ -106,6 +119,7 @@ public class MainViewAllActivity extends AppCompatActivity {
 
                     if(jar.length() > 0){
                         for(int i = 0; i < jar.length();i++){
+                            Log.v("MainViewAllActivity","jar script : " + jar.getJSONObject(i).toString());
                             int welfare_id = jar.getJSONObject(i).getInt("welfare_id");
                             String title = jar.getJSONObject(i).getString("title");
                             String summary = jar.getJSONObject(i).getString("summary");

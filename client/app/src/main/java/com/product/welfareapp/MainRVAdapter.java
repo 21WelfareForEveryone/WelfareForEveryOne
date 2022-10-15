@@ -66,6 +66,8 @@ public class MainRVAdapter extends RecyclerView.Adapter<MainRVAdapter.ViewHolder
                     Intent intent = new Intent(context, com.product.welfareapp.ListActivity.class);
                     intent.putExtras(bundle);
                     context.startActivity(intent);
+                    // main activity should be finished
+
                 }
                 catch(Exception err){
                     Log.v("Category to ListActivity intent process","error");

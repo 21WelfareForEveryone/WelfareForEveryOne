@@ -10,6 +10,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.ImageButton;
 import android.widget.ListView;
+import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -32,6 +33,9 @@ public class ListActivity extends AppCompatActivity {
     private RecyclerView recyclerView;
     private ArrayList<com.product.welfareapp.WelfareInfoComponent> welfareInfoComponentArrayList;
     private WelfareViewAdapter welfareViewAdapter;
+
+    // back button listener
+    private static long back_pressed;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -71,16 +75,25 @@ public class ListActivity extends AppCompatActivity {
         btn_back.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View v) {
+                /**
+                 * 2022.08.28 : replace startActivity to onBackPressed
                 Intent intent = new Intent(ListActivity.this, MainActivity.class);
                 intent.putExtras(bundle);
                 startActivity(intent);
                 finish();
+                */
+                ListActivity.super.onBackPressed();
             }
         });
 
     }
     public interface VolleyCallBack {
         void onSuccess();
+    }
+
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
     }
 
     public synchronized void requestCategoricalWelfareInfo(String token, int category, final VolleyCallBack volleyCallBack){

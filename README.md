@@ -2,9 +2,10 @@
 
 ![](https://i.imgur.com/LkDevQK.png)
 
-복지 사각지대에 계신 분들이 앱 하나로 자신에게 **최적화된 복지 혜택**을 받아 볼 수 있습니다.  
-**최적의 맞춤형 정보제공 챗봇과 실시간 푸시 알림, 주변 복지시설 안내, 관심복지 저장**의 기능을 통해 **복지 사각지대**의 사람들에게 편의를 제공합니다.  
-([2021 프로보노 공모전](https://www.hanium.or.kr/portal/subscription/info.do?trackSeq=2) **대상 과학기술정보통신부장관상** 수상작입니다.)
+- 복지 사각지대에 계신 분들이 앱 하나로 자신에게 **최적화된 복지 혜택**을 받아 볼 수 있습니다.  
+- **최적의 맞춤형 정보제공 챗봇과 실시간 푸시 알림, 주변 복지시설 안내, 관심복지 저장**의 기능을 통해 **복지 사각지대**의 사람들에게 편의를 제공합니다.  
+- [2021 프로보노 공모전](https://www.hanium.or.kr/portal/subscription/info.do?trackSeq=2) 대상 과학기술정보통신부장관상 수상작입니다.
+- 구글 플레이 스토어에 정식으로 다운로드 받으실 수 있습니다.([다운로드 링크](https://play.google.com/store/apps/details?id=com.product.welfareapp), 버전 : 1.0.2, 업데이트 날짜 : 22.08.29)
 
 ## 기술 스택
 
@@ -20,97 +21,114 @@
 - KoSBERT에 대해 알고 싶다면? : [KoSBERT](https://www.notion.so/welfareforeveryone/KoSBERT-15ecbf962da646d0a88909700f8bebd8)
 
 ## 실행 스크립트
-
+---
 ### 앱 실행 스크립트
+- Android Studio Emulator 환경에서 동작시키기(Android Studio 필요)
+    ```java
+    cd ./client/
+    1. Download Android Emulator
+    2. Build -> Make Project
+    3. Run -> Run 'app'
+    ```
 
-```java
-Execute Android Eumulator
-Build Project
-Run
-```
+- Android Studio에서 .aab 혹은 .apk 파일 생성하기
+    ```java
+    1. Build -> Build Bundle(s) / APK(s)
+    2. Download welfare.aab / welfare.apk from local
+    ```
 
+- 디바이스 환경(모바일) : 구글 플레이 스토어에서 [다운로드](https://play.google.com/store/apps/details?id=com.product.welfareapp) 후 사용 가능
+
+<br/>
+
+---
 ### 서버 실행 스크립트
+- 서버 실행 순서
+    1. server/.env를 참고해서 환경변수 파일을 만들어주세요.
+    2. server/config/ 폴더에 chatbot.json파일을 [여기서](https://www.notion.so/welfareforeveryone/391ccf431eaa449db00c9a36658ee6e8) 다운받아서 넣어주세요.
+    3. server/config/ 폴더에 firebase 인증 키 정보를 넣어주고 추가해주세요. 
+    <br/>
 
-server/.env를 참고해서 환경변수 파일을 만들어주세요.
-server/config/ 폴더에 chatbot.json파일을 [여기서](https://www.notion.so/welfareforeveryone/391ccf431eaa449db00c9a36658ee6e8) 다운받아서 넣어주세요.
-server/config/ 폴더에 firebase 인증 키 정보를 넣어주고 추가해주세요. 
+    ```NodeJs
+    cd (backend folder)
+    npm install
+    npm run prod (production version)
+    npm start (development version)
+    ```
+<br/>
 
-```NodeJs
-cd (backend folder)
-npm install
-npm run prod (production version)
-npm start (development version)
-```
-
+---
 ### AI 일상대화 챗봇 실행 스크립트(KcELECTRA)
 
 > docker image 다운로드: kmg2933/welfare-for-everyone:0921
 
 - 파일
+    model.pt 파일은 해당 [링크](https://welfareforeveryone.notion.site/391ccf431eaa449db00c9a36658ee6e8)에서 받아가세요.
 
-model.pt 파일은 해당 [링크](https://welfareforeveryone.notion.site/391ccf431eaa449db00c9a36658ee6e8)에서 받아가세요.
-
-```python
-config = {
-    'port':'number'
-}
-```
+    ```python
+    config = {
+        'port':'number'
+    }
+    ```
 
 - 실행 스크립트
+    ```script
+    sudo cp model.pt WelfareForEveryOne/ai/KcELECTRAchatbot/flask/model.pt
+    sudo cp config.py WelfareForEveryOne/ai/KcELECTRAchatbot/flask/config.py
+    
+    cd WelfareForEveryOne/ai/KcELECTRAchatbot/flask
+    
+    // image build
+    docker build --no-cache -t kmg2933/welfare-for-everyone:prod .
+    
+    // cpu
+    docker run --rm -it -p [host port]:[container port] kmg2933/welfare-for-everyone:prod
+    
+    ```
+<br/>
 
-```script
-sudo cp model.pt WelfareForEveryOne/ai/KcELECTRAchatbot/flask/model.pt
-sudo cp config.py WelfareForEveryOne/ai/KcELECTRAchatbot/flask/config.py
-
-cd WelfareForEveryOne/ai/KcELECTRAchatbot/flask
-
-// image build
-docker build --no-cache -t kmg2933/welfare-for-everyone:prod .
-
-// cpu
-docker run --rm -it -p [host port]:[container port] kmg2933/welfare-for-everyone:prod
-
-```
-
+---
 ### AI 복지정보 챗봇 실행 스크립트(KoSBERT)
-
-> docker image 다운로드:bookbug/kosbert_image:latest  
+>docker image 다운로드:bookbug/kosbert_image:latest  
 (참고 : CPU로 실행되도록 설정되어 있습니다. GPU로 실행하고 싶으시다면 [GPU 실행](https://github.com/BM-K/KoSentenceBERT-SKT/issues/8)을 참고해주세요.)
 
 - 파일
-result.pt 파일은 해당 [링크](https://drive.google.com/drive/folders/1fLYRi7W6J3rxt-KdGALBXMUS2W4Re7II)의 sts/result.pt 파일을 다운받으세요.
-corpus_embedding.csv는 해당 [링크](https://www.notion.so/welfareforeveryone/391ccf431eaa449db00c9a36658ee6e8)에서 다운받으세요. [출처](https://www.data.go.kr/data/15090532/openapi.do)는 공공데이터포털입니다.
+    * result.pt 파일은 해당 [링크](https://drive.google.com/drive/folders/1fLYRi7W6J3rxt-KdGALBXMUS2W4Re7II)의 sts/result.pt 파일을 다운받으세요.
+    * corpus_embedding.csv는 해당 [링크](https://www.notion.so/welfareforeveryone/391ccf431eaa449db00c9a36658ee6e8)에서 다운받으세요. [출처](https://www.data.go.kr/data/15090532/openapi.do)는 공공데이터포털입니다.
 
-```python
-config = {
-    'port':'number'
-}
-```
+    ```python
+    config = {
+        'port':'number'
+    }
+    ```
 
 - 실행 스크립트
+    ```script
+    // file copy
+    sudo cp result.pt WelfareForEveryOne/ai/KoSentenceBERTchatbot/KoSentenceBERT/output/training_sts/0_Transformer/result.pt
+    sudo cp corpus_embedding.csv WelfareForEveryOne/ai/KoSentenceBERTchatbot/KoSentenceBERT/corpus_embedding.csv
+    sudo cp config.py WelfareForEveryOne/ai/KoSentenceBERTchatbot/KoSentenceBERT/config.py
 
-```script
-// file copy
-sudo cp result.pt WelfareForEveryOne/ai/KoSentenceBERTchatbot/KoSentenceBERT/output/training_sts/0_Transformer/result.pt
-sudo cp corpus_embedding.csv WelfareForEveryOne/ai/KoSentenceBERTchatbot/KoSentenceBERT/corpus_embedding.csv
-sudo cp config.py WelfareForEveryOne/ai/KoSentenceBERTchatbot/KoSentenceBERT/config.py
+    cd WelfareForEveryOne/ai/KoSentenceBERTchatbot
 
-cd WelfareForEveryOne/ai/KoSentenceBERTchatbot
+    // image build
+    docker build --no-cache -t kosbert_image:prod .
 
-// image build
-docker build --no-cache -t kosbert_image:prod .
+    // cpu
+    docker run --rm -it -p [host port]:[container port] kosbert_image:prod
 
-// cpu
-docker run --rm -it -p [host port]:[container port] kosbert_image:prod
+    // gpu
+    docker run --gpus all --rm -it -p [host port]:[container port] kosbert_image:prod
 
-// gpu
-docker run --gpus all --rm -it -p [host port]:[container port] kosbert_image:prod
+    ```
 
-```
 
 ## 어플리케이션 시연
+---
 
-전체 시연 영상은 다음 [데모 영상](https://www.youtube.com/watch?v=YdwjrgnP7SM)을 참고해 주세요.
+데모 및 설명은 다음 [데모 영상](https://www.youtube.com/watch?v=YdwjrgnP7SM)을 참고해 주세요.  
+실제 어플리케이션 시연 영상은 다음 [시연 영상](https://www.youtube.com/watch?v=MDyH8tj1s0g)을 참고해 주세요.  
+~~실제 어플리케이션은 [다운로드 링크](https://play.google.com/store/apps/details?id=com.product.welfareapp)를 통해 다운 후 사용해보실 수 있습니다.~~ (현재 서비스 중지)
 
 |추천 복지 열람|챗봇|복지시설 |푸시알림|관심복지 추가|
 |:---:|:---:|:---:|:---:|:---:|

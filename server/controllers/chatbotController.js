@@ -2,11 +2,22 @@
 const User_dibs = require('../models/dibs'); 
 const Welfare = require('../models/welfare');
 const chatbotInfo = require("../config/chatbot.json");  
+const Welfare_category = require('../models/welfare_category'); 
 
 // Import Modules
 let jwt = require("jsonwebtoken"); 
 let secretObj = process.env.JWT_SECRET
 let request = require('request');
+
+// Counseling Dummy API
+
+// exports.counseling = (req, res, next) => {
+//     res.send(JSON.stringify({
+//         "success": true,
+//         "statusCode" : 200,
+//         "message_content":  "인공지능 채팅 서비스는 5월 중 업데이트 예정입니다."
+//     }));
+// }
 
 exports.counseling = (req, res, next) => {
     // 토큰 복호화 
@@ -50,9 +61,43 @@ exports.counseling = (req, res, next) => {
     })
 }
 
+// Recommend Dummy API 
+// exports.get_wel_rcmd = (req, res, next) => {
+//     let dummy_wel_list = [1, 2, 3]
+//     let category_list = []
+
+//     Welfare_category.findAll({where:{welfare_id:dummy_wel_list}})
+//     .then(result => {
+//         console.log(result);
+//         result.forEach(element => {
+//             category_list.push(element.category_id);
+//         })
+//     })
+//     .then(() => {
+//         Welfare.findAll({where: {welfare_id: dummy_wel_list}, raw: true})
+//         .then(result => {
+//             result.forEach(element => {
+//                 element.isLiked = false;
+//             });
+//             result.forEach(element => {
+//                 element.category = category_list.pop();
+//             });
+//             return result;
+//         })
+//         .then(result => {
+//             res.send(JSON.stringify({
+//                 "success": true,
+//                 "statusCode" : 200,
+//                 "welfare_info": result
+//             }));
+//         })    
+//     })
+// }
+
 exports.get_wel_rcmd = (req, res, next) => {
     // 토큰 복호화 
     const user_info = jwt.verify(req.body.token, secretObj);
+    let category_list = []
     
     // Request로부터 user message 추출 
     let user_message = req.body.chat_message;
@@ -84,33 +129,48 @@ exports.get_wel_rcmd = (req, res, next) => {
             kobertResponse = body;
             const welfareIdsKobert = kobertResponse.recommend;
 
-            Welfare.findAll({where: { welfare_id: welfareIdsKobert }, raw: true})
-            .then(result=>{
-                // 해당 welfare 정보가 user가 찜을 한 것인지 검사하고 isLiked attribute 추가 
-                result.forEach(element => {
-                    if(likedWelfareIds.includes(element.welfare_id)){
-                        element.isLiked = true;
-                    }
-                    else {
-                        element.isLiked = false;
-                    }
-                });
-                return result;
-            })
+            Welfare_category.findAll({where:{welfare_id:welfareIdsKobert}})
             .then(result => {
-                // App으로 Response를 보낸다. 
-                res.send(JSON.stringify({
-                    "success": true,
-                    "statusCode" : 200,
-                    "welfare_info": result
-                }));
+                result.forEach(element => {
+                    category_list.push(element.category_id);
+                })
             })
-            .catch(err => {
-                console.log(err);
-            })
+            .then(() => {
+                Welfare.findAll({where: { welfare_id: welfareIdsKobert }, raw: true})
+                .then(result=>{
+                    // 해당 welfare 정보가 user가 찜을 한 것인지 검사하고 isLiked attribute 추가 
+                    result.forEach(element => {
+                        if(likedWelfareIds.includes(element.welfare_id)){
+                            element.isLiked = true;
+                        }
+                        else {
+                            element.isLiked = false;
+                        }
+                    });
+                    idx = 0;
+                    result.forEach(element => {
+                        element.category = category_list[idx];
+                        idx += 1;
+                    });
+                    return result;
+                })
+                .then(result => {
+                    // App으로 Response를 보낸다. 
+                    res.send(JSON.stringify({
+                        "success": true,
+                        "statusCode" : 200,
+                        "welfare_info": result
+                    }));
+                })
+                .catch(err => {
+                    console.log(err);
+                })
+
+            });
         }
     });
 }
+
 
 /*
 Chatbot Server API 
